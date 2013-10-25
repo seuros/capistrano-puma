@@ -52,7 +52,7 @@ do_start() {
 }
 
 do_start_one() {
-  PIDFILE=$1/tmp/puma/pid
+  PIDFILE=$1/tmp/pids/puma.pid
   if [ -e $PIDFILE ]; then
     PID=`cat $PIDFILE`
     # If the puma isn't running, run it, otherwise restart it.
@@ -89,8 +89,8 @@ do_stop() {
 #
 do_stop_one() {
   log_daemon_msg "--> Stopping $1"
-  PIDFILE=$1/tmp/puma/pid
-  STATEFILE=$1/tmp/puma/state
+  PIDFILE=$1/tmp/pids/puma.pid
+  STATEFILE=$1/tmp/pids/puma.state
   if [ -e $PIDFILE ]; then
     PID=`cat $PIDFILE`
     if [ "`ps -A -o pid= | grep -c $PID`" -eq 0 ]; then
@@ -121,13 +121,13 @@ do_restart() {
 # Function that sends a SIGUSR2 to the daemon/service
 #
 do_restart_one() {
-  PIDFILE=$1/tmp/puma/pid
+  PIDFILE=$1/tmp/pids/puma.pid
   i=`grep $1 $CONFIG`
   dir=`echo $i | cut -d , -f 1`
   
   if [ -e $PIDFILE ]; then
     log_daemon_msg "--> About to restart puma $1"
-    pumactl --state $dir/tmp/puma/state restart
+    pumactl --state $dir/tmp/pigs/puma.state restart
     # kill -s USR2 `cat $PIDFILE`
     # TODO Check if process exist
   else
@@ -160,13 +160,13 @@ do_status() {
 # Function that sends a SIGUSR2 to the daemon/service
 #
 do_status_one() {
-  PIDFILE=$1/tmp/puma/pid
+  PIDFILE=$1/tmp/pids/puma.pid
   i=`grep $1 $CONFIG`
   dir=`echo $i | cut -d , -f 1`
   
   if [ -e $PIDFILE ]; then
     log_daemon_msg "--> About to status puma $1"
-    pumactl --state $dir/tmp/puma/state stats
+    pumactl --state $dir/tmp/pids/puma.state stats
     # kill -s USR2 `cat $PIDFILE`
     # TODO Check if process exist
   else
