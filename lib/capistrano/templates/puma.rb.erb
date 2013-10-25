@@ -1,0 +1,13 @@
+#!/usr/bin/env puma           g
+
+directory '<%= current_path %>'
+environment '<%= fetch(:puma_env) %>'
+daemonize true
+pidfile "<%=fetch(:puma_pid)%>"
+state_path "<%=fetch(:puma_state)%>"
+stdout_redirect '<%=fetch(:puma_access_log)%>', '<%=fetch(:puma_error_log)%>', true
+threads <%=fetch(:puma_threads).join(',')%>
+bind "<%=fetch(:puma_bind)%>"
+
+workers <%=fetch(:puma_workers)%>
+preload_app!

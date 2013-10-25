@@ -1,0 +1,78 @@
+namespace :deploy do
+  # after :finished, 'puma:restart'
+end
+
+namespace :load do
+  task :defaults do
+    set :puma_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec puma"
+    set :pumactl_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec pumactl"
+    set :puma_role, :app
+    set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
+
+    # Configure “min” to be the minimum number of threads to use to answer
+    # requests and “max” the maximum.
+    set :puma_threads, [0, 16]
+    set :puma_workers, 0
+  end
+end
+
+namespace :puma do
+  desc 'Setup Puma config file'
+  task :config do
+    on roles(fetch(:puma_role)) do
+      template 'puma.rb.erb', fetch(:puma_conf)
+    end
+  end
+
+
+  desc 'Start puma'
+  task :start do
+    on roles (fetch(:puma_role)) do
+      # within current_path do
+      execute "cd #{current_path} && #{fetch(:puma_cmd)} -C #{fetch(:puma_conf)}"
+      # end
+    end
+  end
+
+  %w[halt stop restart phased-restart status].each do |command|
+    desc "#{command} puma"
+    task command do
+      on roles (fetch(:puma_role)) do
+        # within current_path do
+        execute "cd #{current_path} && #{fetch(:pumactl_cmd)} -S #{fetch(:puma_state)} #{command}"
+        # end
+      end
+    end
+  end
+
+  task :dirty_hack do
+    #Dirty hack, these since cap v3 don't have _cset
+    #TODO Remove when fixed
+    set :puma_state, "#{shared_path}/tmp/puma/state"
+    set :puma_pid, "#{shared_path}/tmp/puma/pid"
+    set :puma_bind, "unix://#{shared_path}/tmp/puma/sock"
+    set :puma_conf, "#{shared_path}/config/puma.rb"
+    set :puma_access_log, "#{shared_path}/log/puma_error.log"
+    set :puma_error_log, "#{shared_path}/log/puma_access.log"
+  end
+
+
+  before :start, :dirty_hack
+  before :config, :dirty_hack
+  before :halt, :dirty_hack
+  before :stop, :dirty_hack
+  before :restart, :dirty_hack
+  before 'phased-restart', :dirty_hack
+  before :status, :dirty_hack
+
+
+end
+
+#load jungle tasks
+load File.expand_path('../jungle.cap', __FILE__)
+
+
+def template(from, to)
+  erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))
+  upload! StringIO.new(ERB.new(erb).result(binding)), to
+end

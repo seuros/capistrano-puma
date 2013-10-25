@@ -1,0 +1,60 @@
+namespace :load do
+  task :defaults do
+    set :puma_jungle_conf, '/etc/puma.conf'
+  end
+end
+
+#TODO support of other distros
+namespace :puma do
+  namespace :jungle do
+
+    desc 'Install Puma jungle'
+    task :install do
+      on roles(fetch(:puma_role)) do
+        template 'run-puma', "#{fetch(:tmp_dir)}/run-puma"
+        execute "chmod +x #{fetch(:tmp_dir)}/run-puma"
+
+        template 'puma', "#{fetch(:tmp_dir)}/puma"
+        execute "chmod +x #{fetch(:tmp_dir)}/puma"
+
+        sudo "mv #{fetch(:tmp_dir)}/run-puma /usr/local/bin/run-puma"
+        sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
+        sudo "update-rc.d -f puma defaults"
+        execute "touch #{fetch(:puma_jungle_conf)}"
+      end
+    end
+
+    desc 'Setup Puma config and install jungle script'
+    task :setup do
+      on roles(fetch(:puma_role)) do
+        invoke :config
+        invoke :install
+        invoke :add
+      end
+    end
+
+    desc 'Add current project to the jungle'
+    task :add do
+      on roles(fetch(:puma_role)) do
+        execute "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user)}"
+      end
+    end
+
+    desc 'Remove current project to the jungle'
+    task :remove do
+      on roles(fetch(:puma_role)) do
+        execute "/etc/init.d/puma remove '#{current_path}'"
+      end
+    end
+
+    %w[start stop restart status].each do |command|
+      desc "#{command} puma"
+      task command do
+        on roles(fetch(:puma_role)) do
+          sudo "service puma #{command} #{current_path}"
+        end
+      end
+    end
+
+  end
+end
