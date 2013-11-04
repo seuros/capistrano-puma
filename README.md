@@ -19,6 +19,7 @@ Or install it yourself as:
     # Capfile
 
         require 'capistrano/puma'
+        require 'capistrano/puma/jungle' #if you have need the jungle tasks
 
 
 
