@@ -5,25 +5,32 @@ end
 namespace :load do
   task :defaults do
     set :puma_role, :app
-    set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
-
+    set :puma_env, -> { fetch(:rack_env, fetch(:rails_env, 'production')) }
     # Configure "min" to be the minimum number of threads to use to answer
     # requests and "max" the maximum.
     set :puma_threads, [0, 16]
     set :puma_workers, 0
+    set :puma_state, -> { File.join(shared_path, "tmp", "puma.state") }
+    set :puma_pid,   -> { File.join(shared_path, "tmp", "puma.pid") }
+    set :puma_bind,  -> { File.join("unix://", shared_path, "tmp", "puma.sock") }
+    set :puma_conf,  -> { File.join(shared_path, "config", "puma.rb") }
+    set :puma_access_log, -> { File.join(shared_path, "log", "puma_error.log") }
+    set :puma_error_log,  -> { File.join(shared_path, "log", "puma_access.log") }
+
+    # Rbenv and RVM integration
     set :rbenv_map_bins, %w{ puma pumactl }
     set :rvm_map_bins, %w{ puma pumactl }
   end
 end
 
 namespace :puma do
+
   desc 'Setup Puma config file'
   task :config do
     on roles(fetch(:puma_role)) do
       template 'puma.rb.erb', fetch(:puma_conf)
     end
   end
-
 
   desc 'Start puma'
   task :start do
