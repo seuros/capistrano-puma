@@ -36,6 +36,11 @@ Configurable options, shown here with defaults:
     set :puma_threads, [0, 16]
     set :puma_workers, 0
 
+## Contributors
+
+@molfar
+
+
 ## Contributing
 
 1. Fork it
