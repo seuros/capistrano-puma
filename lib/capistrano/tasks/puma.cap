@@ -18,8 +18,8 @@ namespace :load do
     set :puma_error_log,  -> { File.join(shared_path, 'log', 'puma_access.log') }
 
     # Rbenv and RVM integration
-    set :rbenv_map_bins, %w{ puma pumactl }
-    set :rvm_map_bins, %w{ puma pumactl }
+    set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w{ puma pumactl })
+    set :rvm_map_bins, fetch(:rvm_map_bins).to_a.concat(%w{ puma pumactl })
   end
 end
 
