@@ -38,7 +38,7 @@ Configurable options, shown here with defaults:
 
 ## Contributors
 
-[molfar](@molfar)
+[molfar](https://github.com/molfar)
 
 
 ## Contributing
