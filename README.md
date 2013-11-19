@@ -10,21 +10,17 @@ And then execute:
 
     $ bundle
 
-
-
 ## Usage
 
     # Capfile
 
         require 'capistrano/puma'
-        require 'capistrano/puma/jungle' #if you have need the jungle tasks
+        require 'capistrano/puma/jungle' #if you need the jungle tasks
 
 
 
 Configurable options, shown here with defaults:
 
-    set :puma_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec puma"
-    set :pumactl_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec pumactl"
     set :puma_state, "#{shared_path}/tmp/pids/puma.state"
     set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
     set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
@@ -35,6 +31,12 @@ Configurable options, shown here with defaults:
     set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
     set :puma_threads, [0, 16]
     set :puma_workers, 0
+
+    For RVM users, it is advisable to set in your deploy.rb for now :
+       set :puma_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec puma"
+       set :pumactl_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec pumactl"
+
+
 
 ## Contributors
 

@@ -11,11 +11,11 @@ namespace :load do
     set :puma_threads, [0, 16]
     set :puma_workers, 0
     set :puma_state, -> { File.join(shared_path, 'tmp', 'pids', 'puma.state') }
-    set :puma_pid,   -> { File.join(shared_path, 'tmp', 'pids','puma.pid') }
-    set :puma_bind,  -> { File.join('unix://', shared_path, 'tmp', 'sockets', 'puma.sock') }
-    set :puma_conf,  -> { File.join(shared_path, 'config', 'puma.rb') }
+    set :puma_pid, -> { File.join(shared_path, 'tmp', 'pids', 'puma.pid') }
+    set :puma_bind, -> { File.join('unix://', shared_path, 'tmp', 'sockets', 'puma.sock') }
+    set :puma_conf, -> { File.join(shared_path, 'config', 'puma.rb') }
     set :puma_access_log, -> { File.join(shared_path, 'log', 'puma_error.log') }
-    set :puma_error_log,  -> { File.join(shared_path, 'log', 'puma_access.log') }
+    set :puma_error_log, -> { File.join(shared_path, 'log', 'puma_access.log') }
 
     # Rbenv and RVM integration
     set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w{ puma pumactl })
@@ -28,7 +28,7 @@ namespace :puma do
   desc 'Setup Puma config file'
   task :config do
     on roles(fetch(:puma_role)) do
-      template 'puma.rb.erb', fetch(:puma_conf)
+      template_puma 'puma.rb.erb', fetch(:puma_conf)
     end
   end
 
@@ -36,7 +36,12 @@ namespace :puma do
   task :start do
     on roles (fetch(:puma_role)) do
       within current_path do
-        execute :puma, "-C #{fetch(:puma_conf)}"
+        # RVM has issues with bundler
+        if  fetch(:puma_cmd)
+          execute "#{fetch(:puma_cmd)} -C #{fetch(:puma_conf)}"
+        else
+          execute :puma, "-C #{fetch(:puma_conf)}"
+        end
       end
     end
   end
@@ -46,15 +51,19 @@ namespace :puma do
     task command do
       on roles (fetch(:puma_role)) do
         within current_path do
-          execute :pumactl, "-S #{fetch(:puma_state)} #{command}"
+          # RVM has issues with bundler
+          if  fetch(:pumactl_cmd)
+            execute "#{fetch(:pumactl_cmd)} -S #{fetch(:puma_state)} #{command}"
+          else
+            execute :pumactl, "-S #{fetch(:puma_state)} #{command}"
+          end
         end
       end
     end
   end
 
-end
-
-def template(from, to)
-  erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))
-  upload! StringIO.new(ERB.new(erb).result(binding)), to
+  def template_puma(from, to)
+    erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))
+    upload! StringIO.new(ERB.new(erb).result(binding)), to
+  end
 end

@@ -11,10 +11,10 @@ namespace :puma do
     desc 'Install Puma jungle'
     task :install do
       on roles(fetch(:puma_role)) do
-        template 'run-puma', "#{fetch(:tmp_dir)}/run-puma"
+        template_puma 'run-puma', "#{fetch(:tmp_dir)}/run-puma"
         execute "chmod +x #{fetch(:tmp_dir)}/run-puma"
 
-        template 'puma', "#{fetch(:tmp_dir)}/puma"
+        template_puma 'puma', "#{fetch(:tmp_dir)}/puma"
         execute "chmod +x #{fetch(:tmp_dir)}/puma"
 
         sudo "mv #{fetch(:tmp_dir)}/run-puma /usr/local/bin/run-puma"
@@ -22,6 +22,15 @@ namespace :puma do
         sudo "update-rc.d -f puma defaults"
         execute "touch #{fetch(:puma_jungle_conf)}"
       end
+    end
+
+
+    task :debian_install do
+      #TODO
+    end
+
+    task :rhel_install do
+      #TODO
     end
 
     desc 'Setup Puma config and install jungle script'

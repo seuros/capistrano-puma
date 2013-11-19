@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name = 'capistrano-puma'
-  spec.version = '0.0.5'
+  spec.version = '0.0.6'
   spec.authors = ['Abdelkader Boudih']
   spec.email = ['Terminale@gmail.com']
   spec.description = %q{Puma integration for Capistrano}
