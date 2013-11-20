@@ -6,6 +6,10 @@ Add this line to your application's Gemfile:
 
     gem 'capistrano-puma', github: "seuros/capistrano-puma"
 
+or:
+
+    gem 'capistrano3-puma'
+
 And then execute:
 
     $ bundle
@@ -36,7 +40,14 @@ Configurable options, shown here with defaults:
        set :puma_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec puma"
        set :pumactl_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec pumactl"
 
+    For Jungle tasks, these options exist:
+       set :puma_jungle_conf, '/etc/puma.conf'
+       set :puma_run_path, '/usr/local/bin/run-puma'
 
+## Changelog
+
+0.0.7 : Gem pushed to rubygems as capistrano3-puma.
+0.0.7 : Support of Redhat based OS for Jungle init script.
 
 ## Contributors
 

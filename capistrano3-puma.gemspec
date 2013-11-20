@@ -8,9 +8,10 @@ Gem::Specification.new do |spec|
   spec.version = Capistrano::Puma::VERSION
   spec.authors = ['Abdelkader Boudih']
   spec.email = ['Terminale@gmail.com']
-  spec.description = %q{Puma integration for Capistrano}
+  spec.description = %q{Puma integration for Capistrano 3}
   spec.summary = %q{Puma integration for Capistrano}
   spec.homepage = 'https://github.com/seuros/capistrano-puma'
+  spec.license = 'MIT'
 
   spec.files = `git ls-files`.split($/)
   spec.require_paths = ['lib']
