@@ -1,58 +1,70 @@
 namespace :load do
   task :defaults do
     set :puma_jungle_conf, '/etc/puma.conf'
+    set :puma_run_path, '/usr/local/bin/run-puma'
   end
 end
 
-#TODO support of other distros
+
 namespace :puma do
   namespace :jungle do
 
     desc 'Install Puma jungle'
     task :install do
       on roles(fetch(:puma_role)) do
-        template_puma 'run-puma', "#{fetch(:tmp_dir)}/run-puma"
+        template_puma 'run-puma.erb', "#{fetch(:tmp_dir)}/run-puma"
         execute "chmod +x #{fetch(:tmp_dir)}/run-puma"
-
-        template_puma 'puma', "#{fetch(:tmp_dir)}/puma"
-        execute "chmod +x #{fetch(:tmp_dir)}/puma"
-
-        sudo "mv #{fetch(:tmp_dir)}/run-puma /usr/local/bin/run-puma"
-        sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
-        sudo "update-rc.d -f puma defaults"
-        execute "touch #{fetch(:puma_jungle_conf)}"
+        sudo "mv #{fetch(:tmp_dir)}/run-puma #{fetch(:puma_run_path)}"
+        if test "[ -f /etc/lsb-release ]"
+          #Debian flavor OS
+          debian_install
+        elsif test "[ -f /etc/redhat-release ]"
+          #RHEL flavor OS
+          rhel_install
+        else
+          #Some other OS
+          #TODO write in the error log
+          puts 'This task is not supported for your OS'
+        end
+        sudo "touch #{fetch(:puma_jungle_conf)}"
       end
     end
 
 
-    task :debian_install do
-      #TODO
+    def debian_install
+      template_puma 'puma-deb.erb', "#{fetch(:tmp_dir)}/puma"
+      execute "chmod +x #{fetch(:tmp_dir)}/puma"
+      sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
+      sudo "update-rc.d -f puma defaults"
+
     end
 
-    task :rhel_install do
-      #TODO
+    def rhel_install
+      template_puma 'puma-rpm.erb', "#{fetch(:tmp_dir)}/puma"
+      execute "chmod +x #{fetch(:tmp_dir)}/puma"
+      sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
+      sudo "chkconfig --add puma"
     end
+
 
     desc 'Setup Puma config and install jungle script'
     task :setup do
-      on roles(fetch(:puma_role)) do
-        invoke :config
-        invoke :install
-        invoke :add
-      end
+      invoke 'puma:config'
+      invoke 'puma:jungle:install'
+      invoke 'puma:jungle:add'
     end
 
     desc 'Add current project to the jungle'
     task :add do
-      on roles(fetch(:puma_role)) do
-        execute "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user)}"
+      on roles(fetch(:puma_role)) do|role|
+        sudo "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user, role.user)}"
       end
     end
 
-    desc 'Remove current project to the jungle'
+    desc 'Remove current project from the jungle'
     task :remove do
       on roles(fetch(:puma_role)) do
-        execute "/etc/init.d/puma remove '#{current_path}'"
+        sudo "/etc/init.d/puma remove '#{current_path}'"
       end
     end
 

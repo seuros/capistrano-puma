@@ -1,11 +1,10 @@
 # coding: utf-8
-# This file is kept for backward compatibility only.
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'capistrano/puma/version'
 
 Gem::Specification.new do |spec|
-  spec.name = 'capistrano-puma'
+  spec.name = 'capistrano3-puma'
   spec.version = Capistrano::Puma::VERSION
   spec.authors = ['Abdelkader Boudih']
   spec.email = ['Terminale@gmail.com']
