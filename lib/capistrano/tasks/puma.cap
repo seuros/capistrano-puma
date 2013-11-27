@@ -36,21 +36,50 @@ namespace :puma do
   task :start do
     on roles (fetch(:puma_role)) do
       within current_path do
-        execute :bundle, "exec puma -C #{fetch(:puma_conf)}"
+        execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)}"
       end
     end
   end
 
-  %w[halt stop restart phased-restart status].each do |command|
+  %w[halt stop phased-restart status].each do |command|
     desc "#{command} puma"
     task command do
       on roles (fetch(:puma_role)) do
         within current_path do
-          execute :bundle, "exec pumactl -S #{fetch(:puma_state)} #{command}"
+          execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
         end
       end
     end
   end
+
+  desc 'Restart puma'
+  task :restart do
+    on roles (fetch(:puma_role)) do
+      within current_path do
+        if test "[ -f #{fetch(:puma_state)} ]"
+          execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} restart"
+        else
+          # Puma is not running or state file is not present : Run it
+          # TODO check for pid
+          execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)}"
+        end
+      end
+    end
+  end
+
+
+  task :check do
+    on roles (fetch(:puma_role)) do
+      #Create puma.rb for new deployments
+      unless  test "[ -f #{fetch(:puma_conf)} ]"
+        warn 'puma.rb NOT FOUND!'
+        #TODO DRY
+        template_puma 'puma.rb.erb', fetch(:puma_conf)
+        info 'puma.rb generated'
+      end
+    end
+  end
+  before 'deploy:check', 'puma:check'
 
   def template_puma(from, to)
     erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))

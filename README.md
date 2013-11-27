@@ -36,23 +36,19 @@ Configurable options, shown here with defaults:
     set :puma_threads, [0, 16]
     set :puma_workers, 0
 
-    For RVM users, it is advisable to set in your deploy.rb for now :
-       set :puma_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec puma"
-       set :pumactl_cmd, "#{fetch(:bundle_cmd, 'bundle')} exec pumactl"
-
-    For Jungle tasks, these options exist:
+    For Jungle tasks (beta), these options exist:
        set :puma_jungle_conf, '/etc/puma.conf'
        set :puma_run_path, '/usr/local/bin/run-puma'
 
 ## Changelog
 
-0.0.7 : Gem pushed to rubygems as capistrano3-puma.
-0.0.7 : Support of Redhat based OS for Jungle init script.
+0.0.8: puma.rb is automatically generated if not present. Fixed RVM issue.
+0.0.7: Gem pushed to rubygems as capistrano3-puma. Support of Redhat based OS for Jungle init script.
 
 ## Contributors
 
 [molfar](https://github.com/molfar)
-
+[ayaya](https://github.com/ayamomiji)
 
 ## Contributing
 
