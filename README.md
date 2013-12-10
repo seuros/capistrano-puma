@@ -47,6 +47,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
 ## Changelog
 
+- 0.1.0: Phased restart will be used if puma is in cluster mode
 - 0.0.9: puma.rb location changed to shared_path root. puma:check moved to after deploy:check
 - 0.0.8: puma.rb is automatically generated if not present. Fixed RVM issue.
 - 0.0.7: Gem pushed to rubygems as capistrano3-puma. Support of Redhat based OS for Jungle init script.
@@ -55,6 +56,8 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
 [molfar](https://github.com/molfar)
 [ayaya](https://github.com/ayamomiji)
+[Shane O'Grady](https://github.com/shaneog)
+
 
 ## Contributing
 

@@ -9,5 +9,5 @@ stdout_redirect '<%=fetch(:puma_access_log)%>', '<%=fetch(:puma_error_log)%>', t
 threads <%=fetch(:puma_threads).join(',')%>
 bind "<%=fetch(:puma_bind)%>"
 
-workers <%=fetch(:puma_workers)%>
+workers <%= puma_workers %>
 preload_app!

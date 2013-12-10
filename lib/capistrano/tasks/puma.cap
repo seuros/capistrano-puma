@@ -1,5 +1,5 @@
 namespace :deploy do
-  after :finished, 'puma:restart'
+  after :finished, 'puma:smart_restart'
 end
 
 namespace :load do
@@ -80,6 +80,23 @@ namespace :puma do
     end
   end
   after 'deploy:check', 'puma:check'
+
+  task :smart_restart do
+    if  puma_workers.to_i > 1
+      invoke 'puma:phased-restart'
+    else
+      invoke 'puma:restart'
+    end
+  end
+
+  def processors_count
+    #TODO , will be used to warn if # of workers is > of available cores
+    capture 'grep -c processor /proc/cpuinfo'
+  end
+
+  def puma_workers
+    fetch(:puma_workers) || 0
+  end
 
   def template_puma(from, to)
     erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))
