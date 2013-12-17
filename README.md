@@ -1,5 +1,10 @@
 # Capistrano::Puma
 
+How this gem works currently: 
+```Currently this gem reads from the puma.rb file located in your shared directory. It will currently ignore any puma.rb files inside of staging specific folders or in the config directory. If it does not find a puma.rb file in the staging directory it will generate one. You must start puma initially with bundle exec cap $stage puma:start before a cap deploy will work, this is a bug which will be resolved shortly. The next version of this gem will support monit directly as well. 
+
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -22,6 +27,7 @@ And then execute:
     require 'capistrano/puma/jungle' #if you need the jungle tasks
 ```
 
+The following options are only needed if you are working in a constrained environment. For instance on a machine on which you do not have root and you only have certain paths available to you. These settings are NOT needed on a regular installation think of them more as overrides. If you do have need of them put them in your deploy.rb
 
 Configurable options, shown here with defaults:
 ```ruby
