@@ -1,5 +1,7 @@
 # Capistrano::Puma
 
+In the current version the gem will expect a puma.rb in the shared directory, if it does not find puma.rb in the expected place it will automatically generate one with sane defaults. Keep in mind this means a puma.rb in the config directory or subdirectories will be ignored. During preparation for deployment you must start the process initially with bundle exec cap $stage puma:start , after starting the process bundle exec cap $stage deploy will work without hanging. The need to start the process initially will be addressed in a future release. Monit support will be added in the next release as well. 
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -23,7 +25,8 @@ And then execute:
 ```
 
 
-Configurable options, shown here with defaults:
+Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file. 
+
 ```ruby
     set :puma_state, "#{shared_path}/tmp/pids/puma.state"
     set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
