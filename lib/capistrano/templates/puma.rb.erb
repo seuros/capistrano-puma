@@ -11,3 +11,9 @@ bind "<%=fetch(:puma_bind)%>"
 
 workers <%= puma_workers %>
 preload_app!
+
+on_restart do
+  puts 'On restart...Refresh ENV["BUNDLE_GEMFILE"]'
+  ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile, "#{release_path}/Gemfile") %>"
+end
+
