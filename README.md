@@ -50,6 +50,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
 ## Changelog
 
+- 0.1.2: Gemfile are refreshed between deploys now
 - 0.1.1: Initial support for Monit and configuration override added.
 - 0.1.0: Phased restart will be used if puma is in cluster mode
 - 0.0.9: puma.rb location changed to shared_path root. puma:check moved to after deploy:check
@@ -58,6 +59,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
 ## Contributors
 
+- [Ruohan Chen] (https://github.com/crhan)
 - [molfar](https://github.com/molfar)
 - [ayaya](https://github.com/ayamomiji)
 - [Shane O'Grady](https://github.com/shaneog)
