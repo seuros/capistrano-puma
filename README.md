@@ -1,6 +1,6 @@
 # Capistrano::Puma
 
-In the current version the gem will expect a puma.rb in the shared directory, if it does not find puma.rb in the expected place it will automatically generate one with sane defaults. Keep in mind this means a puma.rb in the config directory or subdirectories will be ignored. During preparation for deployment you must start the process initially with bundle exec cap $stage puma:start , after starting the process bundle exec cap $stage deploy will work without hanging. The need to start the process initially will be addressed in a future release. Monit support will be added in the next release as well. 
+In the current version the gem will expect a puma.rb in the shared directory, if it does not find puma.rb in the expected place it will automatically generate one with sane defaults. Keep in mind this means a puma.rb in the config directory or subdirectories will be ignored. During preparation for deployment you must start the process initially with bundle exec cap $stage puma:start , after starting the process bundle exec cap $stage deploy will work without hanging. The need to start the process initially will be addressed in a future release.
 
 ## Installation
 
@@ -50,6 +50,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
 ## Changelog
 
+- 0.1.1: Initial support for Monit and configuration override added.
 - 0.1.0: Phased restart will be used if puma is in cluster mode
 - 0.0.9: puma.rb location changed to shared_path root. puma:check moved to after deploy:check
 - 0.0.8: puma.rb is automatically generated if not present. Fixed RVM issue.
@@ -57,9 +58,9 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
 ## Contributors
 
-[molfar](https://github.com/molfar)
-[ayaya](https://github.com/ayamomiji)
-[Shane O'Grady](https://github.com/shaneog)
+- [molfar](https://github.com/molfar)
+- [ayaya](https://github.com/ayamomiji)
+- [Shane O'Grady](https://github.com/shaneog)
 
 
 ## Contributing

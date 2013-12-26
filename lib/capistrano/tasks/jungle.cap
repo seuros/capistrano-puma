@@ -11,20 +11,20 @@ namespace :puma do
 
     desc 'Install Puma jungle'
     task :install do
-      on roles(fetch(:puma_role)) do
-        template_puma 'run-puma.erb', "#{fetch(:tmp_dir)}/run-puma"
+      on roles(fetch(:puma_role)) do |role|
+        @role = role
+        template_puma 'run-puma', "#{fetch(:tmp_dir)}/run-puma", role
         execute "chmod +x #{fetch(:tmp_dir)}/run-puma"
         sudo "mv #{fetch(:tmp_dir)}/run-puma #{fetch(:puma_run_path)}"
-        if test "[ -f /etc/lsb-release ]"
+        if test '[ -f /etc/lsb-release ]'
           #Debian flavor OS
           debian_install
-        elsif test "[ -f /etc/redhat-release ]"
+        elsif test '[ -f /etc/redhat-release ]'
           #RHEL flavor OS
           rhel_install
         else
           #Some other OS
-          #TODO write in the error log
-          puts 'This task is not supported for your OS'
+          error 'This task is not supported for your OS'
         end
         sudo "touch #{fetch(:puma_jungle_conf)}"
       end
@@ -32,18 +32,18 @@ namespace :puma do
 
 
     def debian_install
-      template_puma 'puma-deb.erb', "#{fetch(:tmp_dir)}/puma"
+      template_puma 'puma-deb', "#{fetch(:tmp_dir)}/puma", @role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
       sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
-      sudo "update-rc.d -f puma defaults"
+      sudo 'update-rc.d -f puma defaults'
 
     end
 
     def rhel_install
-      template_puma 'puma-rpm.erb', "#{fetch(:tmp_dir)}/puma"
+      template_puma 'puma-rpm', "#{fetch(:tmp_dir)}/puma" , @role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
       sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
-      sudo "chkconfig --add puma"
+      sudo 'chkconfig --add puma'
     end
 
 
