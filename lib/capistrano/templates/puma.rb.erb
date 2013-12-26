@@ -14,6 +14,6 @@ preload_app!
 
 on_restart do
   puts 'On restart...Refresh ENV["BUNDLE_GEMFILE"]'
-  ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile, "#{release_path}/Gemfile") %>"
+  ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile, "#{current_path}/Gemfile") %>"
 end
 
