@@ -27,8 +27,8 @@ namespace :puma do
 
   desc 'Setup Puma config file'
   task :config do
-    on roles(fetch(:puma_role)) do
-      template_puma 'puma.rb.erb', fetch(:puma_conf)
+    on roles(fetch(:puma_role)) do |role|
+      template_puma 'puma', fetch(:puma_conf), role
     end
   end
 
@@ -57,7 +57,7 @@ namespace :puma do
     on roles (fetch(:puma_role)) do
       within current_path do
         if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
-          # NOTE pid exist but state file lost is none sence, so ignore that case
+          # NOTE pid exist but state file is none sence, so ignore that case
           execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} restart"
         else
           # Puma is not running or state file is not present : Run it
@@ -69,12 +69,12 @@ namespace :puma do
 
 
   task :check do
-    on roles (fetch(:puma_role)) do
+    on roles (fetch(:puma_role)) do |role|
       #Create puma.rb for new deployments
       unless  test "[ -f #{fetch(:puma_conf)} ]"
         warn 'puma.rb NOT FOUND!'
         #TODO DRY
-        template_puma 'puma.rb.erb', fetch(:puma_conf)
+        template_puma 'puma', fetch(:puma_conf), role
         info 'puma.rb generated'
       end
     end
@@ -89,17 +89,26 @@ namespace :puma do
     end
   end
 
-  def processors_count
-    #TODO , will be used to warn if # of workers is > of available cores
-    capture 'grep -c processor /proc/cpuinfo'
-  end
-
   def puma_workers
     fetch(:puma_workers) || 0
   end
 
-  def template_puma(from, to)
-    erb = File.read(File.expand_path("../../templates/#{from}", __FILE__))
-    upload! StringIO.new(ERB.new(erb).result(binding)), to
+  def template_puma(from, to, role)
+    [
+        "lib/capistrano/templates/#{from}-#{role.hostname}-#{fetch(:stage)}.rb",
+        "lib/capistrano/templates/#{from}-#{role.hostname}.rb",
+        "lib/capistrano/templates/#{from}-#{fetch(:stage)}.rb",
+        "lib/capistrano/templates/#{from}.rb.erb",
+        "lib/capistrano/templates/#{from}.rb",
+        "lib/capistrano/templates/#{from}.erb",
+        File.expand_path("../../templates/#{from}.erb", __FILE__)
+    ].each do |path|
+      if File.file?(path)
+        erb = File.read(path)
+        upload! StringIO.new(ERB.new(erb).result(binding)), to
+        break
+      end
+    end
   end
+
 end

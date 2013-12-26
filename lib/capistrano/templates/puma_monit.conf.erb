@@ -1,0 +1,10 @@
+# Monit configuration for Puma
+# Service name: <%= puma_monit_service_name %>
+#
+check process <%= puma_monit_service_name %>
+ with pidfile "<%= fetch(:puma_pid) %>"
+ start program = "/bin/su <%= @role.user %> -c 'source $HOME/.bashrc && cd <%= current_path %> && bundle exec puma -C <%= fetch(:puma_conf) %>'"
+ stop program = "/bin/su <%= @role.user %> -c 'source $HOME/.bashrc && cd <%= current_path %> && bundle exec pumactl -S <%= fetch(:puma_state) %> stop'"
+
+
+
