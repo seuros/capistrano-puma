@@ -6,7 +6,7 @@ In the current version the gem will expect a puma.rb in the shared directory, if
 
 Add this line to your application's Gemfile:
 
-    gem 'capistrano-puma', github: "seuros/capistrano-puma"
+    gem 'capistrano3-puma', github: "seuros/capistrano-puma"
 
 or:
 
@@ -22,6 +22,7 @@ And then execute:
 
     require 'capistrano/puma'
     require 'capistrano/puma/jungle' #if you need the jungle tasks
+    require 'capistrano/puma/monit' #if you need the monit tasks
 ```
 
 
@@ -50,6 +51,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
 ## Changelog
 
+- 0.1.3: Capistrano 3.1 support
 - 0.1.2: Gemfile are refreshed between deploys now
 - 0.1.1: Initial support for Monit and configuration override added.
 - 0.1.0: Phased restart will be used if puma is in cluster mode
