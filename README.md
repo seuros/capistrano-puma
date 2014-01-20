@@ -39,6 +39,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
     set :puma_threads, [0, 16]
     set :puma_workers, 0
+    set :puma_active_record_establish_connection, false
 ```
 For Jungle tasks (beta), these options exist:
 ```ruby
