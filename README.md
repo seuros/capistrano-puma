@@ -39,7 +39,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
     set :puma_threads, [0, 16]
     set :puma_workers, 0
-    set :puma_active_record_establish_connection, false
+    set :puma_init_active_record, false
 ```
 For Jungle tasks (beta), these options exist:
 ```ruby
@@ -52,6 +52,8 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
 ## Changelog
 
+- 0.2.0: Support for puma `ActiveRecord::Base.establish_connection` on
+  boot
 - 0.1.3: Capistrano 3.1 support
 - 0.1.2: Gemfile are refreshed between deploys now
 - 0.1.1: Initial support for Monit and configuration override added.

@@ -12,7 +12,7 @@ namespace :load do
     set :puma_conf, -> { File.join(shared_path, 'puma.rb') }
     set :puma_access_log, -> { File.join(shared_path, 'log', 'puma_error.log') }
     set :puma_error_log, -> { File.join(shared_path, 'log', 'puma_access.log') }
-    set :puma_active_record_establish_connection, false
+    set :puma_init_active_record, false
 
     # Rbenv and RVM integration
     set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w{ puma pumactl })
