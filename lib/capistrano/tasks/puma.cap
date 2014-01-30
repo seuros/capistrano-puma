@@ -33,7 +33,9 @@ namespace :puma do
   task :start do
     on roles (fetch(:puma_role)) do
       within current_path do
-        execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)}"
+        with rack_env: fetch(:puma_env) do
+          execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)}"
+        end
       end
     end
   end
@@ -43,7 +45,9 @@ namespace :puma do
     task command do
       on roles (fetch(:puma_role)) do
         within current_path do
-          execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
+          with rack_env: fetch(:puma_env) do
+            execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
+          end
         end
       end
     end
@@ -55,12 +59,14 @@ namespace :puma do
     task command do
       on roles (fetch(:puma_role)) do
         within current_path do
-          if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
-            # NOTE pid exist but state file is nonsense, so ignore that case
-            execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
-          else
-            # Puma is not running or state file is not present : Run it
-            execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)}"
+          with rack_env: fetch(:puma_env) do
+            if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
+              # NOTE pid exist but state file is nonsense, so ignore that case
+              execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
+            else
+              # Puma is not running or state file is not present : Run it
+              execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)}"
+            end
           end
         end
       end
