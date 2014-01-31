@@ -30,6 +30,17 @@ namespace :puma do
     end
   end
 
+  desc 'check for linked_dirs config'
+  task :config_test do
+    class Array
+      def contains? other; (self & other) == other end
+    end
+    unless fetch(:linked_dirs, []).contains? %w{tmp/pids tmp/sockets log}
+      raise RuntimeError, 'Please add %w{tmp/pids tmp/sockets log} to your `linked_dirs` setting'
+    end
+  end
+  before 'deploy:finished', 'puma:config_test'
+
   desc 'Start puma'
   task :start do
     on roles (fetch(:puma_role)) do
