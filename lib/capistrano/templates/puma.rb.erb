@@ -10,10 +10,12 @@ threads <%=fetch(:puma_threads).join(',')%>
 bind "<%=fetch(:puma_bind)%>"
 
 workers <%= puma_workers %>
+<% if fetch(:puma_preload_app) %>
 preload_app!
+<% end %>
 
 on_restart do
-  puts 'On restart...Refresh ENV["BUNDLE_GEMFILE"]'
+  puts 'Refreshing Gemfile'
   ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile, "#{current_path}/Gemfile") %>"
 end
 

@@ -40,6 +40,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_threads, [0, 16]
     set :puma_workers, 0
     set :puma_init_active_record, false
+    set :puma_preload_app, true
 ```
 For Jungle tasks (beta), these options exist:
 ```ruby
@@ -51,7 +52,8 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
-
+- 0.2.2: Application pre-loading is optional now (set puma_preload_app to false to turn it off)
+- 0.2.1: Tasks are run within rack context
 - 0.2.0: Support for puma `ActiveRecord::Base.establish_connection` on
   boot
 - 0.1.3: Capistrano 3.1 support
@@ -61,6 +63,9 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 - 0.0.9: puma.rb location changed to shared_path root. puma:check moved to after deploy:check
 - 0.0.8: puma.rb is automatically generated if not present. Fixed RVM issue.
 - 0.0.7: Gem pushed to rubygems as capistrano3-puma. Support of Redhat based OS for Jungle init script.
+
+## TODO
+- Support to https://github.com/puma/puma/pull/399 with puma:workers:more, puma:workers:less
 
 ## Contributors
 
