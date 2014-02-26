@@ -21,6 +21,7 @@ And then execute:
     # Capfile
 
     require 'capistrano/puma'
+    require 'capistrano/puma/workers' #if you want to control the workers (in cluster mode)
     require 'capistrano/puma/jungle' #if you need the jungle tasks
     require 'capistrano/puma/monit' #if you need the monit tasks
 ```
@@ -29,6 +30,7 @@ And then execute:
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file. 
 
 ```ruby
+    set :puma_rack_up, -> { File.join(current_path, 'config.ru') }
     set :puma_state, "#{shared_path}/tmp/pids/puma.state"
     set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
     set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
@@ -52,6 +54,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.3.0: Initial support for puma signals
 - 0.2.2: Application pre-loading is optional now (set puma_preload_app to false to turn it off)
 - 0.2.1: Tasks are run within rack context
 - 0.2.0: Support for puma `ActiveRecord::Base.establish_connection` on

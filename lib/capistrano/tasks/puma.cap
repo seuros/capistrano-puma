@@ -1,11 +1,12 @@
 namespace :load do
   task :defaults do
     set :puma_role, :app
-    set :puma_env, -> { fetch(:rack_env, fetch(:rails_env, 'production')) }
+    set :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
     # Configure "min" to be the minimum number of threads to use to answer
     # requests and "max" the maximum.
     set :puma_threads, [0, 16]
     set :puma_workers, 0
+    set :puma_rack_up, -> { File.join(current_path, 'config.ru') }
     set :puma_state, -> { File.join(shared_path, 'tmp', 'pids', 'puma.state') }
     set :puma_pid, -> { File.join(shared_path, 'tmp', 'pids', 'puma.pid') }
     set :puma_bind, -> { File.join('unix://', shared_path, 'tmp', 'sockets', 'puma.sock') }
@@ -41,7 +42,7 @@ namespace :puma do
     end
   end
 
-  %w[halt stop status].each do |command|
+  %w[halt stop status].map do |command|
     desc "#{command} puma"
     task command do
       on roles (fetch(:puma_role)) do
@@ -54,8 +55,7 @@ namespace :puma do
     end
   end
 
-
-  %w[phased-restart restart].each do |command|
+  %w[phased-restart restart].map do |command|
     desc "#{command} puma"
     task command do
       on roles (fetch(:puma_role)) do
@@ -73,7 +73,6 @@ namespace :puma do
       end
     end
   end
-
 
   task :check do
     on roles (fetch(:puma_role)) do |role|
@@ -96,6 +95,7 @@ namespace :puma do
     end
   end
   after 'deploy:finished', 'puma:smart_restart'
+
 
   def puma_workers
     fetch(:puma_workers) || 0

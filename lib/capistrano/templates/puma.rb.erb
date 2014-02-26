@@ -1,6 +1,7 @@
 #!/usr/bin/env puma
 
 directory '<%= current_path %>'
+rackup "<%=fetch(:puma_rackup)%>"
 environment '<%= fetch(:puma_env) %>'
 daemonize true
 pidfile "<%=fetch(:puma_pid)%>"

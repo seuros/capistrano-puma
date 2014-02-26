@@ -131,7 +131,7 @@ do_restart_one() {
 	dir=`echo $i | cut -d , -f 1`
 	if [ -e $PIDFILE ]; then
 		log_daemon_msg "--> About to restart puma $1"
-		pumactl --state $dir/tmp/pigs/puma.state restart
+		pumactl --state $dir/tmp/pids/puma.state restart
 
 	else
 		log_daemon_msg "--> Your puma was never playing... Let's get it out there first"
