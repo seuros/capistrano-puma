@@ -16,12 +16,12 @@ namespace :puma do
         template_puma 'run-puma', "#{fetch(:tmp_dir)}/run-puma", role
         execute "chmod +x #{fetch(:tmp_dir)}/run-puma"
         sudo "mv #{fetch(:tmp_dir)}/run-puma #{fetch(:puma_run_path)}"
-        if test '[ -f /etc/lsb-release ]'
-          #Debian flavor OS
-          debian_install
-        elsif test '[ -f /etc/redhat-release ]'
+        if test '[ -f /etc/redhat-release ]'
           #RHEL flavor OS
           rhel_install
+        elsif test '[ -f /etc/lsb-release ]'
+          #Debian flavor OS
+          debian_install
         else
           #Some other OS
           error 'This task is not supported for your OS'
