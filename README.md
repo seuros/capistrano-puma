@@ -30,7 +30,7 @@ And then execute:
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file. 
 
 ```ruby
-    set :puma_rack_up, -> { File.join(current_path, 'config.ru') }
+    set :puma_rackup, -> { File.join(current_path, 'config.ru') }
     set :puma_state, "#{shared_path}/tmp/pids/puma.state"
     set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
     set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
@@ -54,6 +54,8 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.3.2: Tag option support (require puma  2.8.2+)
+- 0.3.1: Typo fix
 - 0.3.0: Initial support for puma signals
 - 0.2.2: Application pre-loading is optional now (set puma_preload_app to false to turn it off)
 - 0.2.1: Tasks are run within rack context
@@ -68,7 +70,6 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 - 0.0.7: Gem pushed to rubygems as capistrano3-puma. Support of Redhat based OS for Jungle init script.
 
 ## TODO
-- Support to https://github.com/puma/puma/pull/399 with puma:workers:more, puma:workers:less
 
 ## Contributors
 
