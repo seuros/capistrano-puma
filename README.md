@@ -54,6 +54,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.3.3: Puma jungle start fix
 - 0.3.2: Tag option support (require puma  2.8.2+)
 - 0.3.1: Typo fix
 - 0.3.0: Initial support for puma signals
