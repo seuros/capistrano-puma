@@ -15,6 +15,7 @@ namespace :load do
     set :puma_error_log, -> { File.join(shared_path, 'log', 'puma_access.log') }
     set :puma_init_active_record, false
     set :puma_preload_app, true
+    set :puma_linked_dirs, %w{tmp/pids tmp/sockets log}
 
     # Rbenv and RVM integration
     set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w{ puma pumactl })
@@ -75,6 +76,13 @@ namespace :puma do
   end
 
   task :check do
+    # linked_dirs config check
+    require 'set'
+    unless fetch(:linked_dirs, []).to_set.superset? fetch(:puma_linked_dirs).to_set
+      raise RuntimeError, 'Please add %w{tmp/pids tmp/sockets log} to your `linked_dirs` setting'
+    end
+
+    # check and generate puma config file
     on roles (fetch(:puma_role)) do |role|
       #Create puma.rb for new deployments
       unless  test "[ -f #{fetch(:puma_conf)} ]"
