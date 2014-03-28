@@ -52,6 +52,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.3.6: Dependency bug fix
 - 0.3.5: Fixed a prehistoric bug
 - 0.3.4: I don't remember what i did here
 - 0.3.3: Puma jungle start fix
