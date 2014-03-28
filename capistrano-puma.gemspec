@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage = 'https://github.com/seuros/capistrano-puma'
   spec.license = 'MIT'
 
-  spec.required_ruby_version = '~> 1.9.3'
+  # spec.required_ruby_version = '~> 1.9.3'
 
   spec.files = `git ls-files`.split($/)
   spec.require_paths = ['lib']
