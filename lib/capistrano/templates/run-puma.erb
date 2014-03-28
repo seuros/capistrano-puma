@@ -1,2 +1,9 @@
 #!/bin/bash
-cd $1 && exec bundle exec puma -C config/puma.rb
+app=$1;
+cd $app || exit 1
+
+if [ -e Gemfile ]; then
+    exec sh -c "exec bundle exec puma -C ../../shared/config/puma.rb"
+else
+    exec sh -c "exec puma -C ../../shared/config/puma.rb"
+fi

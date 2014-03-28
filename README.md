@@ -1,7 +1,5 @@
 # Capistrano::Puma
 
-In the current version the gem will expect a puma.rb in the shared directory, if it does not find puma.rb in the expected place it will automatically generate one with sane defaults. Keep in mind this means a puma.rb in the config directory or subdirectories will be ignored. During preparation for deployment you must start the process initially with bundle exec cap $stage puma:start , after starting the process bundle exec cap $stage deploy will work without hanging. The need to start the process initially will be addressed in a future release.
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -54,6 +52,8 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.3.5: Fixed a prehistoric bug
+- 0.3.4: I don't remember what i did here
 - 0.3.3: Puma jungle start fix
 - 0.3.2: Tag option support (require puma  2.8.2+)
 - 0.3.1: Typo fix
