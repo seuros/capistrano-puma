@@ -31,7 +31,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_rackup, -> { File.join(current_path, 'config.ru') }
     set :puma_state, "#{shared_path}/tmp/pids/puma.state"
     set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
-    set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
+    set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"    #accept array for multi-bind
     set :puma_conf, "#{shared_path}/puma.rb"
     set :puma_access_log, "#{shared_path}/log/puma_error.log"
     set :puma_error_log, "#{shared_path}/log/puma_access.log"
@@ -52,6 +52,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.4.0: Multi-bind support
 - 0.3.7: Dependency bug fix
 - 0.3.5: Fixed a prehistoric bug
 - 0.3.4: I don't remember what i did here

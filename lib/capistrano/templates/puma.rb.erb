@@ -11,7 +11,8 @@ stdout_redirect '<%=fetch(:puma_access_log)%>', '<%=fetch(:puma_error_log)%>', t
 
 
 threads <%=fetch(:puma_threads).join(',')%>
-bind "<%=fetch(:puma_bind)%>"
+
+<%= puma_bind %>
 
 
 workers <%= puma_workers %>

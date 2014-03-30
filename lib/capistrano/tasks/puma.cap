@@ -124,6 +124,17 @@ namespace :puma do
     end
   end
 
+  def puma_bind
+    case fetch(:puma_bind)
+      when Array
+        fetch(:puma_bind).collect do |bind|
+          "bind #{bind}"
+        end.join("\n")
+      else
+        "bind #{fetch(:puma_bind)}"
+    end
+  end
+
   def template_puma(from, to, role)
     [
         "lib/capistrano/templates/#{from}-#{role.hostname}-#{fetch(:stage)}.rb",
