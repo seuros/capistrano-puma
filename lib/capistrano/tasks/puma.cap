@@ -128,7 +128,7 @@ namespace :puma do
     case fetch(:puma_bind)
       when Array
         fetch(:puma_bind).collect do |bind|
-          "'bind #{bind}'"
+          "bind '#{bind}'"
         end.join("\n")
       else
         "bind '#{fetch(:puma_bind)}'"
