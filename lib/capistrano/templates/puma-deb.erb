@@ -127,7 +127,7 @@ do_restart_one() {
   PIDFILE=$1/tmp/pids/puma.pid
   i=`grep $1 $CONFIG`
   dir=`echo $i | cut -d , -f 1`
-  
+
   if [ -e $PIDFILE ]; then
     log_daemon_msg "--> About to restart puma $1"
     su - $2 -c "pumactl --state $dir/tmp/pids/puma.state restart"
@@ -138,9 +138,9 @@ do_restart_one() {
     user=`echo $i | cut -d , -f 2`
     config_file=`echo $i | cut -d , -f 3`
     if [ "$config_file" = "" ]; then
-    config_file="$dir/config/puma.rb"
-    do_start_one $dir $user $config_file
-  fi
+      config_file="$dir/config/puma.rb"
+      do_start_one $dir $user $config_file
+    fi
     log_file=`echo $i | cut -d , -f 4`
     if [ "$log_file" = "" ]; then
       log_file="$dir/log/puma.log"
@@ -168,7 +168,7 @@ do_status_one() {
   PIDFILE=$1/tmp/pids/puma.pid
   i=`grep $1 $CONFIG`
   dir=`echo $i | cut -d , -f 1`
-  
+
   if [ -e $PIDFILE ]; then
     log_daemon_msg "--> About to status puma $1"
 
@@ -234,39 +234,40 @@ do_remove() {
 
 case "$1" in
   start)
-[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
-if [ "$#" -eq 1 ]; then
-  do_start
-else
-  i=`grep $2 $CONFIG`
-  dir=`echo $i | cut -d , -f 1`
-  user=`echo $i | cut -d , -f 2`
-  config_file=`echo $i | cut -d , -f 3`
-  if [ "$config_file" = "" ]; then
-  config_file="$dir/config/puma.rb"
+    [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+    if [ "$#" -eq 1 ]; then
+      do_start
+    else
+      i=`grep $2 $CONFIG`
+      dir=`echo $i | cut -d , -f 1`
+      user=`echo $i | cut -d , -f 2`
+      config_file=`echo $i | cut -d , -f 3`
+      if [ "$config_file" = "" ]; then
+        config_file="$dir/config/puma.rb"
 
-  do_start_one $dir $user $config_file
-fi
-case "$?" in
-  0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-esac
-;;
-stop)
-[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
-if [ "$#" -eq 1 ]; then
-  do_stop
-else
-  i=`grep $2 $CONFIG`
-  dir=`echo $i | cut -d , -f 1`
-  do_stop_one $dir
-fi
-case "$?" in
-  0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-esac
-;;
-status)
+        do_start_one $dir $user $config_file
+      fi
+      case "$?" in
+        0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+        2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+      esac
+    fi
+  ;;
+  stop)
+    [ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+    if [ "$#" -eq 1 ]; then
+      do_stop
+    else
+      i=`grep $2 $CONFIG`
+      dir=`echo $i | cut -d , -f 1`
+      do_stop_one $dir
+    fi
+    case "$?" in
+      0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+      2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+    esac
+  ;;
+  status)
     # TODO Implement.
     log_daemon_msg "Status $DESC" "$NAME"
     if [ "$#" -eq 1 ]; then
@@ -278,57 +279,58 @@ status)
     fi
     case "$?" in
       0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-esac
-;;
-restart)
-log_daemon_msg "Restarting $DESC" "$NAME"
-if [ "$#" -eq 1 ]; then
-  do_restart
-else
-  i=`grep $2 $CONFIG`
-  dir=`echo $i | cut -d , -f 1`
-  do_restart_one $dir
-fi
-case "$?" in
-  0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-esac
-;;
-add)
-if [ "$#" -lt 3 ]; then
-  echo "Please, specifiy the app's directory and the user that will run it at least."
-  echo " Usage: $SCRIPTNAME add /path/to/app user /path/to/app/config/puma.rb /path/to/app/config/log/puma.log"
-  echo " config and log are optionals."
-  exit 1
-else
-  do_add $2 $3 $4 $5
-fi
-case "$?" in
-  0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-esac
-;;
-remove)
-if [ "$#" -lt 2 ]; then
-  echo "Please, specifiy the app's directory to remove."
-  exit 1
-else
-  do_remove $2
-fi
-case "$?" in
-  0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-esac
-;;
-*)
-echo "Usage:" >&2
-echo " Run the jungle: $SCRIPTNAME {start|stop|status|restart}" >&2
-echo " Add a Puma: $SCRIPTNAME add /path/to/app user /path/to/app/config/puma.rb /path/to/app/config/log/puma.log"
-echo " config and log are optionals."
-echo " Remove a Puma: $SCRIPTNAME remove /path/to/app"
-echo " On a Puma: $SCRIPTNAME {start|stop|status|restart} PUMA-NAME" >&2
-exit 3
-;;
+      2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+    esac
+  ;;
+  restart)
+    log_daemon_msg "Restarting $DESC" "$NAME"
+    if [ "$#" -eq 1 ]; then
+      do_restart
+    else
+      i=`grep $2 $CONFIG`
+      dir=`echo $i | cut -d , -f 1`
+      do_restart_one $dir
+    fi
+    case "$?" in
+      0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+      2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+    esac
+  ;;
+  add)
+    if [ "$#" -lt 3 ]; then
+      echo "Please, specifiy the app's directory and the user that will run it at least."
+      echo " Usage: $SCRIPTNAME add /path/to/app user /path/to/app/config/puma.rb /path/to/app/config/log/puma.log"
+      echo " config and log are optionals."
+      exit 1
+    else
+      do_add $2 $3 $4 $5
+    fi
+    case "$?" in
+      0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+      2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+    esac
+  ;;
+  remove)
+    if [ "$#" -lt 2 ]; then
+      echo "Please, specifiy the app's directory to remove."
+      exit 1
+    else
+      do_remove $2
+    fi
+    case "$?" in
+      0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+      2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+    esac
+  ;;
+  *)
+    echo "Usage:" >&2
+    echo " Run the jungle: $SCRIPTNAME {start|stop|status|restart}" >&2
+    echo " Add a Puma: $SCRIPTNAME add /path/to/app user /path/to/app/config/puma.rb /path/to/app/config/log/puma.log"
+    echo " config and log are optionals."
+    echo " Remove a Puma: $SCRIPTNAME remove /path/to/app"
+    echo " On a Puma: $SCRIPTNAME {start|stop|status|restart} PUMA-NAME" >&2
+    exit 3
+  ;;
 esac
 :
+
