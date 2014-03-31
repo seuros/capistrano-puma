@@ -52,6 +52,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.4.1: Fix puma jungle (debian)
 - 0.4.0: Multi-bind support
 - 0.3.7: Dependency bug fix
 - 0.3.5: Fixed a prehistoric bug
