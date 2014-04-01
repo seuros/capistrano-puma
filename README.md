@@ -52,6 +52,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.4.2: Fix monit template to support chruby
 - 0.4.1: Fix puma jungle (debian)
 - 0.4.0: Multi-bind support
 - 0.3.7: Dependency bug fix
@@ -81,7 +82,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 - [molfar](https://github.com/molfar)
 - [ayaya](https://github.com/ayamomiji)
 - [Shane O'Grady](https://github.com/shaneog)
-
+- [Jun Lin](https://github.com/linjunpop)
 
 ## Contributing
 
