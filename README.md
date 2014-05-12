@@ -8,7 +8,7 @@ Add this line to your application's Gemfile:
 
 or:
 
-    gem 'capistrano3-puma'
+    gem 'capistrano3-puma' , group: :development
 
 And then execute:
 
