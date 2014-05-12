@@ -47,11 +47,26 @@ For Jungle tasks (beta), these options exist:
     set :puma_jungle_conf, '/etc/puma.conf'
     set :puma_run_path, '/usr/local/bin/run-puma'
 ```
+
+Multi-bind can be set with an array in the puma_bind variable
+```ruby
+  set :puma_bind, %w(tcp://0.0.0.0:9292 unix:///tmp/puma.sock)
+```
+    * Listening on tcp://0.0.0.0:9220
+    * Listening on unix:///tmp/puma.sock
+
+
+For ActiveRecord the following line to your deploy.rb
+```ruby
+    set :puma_init_active_record, true
+```
+
 Ensure that the following directories are shared (via ``linked_dirs``):
 
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.5.0: Bugs fixes
 - 0.4.2: Fix monit template to support chruby
 - 0.4.1: Fix puma jungle (debian)
 - 0.4.0: Multi-bind support

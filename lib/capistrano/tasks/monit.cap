@@ -53,7 +53,7 @@ namespace :puma do
     end
 
     def puma_monit_service_name
-      fetch(:puma_monit_service_name, "puma_monit_#{fetch(:application)}")
+      fetch(:puma_monit_service_name, "puma_#{fetch(:application)}")
     end
 
   end

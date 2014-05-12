@@ -14,7 +14,7 @@ namespace :puma do
     # TODO
     # Add/remove workers to specific host/s
     # Define  # of workers to add/remove
-    # Refractor
+    # Refactor
     desc 'Worker++'
     task :more do
       on roles (fetch(:puma_role)) do
