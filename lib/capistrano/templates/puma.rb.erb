@@ -3,7 +3,9 @@
 directory '<%= current_path %>'
 rackup "<%=fetch(:puma_rackup)%>"
 environment '<%= fetch(:puma_env) %>'
-<%= puma_tag %>
+<% if fetch(:puma_tag) %>
+  tag '<%= fetch(:puma_tag)%>'
+<% end %>
 daemonize true
 pidfile "<%=fetch(:puma_pid)%>"
 state_path "<%=fetch(:puma_state)%>"
@@ -13,9 +15,11 @@ stdout_redirect '<%=fetch(:puma_access_log)%>', '<%=fetch(:puma_error_log)%>', t
 threads <%=fetch(:puma_threads).join(',')%>
 
 <%= puma_bind %>
-
-
 workers <%= puma_workers %>
+<% if fetch(:puma_worker_timeout) %>
+worker_timeout <%= fetch(:puma_worker_timeout).to_i %>
+<% end %>
+
 <% if fetch(:puma_preload_app) %>
 preload_app!
 <% end %>

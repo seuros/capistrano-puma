@@ -39,6 +39,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
     set :puma_threads, [0, 16]
     set :puma_workers, 0
+    set :puma_worker_timeout, nil
     set :puma_init_active_record, false
     set :puma_preload_app, true
 ```
@@ -66,6 +67,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.5.1: Added worker_timeout option
 - 0.5.0: Bugs fixes
 - 0.4.2: Fix monit template to support chruby
 - 0.4.1: Fix puma jungle (debian)

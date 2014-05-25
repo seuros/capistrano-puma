@@ -112,17 +112,7 @@ namespace :puma do
     fetch(:puma_workers) || 0
   end
 
-  def puma_tag
-    if  fetch(:puma_tag)
-      # Versions(puma) prior to 2.8.2 don't support tag option
-      if Gem.loaded_specs['puma'].version >= Gem::Version.new('2.8.2')
-        return "tag '#{fetch(:puma_tag)}'"
-      else
-        warn 'Version puma 2.8.2+ required for tag option: Tag not set'
-      end
-      return
-    end
-  end
+
 
   def puma_bind
     case fetch(:puma_bind)
