@@ -37,7 +37,7 @@ namespace :puma do
       within current_path do
         with rack_env: fetch(:puma_env) do
 
-          execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)}"
+          execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)} --daemon"
         end
       end
     end
@@ -77,7 +77,7 @@ namespace :puma do
               execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
             else
               # Puma is not running or state file is not present : Run it
-              execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)}"
+              execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)} --daemon"
             end
           end
         end

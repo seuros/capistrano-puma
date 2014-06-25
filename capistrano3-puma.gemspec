@@ -21,4 +21,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'capistrano', '~> 3.0'
   spec.add_dependency 'puma' , '>= 2.6'
 
+  spec.post_install_message = "capistrano-puma: The puma.rb configuration file no longer explicitly sets daemonize to true. Add the --daemon flag if you reuse that file elsewhere (e.g. 'puma -C path/to/puma.rb --daemon')."
 end
