@@ -1,5 +1,6 @@
 namespace :load do
   task :defaults do
+    set :puma_default_hooks, -> { true }
     set :puma_role, :app
     set :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
     # Configure "min" to be the minimum number of threads to use to answer
@@ -19,6 +20,12 @@ namespace :load do
     # Rbenv and RVM integration
     set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w{ puma pumactl })
     set :rvm_map_bins, fetch(:rvm_map_bins).to_a.concat(%w{ puma pumactl })
+  end
+end
+
+namespace :deploy do
+  before :starting, :check_puma_hooks do
+    invoke 'puma:add_default_hooks' if fetch(:puma_default_hooks)
   end
 end
 
@@ -96,7 +103,7 @@ namespace :puma do
       end
     end
   end
-  after 'deploy:check', 'puma:check'
+
 
   task :smart_restart do
     if  puma_workers.to_i > 1
@@ -105,7 +112,7 @@ namespace :puma do
       invoke 'puma:restart'
     end
   end
-  after 'deploy:finished', 'puma:smart_restart'
+
 
 
   def puma_workers
@@ -136,6 +143,11 @@ namespace :puma do
         break
       end
     end
+  end
+
+  task :add_default_hooks do
+    after 'deploy:check', 'puma:check'
+    after 'deploy:finished', 'puma:smart_restart'
   end
 
 end
