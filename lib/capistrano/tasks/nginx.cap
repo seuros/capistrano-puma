@@ -1,0 +1,19 @@
+require_relative '../../capistrano-puma'
+
+include Capistrano::NginxPuma::Helpers
+
+namespace :nginx do
+  desc "Setup nginx configuration"
+  task :config do
+    on roles(:web) do
+      execute :mkdir, "-p", shared_path.join("log")
+      template("nginx_conf.erb", "/tmp/nginx_#{fetch(:nginx_config_name)}")
+      if fetch(:nginx_sites_available_path) == "/etc/nginx/sites-available"
+        sudo :mv, "/tmp/nginx_#{fetch(:nginx_config_name)} #{fetch(:nginx_sites_available_path)}/#{fetch(:nginx_config_name)}"
+        sudo :ln, "-fs", "#{fetch(:nginx_sites_available_path)}/#{fetch(:nginx_config_name)} #{fetch(:nginx_sites_enabled_path)}/#{fetch(:nginx_config_name)}"
+      else
+        sudo :mv, "/tmp/#{fetch(:nginx_config_name)} #{fetch(:nginx_sites_available_path)}/#{fetch(:nginx_config_name)}"
+      end
+    end
+  end
+end

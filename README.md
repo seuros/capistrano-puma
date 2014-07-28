@@ -20,12 +20,28 @@ And then execute:
 
     require 'capistrano/puma'
     require 'capistrano/puma/workers' #if you want to control the workers (in cluster mode)
-    require 'capistrano/puma/jungle' #if you need the jungle tasks
-    require 'capistrano/puma/monit' #if you need the monit tasks
+    require 'capistrano/puma/jungle'  #if you need the jungle tasks
+    require 'capistrano/puma/monit'   #if you need the monit tasks
+    require 'capistrano/puma/nginx'   #if you want to upload a nginx site template
 ```
 
+then you can use ```cap -vT``` to list tasks
+```
+cap nginx:config # upload a nginx site config(eg. /etc/nginx/site-enabled/)
+cap puma:config  # upload puma config(eg. shared/puma.config)
+```
+you may want to customize these two templates localy before uploading
+```
+rails g capistrano:nginx_puma:config
+```
 
-Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file. 
+if your nginx server configuration is not located in /etc/nginx, you may need to customize nginx_sites_available_path and nginx_sites_enabled_path
+```
+set :nginx_sites_available_path, "/etc/nginx/sites-available"
+set :nginx_sites_enabled_path, "/etc/nginx/sites-enabled"
+```
+
+Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
 
 ```ruby
     set :puma_rackup, -> { File.join(current_path, 'config.ru') }
@@ -97,11 +113,12 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
 ## Contributors
 
-- [Ruohan Chen] (https://github.com/crhan)
+- [Ruohan Chen](https://github.com/crhan)
 - [molfar](https://github.com/molfar)
 - [ayaya](https://github.com/ayamomiji)
 - [Shane O'Grady](https://github.com/shaneog)
 - [Jun Lin](https://github.com/linjunpop)
+- [fang duan](https://github.com/dfang/capistrano-puma)
 
 ## Contributing
 
