@@ -20,12 +20,13 @@ And then execute:
 
     require 'capistrano/puma'
     require 'capistrano/puma/workers' #if you want to control the workers (in cluster mode)
-    require 'capistrano/puma/jungle' #if you need the jungle tasks
-    require 'capistrano/puma/monit' #if you need the monit tasks
+    require 'capistrano/puma/jungle'  #if you need the jungle tasks
+    require 'capistrano/puma/monit'   #if you need the monit tasks
+    require 'capistrano/puma/nginx'   #if you want to upload a nginx site template
 ```
 
 
-Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file. 
+Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
 
 ```ruby
     set :puma_rackup, -> { File.join(current_path, 'config.ru') }

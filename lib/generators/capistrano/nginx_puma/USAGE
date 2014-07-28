@@ -1,0 +1,9 @@
+To create local nginx and puma configuration files call
+
+    rails generate capistrano:nginx_puma:config [path]
+
+The default path is "config/deploy/templates". You can override it like so:
+
+    rails generate capistrano:nginx_puma:config "config/templates"
+
+If you override templates path, don't forget to set "templates_path" variable in your deploy.rb

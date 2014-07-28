@@ -20,6 +20,15 @@ namespace :load do
     # Rbenv and RVM integration
     set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w{ puma pumactl })
     set :rvm_map_bins, fetch(:rvm_map_bins).to_a.concat(%w{ puma pumactl })
+
+    # Nginx and puma configuration
+    set :nginx_config_name, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
+    set :templates_path, "config/deploy/templates"
+    set :nginx_config_path, "/etc/nginx/sites-available"
+    set :nginx_server_name, -> { "localhost #{fetch(:application)}.local" }
+    set :nginx_use_ssl, false
+    set :nginx_ssl_certificate, -> { "#{fetch(:nginx_server_name)}.crt" }
+    set :nginx_ssl_certificate_key, -> { "#{fetch(:nginx_server_name)}.key" }
   end
 end
 
@@ -34,7 +43,8 @@ namespace :puma do
   desc 'Setup Puma config file'
   task :config do
     on roles(fetch(:puma_role)) do |role|
-      template_puma 'puma', fetch(:puma_conf), role
+      # template_puma 'puma', fetch(:puma_conf), role
+      template("puma.rb.erb", fetch(:puma_conf))
     end
   end
 
