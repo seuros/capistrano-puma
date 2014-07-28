@@ -24,11 +24,10 @@ namespace :load do
     # Nginx and puma configuration
     set :nginx_config_name, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
     set :templates_path, "config/deploy/templates"
-    set :nginx_config_path, "/etc/nginx/sites-available"
+    set :nginx_sites_available_path, "/etc/nginx/sites-available"
+    set :nginx_sites_enabled_path, "/etc/nginx/sites-enabled"
     set :nginx_server_name, -> { "localhost #{fetch(:application)}.local" }
-    set :nginx_use_ssl, false
-    set :nginx_ssl_certificate, -> { "#{fetch(:nginx_server_name)}.crt" }
-    set :nginx_ssl_certificate_key, -> { "#{fetch(:nginx_server_name)}.key" }
+
   end
 end
 
