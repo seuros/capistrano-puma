@@ -25,6 +25,15 @@ And then execute:
     require 'capistrano/puma/nginx'   #if you want to upload a nginx site template
 ```
 
+then you can use ```cap -vT``` to list tasks
+```
+cap nginx:config # upload a nginx site config(eg. /etc/nginx/site-enabled/)
+cap puma:config  # upload puma config(eg. shared/puma.config)
+```
+you may want to customize these two templates localy before uploading
+```
+rails g capistrano:nginx_puma:config
+```
 
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
 
