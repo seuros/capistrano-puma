@@ -2,6 +2,7 @@ namespace :load do
   task :defaults do
     set :puma_default_hooks, -> { true }
     set :puma_role, :app
+    set :puma_nginx_role, :web
     set :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
     # Configure "min" to be the minimum number of threads to use to answer
     # requests and "max" the maximum.
@@ -23,9 +24,8 @@ namespace :load do
 
     # Nginx and puma configuration
     set :nginx_config_name, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
-    set :templates_path, "config/deploy/templates"
-    set :nginx_sites_available_path, "/etc/nginx/sites-available"
-    set :nginx_sites_enabled_path, "/etc/nginx/sites-enabled"
+    set :nginx_sites_available_path, -> { '/etc/nginx/sites-available' }
+    set :nginx_sites_enabled_path, -> { '/etc/nginx/sites-enabled' }
     set :nginx_server_name, -> { "localhost #{fetch(:application)}.local" }
 
   end
@@ -42,8 +42,7 @@ namespace :puma do
   desc 'Setup Puma config file'
   task :config do
     on roles(fetch(:puma_role)) do |role|
-      # template_puma 'puma', fetch(:puma_conf), role
-      template("puma.rb.erb", fetch(:puma_conf))
+      template_puma 'puma', fetch(:puma_conf), role
     end
   end
 
@@ -143,6 +142,9 @@ namespace :puma do
         "lib/capistrano/templates/#{from}.rb.erb",
         "lib/capistrano/templates/#{from}.rb",
         "lib/capistrano/templates/#{from}.erb",
+        "config/deploy/templates/#{from}.rb.erb",
+        "config/deploy/templates/#{from}.rb",
+        "config/deploy/templates/#{from}.erb",
         File.expand_path("../../templates/#{from}.rb.erb", __FILE__),
         File.expand_path("../../templates/#{from}.erb", __FILE__)
     ].each do |path|

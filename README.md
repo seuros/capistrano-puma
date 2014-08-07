@@ -83,6 +83,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.7.0: added Nginx template generator  @dfang
 - 0.6.1: added :puma_default_hooks, you can turn off the automatic hooks by setting it false
 - 0.6.0: Remove `daemonize true` from default puma.rb file. Explicitly pass `--daemon` flag when needed.
 - 0.5.1: Added worker_timeout option
