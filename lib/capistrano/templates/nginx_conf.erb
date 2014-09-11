@@ -1,5 +1,15 @@
-upstream puma_<%= fetch(:nginx_config_name) %> {
-  server <%= fetch(:puma_bind) %> fail_timeout=0;
+upstream puma_<%= fetch(:nginx_config_name) %> { <%
+  flags = 'fail_timeout=0'
+  @backends = [fetch(:puma_bind)].flatten.map do |m|
+  etype, address  = /(tcp|unix|ssl):\/\/(.+)/.match(m).captures
+  if etype =='unix'
+    "server #{etype}:#{address} #{fetch(:nginx_socket_flags)};"
+  else
+    "server #{address.gsub(/0\.0\.0\.0(.+)/, "127.0.0.1\\1")} #{fetch(:nginx_http_flags)};"
+  end
+end
+%><% @backends.each do |server|  %>
+  <%= server %><% end %>
 }
 
 server {
