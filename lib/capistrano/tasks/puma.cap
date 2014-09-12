@@ -29,7 +29,7 @@ namespace :load do
     set :nginx_server_name, -> { "localhost #{fetch(:application)}.local" }
     set :nginx_flags, -> { 'fail_timeout=0' }
 		set :nginx_http_flags, -> { fetch(:nginx_flags) }
-		set :nginx_socket_flags -> { fetch(:nginx_flags) }
+		set :nginx_socket_flags, -> { fetch(:nginx_flags) }
   end
 end
 
