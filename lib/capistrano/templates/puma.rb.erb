@@ -23,10 +23,9 @@ worker_timeout <%= fetch(:puma_worker_timeout).to_i %>
 preload_app!
 <% end %>
 
-on_restart do
-  puts 'Refreshing Gemfile'
-  ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile, "#{current_path}/Gemfile") %>"
-end
+<% if fetch(:puma_prune_bundler) %>
+prune_bundler
+<% end %>
 
 <% if fetch(:puma_init_active_record) %>
 on_worker_boot do
