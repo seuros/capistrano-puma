@@ -2,7 +2,6 @@ namespace :load do
   task :defaults do
     set :puma_default_hooks, -> { true }
     set :puma_role, :app
-    set :puma_nginx_role, :web
     set :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
     # Configure "min" to be the minimum number of threads to use to answer
     # requests and "max" the maximum.

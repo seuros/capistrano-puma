@@ -1,6 +1,13 @@
+namespace :load do
+  task :defaults do
+    set :puma_nginx, :web
+  end
+end
+
 namespace :puma do
   desc "Setup nginx configuration"
   task :nginx_config do
+    fail ":puma_nginx role not set!" if roles(:puma_nginx).empty?
     on roles(:puma_nginx) do |role|
       template_puma("nginx_conf", "/tmp/nginx_#{fetch(:nginx_config_name)}", role)
       sudo :mv, "/tmp/nginx_#{fetch(:nginx_config_name)} #{fetch(:nginx_sites_available_path)}/#{fetch(:nginx_config_name)}"
