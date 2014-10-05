@@ -27,7 +27,7 @@ And then execute:
 
 then you can use ```cap -vT``` to list tasks
 ```
-cap nginx:config # upload a nginx site config(eg. /etc/nginx/site-enabled/)
+cap puma:nginx_config # upload a nginx site config(eg. /etc/nginx/site-enabled/)
 cap puma:config  # upload puma config(eg. shared/puma.config)
 ```
 you may want to customize these two templates localy before uploading
