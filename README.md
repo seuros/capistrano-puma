@@ -41,7 +41,7 @@ set :nginx_sites_available_path, "/etc/nginx/sites-available"
 set :nginx_sites_enabled_path, "/etc/nginx/sites-enabled"
 ```
 
-Be default, ```nginx_config``` will be executed with ```:web``` role. But you can assign it to a different role:
+By default, ```nginx_config``` will be executed with ```:web``` role. But you can assign it to a different role:
 ```
 set :puma_nginx, :foo
 ```
