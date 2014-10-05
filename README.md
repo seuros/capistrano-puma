@@ -30,7 +30,7 @@ then you can use ```cap -vT``` to list tasks
 cap puma:nginx_config # upload a nginx site config(eg. /etc/nginx/site-enabled/)
 cap puma:config  # upload puma config(eg. shared/puma.config)
 ```
-you may want to customize these two templates localy before uploading
+you may want to customize these two templates locally before uploading
 ```
 rails g capistrano:nginx_puma:config
 ```
@@ -39,6 +39,15 @@ if your nginx server configuration is not located in /etc/nginx, you may need to
 ```
 set :nginx_sites_available_path, "/etc/nginx/sites-available"
 set :nginx_sites_enabled_path, "/etc/nginx/sites-enabled"
+```
+
+Be default, ```nginx_config``` will be executed with ```:web``` role. But you can assign it to a different role:
+```
+set :puma_nginx, :foo
+```
+or define a standalone one:
+```
+role :puma_nginx, %w{root@example.com}
 ```
 
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
