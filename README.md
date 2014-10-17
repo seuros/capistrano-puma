@@ -93,6 +93,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.8.2: Start task creates a conf file if none exists @stevemadere
 - 0.8.1: Fixed nginx task @hnatt, support for prune_bundler @behe
 - 0.8.0: Some changes
 - 0.7.0: added Nginx template generator  @dfang
@@ -122,7 +123,6 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 - 0.0.8: puma.rb is automatically generated if not present. Fixed RVM issue.
 - 0.0.7: Gem pushed to rubygems as capistrano3-puma. Support of Redhat based OS for Jungle init script.
 
-## TODO
 
 ## Contributors
 
@@ -131,7 +131,8 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 - [ayaya](https://github.com/ayamomiji)
 - [Shane O'Grady](https://github.com/shaneog)
 - [Jun Lin](https://github.com/linjunpop)
-- [fang duan](https://github.com/dfang/capistrano-puma)
+- [fang duan](https://github.com/dfang)
+- [Steve Madere](https://github.com/stevemadere)
 
 ## Contributing
 

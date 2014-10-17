@@ -1,6 +1,6 @@
 namespace :load do
   task :defaults do
-    set :puma_nginx, :web
+    set :puma_nginx, -> { :web }
   end
 end
 
