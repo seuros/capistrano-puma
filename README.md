@@ -1,3 +1,4 @@
+[![Gem Version](https://badge.fury.io/rb/capistrano3-puma.svg)](http://badge.fury.io/rb/capistrano3-puma)
 # Capistrano::Puma
 
 ## Installation
