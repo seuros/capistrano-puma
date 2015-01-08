@@ -31,21 +31,21 @@ namespace :puma do
       end
     end
 
-    desc 'Disable Puma monit-service'
+    desc 'Start Puma monit-service'
     task :start do
       on roles(fetch(:puma_role)) do
         sudo "#{fetch(:puma_monit_bin)}  start #{puma_monit_service_name}"
       end
     end
 
-    desc 'Disable Puma monit-service'
+    desc 'Stop Puma monit-service'
     task :stop do
       on roles(fetch(:puma_role)) do
         sudo "#{fetch(:puma_monit_bin)}  stop #{puma_monit_service_name}"
       end
     end
 
-    desc 'Disable Puma monit-service'
+    desc 'Restart Puma monit-service'
     task :restart do
       on roles(fetch(:puma_role)) do
         sudo "#{fetch(:puma_monit_bin)}  restart #{puma_monit_service_name}"
