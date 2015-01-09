@@ -58,7 +58,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_state, "#{shared_path}/tmp/pids/puma.state"
     set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
     set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"    #accept array for multi-bind
-    set :puma_conf, "#{shared_path}/puma.rb"
+    set :puma_conf, "#{shared_path}/config/puma.rb"
     set :puma_access_log, "#{shared_path}/log/puma_access.log"
     set :puma_error_log, "#{shared_path}/log/puma_error.log"
     set :puma_role, :app
@@ -88,6 +88,8 @@ For ActiveRecord the following line to your deploy.rb
 ```ruby
     set :puma_init_active_record, true
 ```
+
+Ensure that `config/puma.rb` is shared (via ``linked_files``).
 
 Ensure that the following directories are shared (via ``linked_dirs``):
 
