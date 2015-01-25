@@ -94,6 +94,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 0.8.4: Allow patch method (Nginx template) @lonre
 - 0.8.2: Start task creates a conf file if none exists @stevemadere
 - 0.8.1: Fixed nginx task @hnatt, support for prune_bundler @behe
 - 0.8.0: Some changes
