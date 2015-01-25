@@ -57,7 +57,7 @@ server {
     rewrite ^(.*)$ /503.html break;
   }
 
-  if ($request_method !~ ^(GET|HEAD|PUT|POST|DELETE|OPTIONS)$ ){
+  if ($request_method !~ ^(GET|HEAD|PUT|PATCH|POST|DELETE|OPTIONS)$ ){
     return 405;
   }
 
