@@ -122,7 +122,7 @@ namespace :puma do
 
 
   task :smart_restart do
-    if  puma_workers.to_i > 1
+    if !puma_preload_app? && puma_workers.to_i > 1
       invoke 'puma:phased-restart'
     else
       invoke 'puma:restart'
@@ -135,6 +135,9 @@ namespace :puma do
     fetch(:puma_workers, 0)
   end
 
+  def puma_preload_app?
+    fetch(:puma_preload_app)
+  end
 
   def puma_bind
     Array(fetch(:puma_bind)).collect do |bind|
