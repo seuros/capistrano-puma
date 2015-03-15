@@ -20,15 +20,15 @@ And then execute:
     # Capfile
 
     require 'capistrano/puma'
-    require 'capistrano/puma/workers' #if you want to control the workers (in cluster mode)
-    require 'capistrano/puma/jungle'  #if you need the jungle tasks
-    require 'capistrano/puma/monit'   #if you need the monit tasks
-    require 'capistrano/puma/nginx'   #if you want to upload a nginx site template
+    require 'capistrano/puma/workers' # if you want to control the workers (in cluster mode)
+    require 'capistrano/puma/jungle'  # if you need the jungle tasks
+    require 'capistrano/puma/monit'   # if you need the monit tasks
+    require 'capistrano/puma/nginx'   # if you want to upload a nginx site template
 ```
 
 then you can use ```cap -vT``` to list tasks
 ```
-cap puma:nginx_config # upload a nginx site config(eg. /etc/nginx/site-enabled/)
+cap puma:nginx_config # upload a nginx site config(eg. /etc/nginx/sites-enabled/)
 cap puma:config  # upload puma config(eg. shared/puma.config)
 ```
 you may want to customize these two templates locally before uploading
