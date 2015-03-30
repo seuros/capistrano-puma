@@ -27,7 +27,7 @@ on_restart do
   ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile, "#{current_path}/Gemfile") %>"
 end
 <% else %>
-prune_bundle
+prune_bundler
 <% end %>
 
 <% if fetch(:puma_init_active_record) %>
