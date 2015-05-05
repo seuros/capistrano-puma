@@ -94,6 +94,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 1.0.0: Add activate control app @askagirl
 - 0.8.5: Fix smart_restart task to check if puma preloads app
 - 0.8.4: Allow patch method (Nginx template) @lonre
 - 0.8.2: Start task creates a conf file if none exists @stevemadere
