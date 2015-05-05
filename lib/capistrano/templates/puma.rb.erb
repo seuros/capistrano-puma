@@ -14,6 +14,9 @@ stdout_redirect '<%=fetch(:puma_access_log)%>', '<%=fetch(:puma_error_log)%>', t
 threads <%=fetch(:puma_threads).join(',')%>
 
 <%= puma_bind %>
+<% if fetch(:puma_control_app) %>
+activate_control_app "<%= fetch(:puma_default_control_app) %>"
+<% end %>
 workers <%= puma_workers %>
 <% if fetch(:puma_worker_timeout) %>
 worker_timeout <%= fetch(:puma_worker_timeout).to_i %>
