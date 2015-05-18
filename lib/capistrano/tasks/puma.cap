@@ -167,6 +167,11 @@ namespace :puma do
     end
   end
 
+  def sudo_command(str)
+    ask(:password, "pwd", echo: false)
+    execute "echo #{fetch(:password)} | sudo -S  " + str
+  end
+
   task :add_default_hooks do
     after 'deploy:check', 'puma:check'
     after 'deploy:finished', 'puma:smart_restart'

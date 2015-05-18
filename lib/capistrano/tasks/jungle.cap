@@ -15,7 +15,7 @@ namespace :puma do
         @role = role
         template_puma 'run-puma', "#{fetch(:tmp_dir)}/run-puma", role
         execute "chmod +x #{fetch(:tmp_dir)}/run-puma"
-        sudo "mv #{fetch(:tmp_dir)}/run-puma #{fetch(:puma_run_path)}"
+        sudo_command "mv #{fetch(:tmp_dir)}/run-puma #{fetch(:puma_run_path)}"
         if test '[ -f /etc/redhat-release ]'
           #RHEL flavor OS
           rhel_install
@@ -26,7 +26,7 @@ namespace :puma do
           #Some other OS
           error 'This task is not supported for your OS'
         end
-        sudo "touch #{fetch(:puma_jungle_conf)}"
+        sudo_command "touch #{fetch(:puma_jungle_conf)}"
       end
     end
 
@@ -34,16 +34,16 @@ namespace :puma do
     def debian_install
       template_puma 'puma-deb', "#{fetch(:tmp_dir)}/puma", @role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
-      sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
-      sudo 'update-rc.d -f puma defaults'
+      sudo_command "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
+      sudo_command 'update-rc.d -f puma defaults'
 
     end
 
     def rhel_install
       template_puma 'puma-rpm', "#{fetch(:tmp_dir)}/puma" , @role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
-      sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
-      sudo 'chkconfig --add puma'
+      sudo_command "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
+      sudo_command 'chkconfig --add puma'
     end
 
 
@@ -57,14 +57,14 @@ namespace :puma do
     desc 'Add current project to the jungle'
     task :add do
       on roles(fetch(:puma_role)) do|role|
-        sudo "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user, role.user)}"
+        sudo_command "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user, role.user)}"
       end
     end
 
     desc 'Remove current project from the jungle'
     task :remove do
       on roles(fetch(:puma_role)) do
-        sudo "/etc/init.d/puma remove '#{current_path}'"
+        sudo_command "/etc/init.d/puma remove '#{current_path}'"
       end
     end
 
@@ -72,7 +72,7 @@ namespace :puma do
       desc "#{command} puma"
       task command do
         on roles(fetch(:puma_role)) do
-          sudo "service puma #{command} #{current_path}"
+          sudo_command "service puma #{command} #{current_path}"
         end
       end
     end
