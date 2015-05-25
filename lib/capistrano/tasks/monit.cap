@@ -14,6 +14,7 @@ namespace :puma do
         @role = role
         template_puma 'puma_monit.conf', "#{fetch(:tmp_dir)}/monit.conf", @role
         sudo "mv #{fetch(:tmp_dir)}/monit.conf #{fetch(:puma_monit_conf_dir)}"
+        sudo "#{fetch(:puma_monit_bin)} reload"
       end
     end
 
