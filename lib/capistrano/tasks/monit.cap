@@ -6,7 +6,6 @@ namespace :load do
   end
 end
 
-
 namespace :puma do
   namespace :monit do
     desc 'Config Puma monit-service'
@@ -53,6 +52,9 @@ namespace :puma do
         sudo_if_needed "#{fetch(:puma_monit_bin)} restart #{puma_monit_service_name}"
       end
     end
+
+    before 'deploy:updating', 'puma:monit:unmonitor'
+    after 'deploy:published', 'puma:monit:monitor'
 
     def puma_monit_service_name
       fetch(:puma_monit_service_name, "puma_#{fetch(:application)}_#{fetch(:stage)}")
