@@ -1,6 +1,7 @@
 
 namespace :load do
   task :defaults do
+    set :puma_user, nil
     set :puma_default_hooks, -> { true }
     set :puma_role, :app
     set :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
@@ -52,15 +53,17 @@ namespace :puma do
   desc 'Start puma'
   task :start do
     on roles (fetch(:puma_role)) do
-      if test "[ -f #{fetch(:puma_conf)} ]"
-        info "using conf file #{fetch(:puma_conf)}"
-      else
-        invoke 'puma:config'
-      end
-      within current_path do
-        with rack_env: fetch(:puma_env) do
+      switch_user do
+        if test "[ -f #{fetch(:puma_conf)} ]"
+          info "using conf file #{fetch(:puma_conf)}"
+        else
+          invoke 'puma:config'
+        end
+        within current_path do
+          with rack_env: fetch(:puma_env) do
 
-          execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)} --daemon"
+            execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)} --daemon"
+          end
         end
       end
     end
@@ -70,18 +73,20 @@ namespace :puma do
     desc "#{command} puma"
     task command do
       on roles (fetch(:puma_role)) do
-        within current_path do
-          with rack_env: fetch(:puma_env) do
-            if test "[ -f #{fetch(:puma_pid)} ]"
-              if test "kill -0 $( cat #{fetch(:puma_pid)} )"
-                execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
+        switch_user do
+          within current_path do
+            with rack_env: fetch(:puma_env) do
+              if test "[ -f #{fetch(:puma_pid)} ]"
+                if test "kill -0 $( cat #{fetch(:puma_pid)} )"
+                  execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
+                else
+                  # delete invalid pid file , process is not running.
+                  execute :rm, fetch(:puma_pid)
+                end
               else
-                # delete invalid pid file , process is not running.
-                execute :rm, fetch(:puma_pid)
+                #pid file not found, so puma is probably not running or it using another pidfile
+                warn 'Puma not running'
               end
-            else
-              #pid file not found, so puma is probably not running or it using another pidfile
-              warn 'Puma not running'
             end
           end
         end
@@ -93,14 +98,16 @@ namespace :puma do
     desc "#{command} puma"
     task command do
       on roles (fetch(:puma_role)) do
-        within current_path do
-          with rack_env: fetch(:puma_env) do
-            if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
-              # NOTE pid exist but state file is nonsense, so ignore that case
-              execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
-            else
-              # Puma is not running or state file is not present : Run it
-              invoke 'puma:start'
+        switch_user do
+          within current_path do
+            with rack_env: fetch(:puma_env) do
+              if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
+                # NOTE pid exist but state file is nonsense, so ignore that case
+                execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
+              else
+                # Puma is not running or state file is not present : Run it
+                invoke 'puma:start'
+              end
             end
           end
         end
@@ -129,7 +136,15 @@ namespace :puma do
     end
   end
 
-
+  def switch_user(&block)
+    su_user = fetch(:puma_user)
+    if su_user
+      return as su_user do
+        yield
+      end
+    end
+    yield
+  end
 
   def puma_workers
     fetch(:puma_workers, 0)
