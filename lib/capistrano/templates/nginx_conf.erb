@@ -11,9 +11,22 @@ end
 %><% @backends.each do |server|  %>
   <%= server %><% end %>
 }
-
+<% if fetch(:nginx_use_ssl) %>
 server {
   listen 80;
+  rewrite ^(.*) https://$host$1 permanent;
+}
+<% end %>
+
+server {
+<% if fetch(:nginx_use_ssl) %>
+  listen 443;
+  ssl on;
+  ssl_certificate /etc/ssl/certs/<%= fetch(:nginx_config_name) %>.crt;
+  ssl_certificate_key /etc/ssl/private/<%= fetch(:nginx_config_name) %>.key;
+<% else %>
+  listen 80;
+<% end %>
 
   client_max_body_size 4G;
   keepalive_timeout 10;
@@ -29,6 +42,9 @@ server {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
     proxy_redirect off;
+<% if fetch(:nginx_use_ssl) %>
+    proxy_set_header X-Forwarded-Proto https;
+<% end %>
     proxy_pass http://puma_<%= fetch(:nginx_config_name) %>;
     # limit_req zone=one;
     access_log <%= shared_path %>/log/nginx.access.log;
