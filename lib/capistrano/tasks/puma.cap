@@ -32,6 +32,7 @@ namespace :load do
     set :nginx_flags, -> { 'fail_timeout=0' }
     set :nginx_http_flags, -> { fetch(:nginx_flags) }
     set :nginx_socket_flags, -> { fetch(:nginx_flags) }
+    set :nginx_use_ssl, false
   end
 end
 

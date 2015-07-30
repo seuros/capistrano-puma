@@ -70,6 +70,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_worker_timeout, nil
     set :puma_init_active_record, false
     set :puma_preload_app, true
+    set :nginx_use_ssl, false
 ```
 For Jungle tasks (beta), these options exist:
 ```ruby
@@ -95,6 +96,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
+- 1.2.0: Adds nginx ssl configuration
 - 1.1.0: Set :puma_preload_app to false; Reload Monit after uploading any monit configuration; Always refresh Gemfile @rafaelgoulart @suhailpatel @sime
 - 1.0.0: Add activate control app @askagirl
 - 0.8.5: Fix smart_restart task to check if puma preloads app
@@ -139,6 +141,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 - [Jun Lin](https://github.com/linjunpop)
 - [fang duan](https://github.com/dfang)
 - [Steve Madere](https://github.com/stevemadere)
+- [Matias De Santi](https://github.com/mdesanti)
 
 ## Contributing
 
