@@ -139,10 +139,11 @@ namespace :puma do
   def switch_user(&block)
     su_user = fetch(:puma_user)
     if su_user
-      return as su_user do
+      as su_user do
         yield
       end
     end
+
     yield
   end
 
