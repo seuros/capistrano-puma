@@ -1,7 +1,6 @@
 
 namespace :load do
   task :defaults do
-    set :puma_user, nil
     set :puma_default_hooks, -> { true }
     set :puma_role, :app
     set :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
@@ -53,8 +52,8 @@ namespace :puma do
 
   desc 'Start puma'
   task :start do
-    on roles (fetch(:puma_role)) do
-      switch_user do
+    on roles (fetch(:puma_role)) do |role|
+      puma_switch_user(role) do
         if test "[ -f #{fetch(:puma_conf)} ]"
           info "using conf file #{fetch(:puma_conf)}"
         else
@@ -62,7 +61,6 @@ namespace :puma do
         end
         within current_path do
           with rack_env: fetch(:puma_env) do
-
             execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)} --daemon"
           end
         end
@@ -74,8 +72,8 @@ namespace :puma do
     desc "#{command} puma"
     task command do
       on roles (fetch(:puma_role)) do
-        switch_user do
-          within current_path do
+        within current_path do
+          puma_switch_user(role) do
             with rack_env: fetch(:puma_env) do
               if test "[ -f #{fetch(:puma_pid)} ]"
                 if test "kill -0 $( cat #{fetch(:puma_pid)} )"
@@ -98,9 +96,9 @@ namespace :puma do
   %w[phased-restart restart].map do |command|
     desc "#{command} puma"
     task command do
-      on roles (fetch(:puma_role)) do
-        switch_user do
-          within current_path do
+      on roles (fetch(:puma_role)) do |role|
+        within current_path do
+          puma_switch_user(role) do
             with rack_env: fetch(:puma_env) do
               if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
                 # NOTE pid exist but state file is nonsense, so ignore that case
@@ -137,15 +135,22 @@ namespace :puma do
     end
   end
 
-  def switch_user(&block)
-    su_user = fetch(:puma_user)
-    if su_user
-      as su_user do
-        yield
+  def puma_switch_user(role, &block)
+    user = puma_user(role)
+    if user == role.user
+      block.call
+    else
+      as user do
+        block.call
       end
     end
+  end
 
-    yield
+  def puma_user(role)
+    properties = role.properties
+    properties.fetch(:puma_user) ||               # local property for puma only
+    properties.fetch(:run_as) || # global property across multiple capistrano gems
+    role.user
   end
 
   def puma_workers
