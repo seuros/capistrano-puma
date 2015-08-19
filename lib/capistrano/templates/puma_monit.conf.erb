@@ -3,5 +3,5 @@
 #
 check process <%= puma_monit_service_name %>
   with pidfile "<%= fetch(:puma_pid) %>"
-  start program = "/usr/bin/sudo -u <%= @role.user %> /bin/bash -c 'cd <%= current_path %> && <%= SSHKit.config.command_map[:bundle] %> exec puma -C <%= fetch(:puma_conf) %> --daemon'"
-  stop program = "/usr/bin/sudo -u <%= @role.user %> /bin/bash -c 'cd <%= current_path %> && <%= SSHKit.config.command_map[:bundle] %> exec pumactl -S <%= fetch(:puma_state) %> stop'"
+  start program = "/usr/bin/sudo -u <%= fetch(:puma_user, @role.user) %> /bin/bash -c 'cd <%= current_path %> && <%= SSHKit.config.command_map[:bundle] %> exec puma -C <%= fetch(:puma_conf) %> --daemon'"
+  stop program = "/usr/bin/sudo -u <%= fetch(:puma_user, @role.user) %> /bin/bash -c 'cd <%= current_path %> && <%= SSHKit.config.command_map[:bundle] %> exec pumactl -S <%= fetch(:puma_state) %> stop'"
