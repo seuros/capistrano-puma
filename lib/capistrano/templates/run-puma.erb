@@ -3,7 +3,7 @@ app=$1;
 cd $app || exit 1
 
 if [ -e Gemfile ]; then
-    exec <%= fetch(:puma_user) ? "sudo -u #{fetch(:puma_user)}" : '' %> sh -c "exec bundle exec puma -C <%= fetch(:puma_conf) %> --daemon"
+    exec <%= fetch(:puma_user) ? "sudo -u #{puma_user(@role)}" : '' %> sh -c "exec bundle exec puma -C <%= fetch(:puma_conf) %> --daemon"
 else
-    exec <%= fetch(:puma_user) ? "sudo -u #{fetch(:puma_user)}" : '' %> sh -c "exec puma -C <%= fetch(:puma_conf) %> --daemon"
+    exec <%= fetch(:puma_user) ? "sudo -u #{puma_user(@role)}" : '' %> sh -c "exec puma -C <%= fetch(:puma_conf) %> --daemon"
 fi

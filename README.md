@@ -96,7 +96,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
     tmp/pids tmp/sockets log
 
 ## Changelog
-- 1.2.0: Adds nginx ssl configuration
+- 1.2.0: add support for puma user for puma user @mcb & @seuros
 - 1.1.0: Set :puma_preload_app to false; Reload Monit after uploading any monit configuration; Always refresh Gemfile @rafaelgoulart @suhailpatel @sime
 - 1.0.0: Add activate control app @askagirl
 - 0.8.5: Fix smart_restart task to check if puma preloads app
