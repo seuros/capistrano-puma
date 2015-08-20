@@ -71,7 +71,7 @@ namespace :puma do
   %w[halt stop status].map do |command|
     desc "#{command} puma"
     task command do
-      on roles (fetch(:puma_role)) do
+      on roles (fetch(:puma_role)) do |role|
         within current_path do
           puma_switch_user(role) do
             with rack_env: fetch(:puma_env) do
