@@ -32,6 +32,7 @@ namespace :load do
     set :nginx_http_flags, -> { fetch(:nginx_flags) }
     set :nginx_socket_flags, -> { fetch(:nginx_flags) }
     set :nginx_use_ssl, false
+    set :bundle_gemfile, ->{ File.join(current_path, 'Gemfile') }
   end
 end
 
@@ -97,16 +98,14 @@ namespace :puma do
     desc "#{command} puma"
     task command do
       on roles (fetch(:puma_role)) do |role|
-        within current_path do
-          puma_switch_user(role) do
-            with rack_env: fetch(:puma_env) do
-              if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
-                # NOTE pid exist but state file is nonsense, so ignore that case
-                execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
-              else
-                # Puma is not running or state file is not present : Run it
-                invoke 'puma:start'
-              end
+        puma_switch_user(role) do
+          with rack_env: fetch(:puma_env), bundle_gemfile: fetch(:bundle_gemfile) do
+            if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
+              # NOTE pid exist but state file is nonsense, so ignore that case
+              execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
+            else
+              # Puma is not running or state file is not present : Run it
+              invoke 'puma:start'
             end
           end
         end
