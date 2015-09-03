@@ -26,7 +26,7 @@ And then execute:
     require 'capistrano/puma/nginx'   # if you want to upload a nginx site template
 ```
 
-then you can use ```cap -vT``` to list tasks
+then you can use ```cap -T``` to list tasks
 ```
 cap puma:nginx_config # upload a nginx site config(eg. /etc/nginx/sites-enabled/)
 cap puma:config  # upload puma config(eg. shared/puma.config)
