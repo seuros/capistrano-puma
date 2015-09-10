@@ -142,6 +142,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 - [fang duan](https://github.com/dfang)
 - [Steve Madere](https://github.com/stevemadere)
 - [Matias De Santi](https://github.com/mdesanti)
+- [Huang Bin](https://github.com/hbin)
 
 ## Contributing
 

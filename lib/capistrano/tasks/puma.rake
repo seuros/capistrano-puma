@@ -1,4 +1,3 @@
-
 namespace :load do
   task :defaults do
     set :puma_default_hooks, -> { true }
@@ -22,6 +21,9 @@ namespace :load do
     # Rbenv and RVM integration
     set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w{ puma pumactl })
     set :rvm_map_bins, fetch(:rvm_map_bins).to_a.concat(%w{ puma pumactl })
+
+    # Bundler integration
+    set :bundle_bins, fetch(:bundle_bins).to_a.concat(%w{ puma pumactl })
 
     # Nginx and puma configuration
     set :nginx_config_name, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
@@ -61,7 +63,7 @@ namespace :puma do
         end
         within current_path do
           with rack_env: fetch(:puma_env) do
-            execute :bundle, 'exec', :puma, "-C #{fetch(:puma_conf)} --daemon"
+            execute :puma, "-C #{fetch(:puma_conf)} --daemon"
           end
         end
       end
@@ -77,7 +79,7 @@ namespace :puma do
             with rack_env: fetch(:puma_env) do
               if test "[ -f #{fetch(:puma_pid)} ]"
                 if test "kill -0 $( cat #{fetch(:puma_pid)} )"
-                  execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
+                  execute :pumactl, "-S #{fetch(:puma_state)} #{command}"
                 else
                   # delete invalid pid file , process is not running.
                   execute :rm, fetch(:puma_pid)
@@ -102,7 +104,7 @@ namespace :puma do
             with rack_env: fetch(:puma_env) do
               if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
                 # NOTE pid exist but state file is nonsense, so ignore that case
-                execute :bundle, 'exec', :pumactl, "-S #{fetch(:puma_state)} #{command}"
+                execute :pumactl, "-S #{fetch(:puma_state)} #{command}"
               else
                 # Puma is not running or state file is not present : Run it
                 invoke 'puma:start'
