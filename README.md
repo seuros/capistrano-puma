@@ -51,6 +51,12 @@ or define a standalone one:
 role :puma_nginx, %w{root@example.com}
 ```
 
+if you want to use Basic Authentication on your server you can set the following
+```
+set :nginx_use_basicauth, true
+set :nginx_basicauth_location, "/var/www/_htpasswd/<your_project_name>.htpasswd"
+```
+
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
 
 ```ruby
@@ -70,6 +76,8 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_worker_timeout, nil
     set :puma_init_active_record, false
     set :puma_preload_app, true
+    set :nginx_use_basicauth, false
+    set :nginx_basicauth_location, "/var/www/_htpasswd/#{project_name}.htpasswd"
     set :nginx_use_ssl, false
 ```
 For Jungle tasks (beta), these options exist:

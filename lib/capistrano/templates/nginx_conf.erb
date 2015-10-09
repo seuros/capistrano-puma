@@ -49,6 +49,12 @@ server {
     # limit_req zone=one;
     access_log <%= shared_path %>/log/nginx.access.log;
     error_log <%= shared_path %>/log/nginx.error.log;
+
+<% if fetch(:nginx_use_basicauth) && fetch(:nginx_basicauth_location) %>
+    # Basic authentication
+    auth_basic "Restricted";
+    auth_basic_user_file <%= fetch(:nginx_basicauth_location) %>;
+<% end %>
   }
 
   location ^~ /assets/ {
