@@ -18,7 +18,8 @@ namespace :load do
     set :puma_init_active_record, false
     set :puma_preload_app, false
 
-    # Rbenv and RVM integration
+    # Chruby, Rbenv and RVM integration
+    set :chruby_map_bins, fetch(:chruby_map_bins).to_a.concat(%w{ puma pumactl })
     set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w{ puma pumactl })
     set :rvm_map_bins, fetch(:rvm_map_bins).to_a.concat(%w{ puma pumactl })
 
