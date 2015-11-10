@@ -21,7 +21,7 @@ namespace :puma do
     task :more do
       on roles (fetch(:puma_role)) do |role|
         puma_switch_user(role) do
-          execute("kill -TTIN `cat  #{fetch(:puma_pid)}`")
+          execute(:kill, "-TTIN `cat  #{fetch(:puma_pid)}`")
         end
       end
     end
@@ -30,7 +30,7 @@ namespace :puma do
     task :less do
       on roles (fetch(:puma_role)) do |role|
         puma_switch_user(role) do
-          execute("kill -TTOU `cat  #{fetch(:puma_pid)}`")
+          execute(:kill, "-TTOU `cat  #{fetch(:puma_pid)}`")
         end
       end
     end
