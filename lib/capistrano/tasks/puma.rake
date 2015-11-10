@@ -79,7 +79,7 @@ namespace :puma do
           puma_switch_user(role) do
             with rack_env: fetch(:puma_env) do
               if test "[ -f #{fetch(:puma_pid)} ]"
-                if test "kill -0 $( cat #{fetch(:puma_pid)} )"
+                if test :kill, "-0 $( cat #{fetch(:puma_pid)} )"
                   execute :pumactl, "-S #{fetch(:puma_state)} -F #{fetch(:puma_conf)} #{command}"
                 else
                   # delete invalid pid file , process is not running.
@@ -103,7 +103,7 @@ namespace :puma do
         within current_path do
           puma_switch_user(role) do
             with rack_env: fetch(:puma_env) do
-              if test "[ -f #{fetch(:puma_pid)} ]" and test "kill -0 $( cat #{fetch(:puma_pid)} )"
+              if test "[ -f #{fetch(:puma_pid)} ]" and test :kill, "-0 $( cat #{fetch(:puma_pid)} )"
                 # NOTE pid exist but state file is nonsense, so ignore that case
                 execute :pumactl, "-S #{fetch(:puma_state)} -F #{fetch(:puma_conf)} #{command}"
               else
@@ -152,6 +152,7 @@ namespace :puma do
   def puma_user(role)
     properties = role.properties
     properties.fetch(:puma_user) ||               # local property for puma only
+    fetch(:puma_user) ||
     properties.fetch(:run_as) || # global property across multiple capistrano gems
     role.user
   end
