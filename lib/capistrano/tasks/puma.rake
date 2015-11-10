@@ -152,6 +152,7 @@ namespace :puma do
   def puma_user(role)
     properties = role.properties
     properties.fetch(:puma_user) ||               # local property for puma only
+    fetch(:puma_user) ||
     properties.fetch(:run_as) || # global property across multiple capistrano gems
     role.user
   end
