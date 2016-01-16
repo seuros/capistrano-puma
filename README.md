@@ -95,17 +95,7 @@ Ensure that the following directories are shared (via ``linked_dirs``):
 
     tmp/pids tmp/sockets log
 
-## Contributors
 
-- [Ruohan Chen](https://github.com/crhan)
-- [molfar](https://github.com/molfar)
-- [ayaya](https://github.com/ayamomiji)
-- [Shane O'Grady](https://github.com/shaneog)
-- [Jun Lin](https://github.com/linjunpop)
-- [fang duan](https://github.com/dfang)
-- [Steve Madere](https://github.com/stevemadere)
-- [Matias De Santi](https://github.com/mdesanti)
-- [Huang Bin](https://github.com/hbin)
 
 ## Contributing
 
