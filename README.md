@@ -91,6 +91,11 @@ For ActiveRecord the following line to your deploy.rb
     set :puma_init_active_record, true
 ```
 
+Adding `before_fork` hook:
+```ruby
+    set :puma_before_fork, "PumaWorkerKiller.start"
+```
+
 Ensure that the following directories are shared (via ``linked_dirs``):
 
     tmp/pids tmp/sockets log
