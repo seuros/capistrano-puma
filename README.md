@@ -69,7 +69,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_workers, 0
     set :puma_worker_timeout, nil
     set :puma_init_active_record, false
-    set :puma_preload_app, true
+    set :puma_preload_app, false
     set :nginx_use_ssl, false
 ```
 For Jungle tasks (beta), these options exist:
