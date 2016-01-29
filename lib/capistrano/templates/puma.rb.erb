@@ -40,3 +40,9 @@ on_worker_boot do
   end
 end
 <% end %>
+
+<% if fetch(:puma_before_fork) %>
+before_fork do
+  <%= fetch(:puma_before_fork).to_s %>
+end
+<% end %>
