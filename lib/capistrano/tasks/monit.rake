@@ -3,6 +3,7 @@ namespace :load do
     set :puma_monit_conf_dir, -> { "/etc/monit/conf.d/#{puma_monit_service_name}.conf" }
     set :puma_monit_use_sudo, true
     set :puma_monit_bin, '/usr/bin/monit'
+    set :puma_monit_shell, -> { fetch(:puma_monit_shell, fetch(:shell, '/bin/bash')) }
   end
 end
 
