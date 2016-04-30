@@ -81,8 +81,4 @@ server {
   if (-f $document_root/system/maintenance.html) {
     return 503;
   }
-
-  location ~ \.(php|html)$ {
-    return 405;
-  }
 }
