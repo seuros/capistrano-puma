@@ -1,4 +1,9 @@
 ## Changelog
+- 2.0.0: 
+ - Require puma 3.4+
+ - Require Capistrano 3.5+
+ - Require capistrano-bundler
+ 
 - 1.2.0: add support for puma user for puma user @mcb & @seuros
 - 1.1.0: Set :puma_preload_app to false; Reload Monit after uploading any monit configuration; Always refresh Gemfile @rafaelgoulart @suhailpatel @sime
 - 1.0.0: Add activate control app @askagirl

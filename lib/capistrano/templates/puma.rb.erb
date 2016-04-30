@@ -13,6 +13,8 @@ stdout_redirect '<%=fetch(:puma_access_log)%>', '<%=fetch(:puma_error_log)%>', t
 
 threads <%=fetch(:puma_threads).join(',')%>
 
+<%= puma_plugins %>
+
 <%= puma_bind %>
 <% if fetch(:puma_control_app) %>
 activate_control_app "<%= fetch(:puma_default_control_app) %>"
