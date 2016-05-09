@@ -19,22 +19,12 @@ namespace :load do
     set :puma_preload_app, false
 
     # Chruby, Rbenv and RVM integration
-    set :chruby_map_bins, fetch(:chruby_map_bins).to_a.concat(%w{ puma pumactl })
-    set :rbenv_map_bins, fetch(:rbenv_map_bins).to_a.concat(%w{ puma pumactl })
-    set :rvm_map_bins, fetch(:rvm_map_bins).to_a.concat(%w{ puma pumactl })
+    append :chruby_map_bins, 'puma', 'pumactl'
+    append :rbenv_map_bins, 'puma', 'pumactl'
+    append :rvm_map_bins, 'puma', 'pumactl'
 
     # Bundler integration
-    set :bundle_bins, fetch(:bundle_bins).to_a.concat(%w{ puma pumactl })
-
-    # Nginx and puma configuration
-    set :nginx_config_name, -> { "#{fetch(:application)}_#{fetch(:stage)}" }
-    set :nginx_sites_available_path, -> { '/etc/nginx/sites-available' }
-    set :nginx_sites_enabled_path, -> { '/etc/nginx/sites-enabled' }
-    set :nginx_server_name, -> { "localhost #{fetch(:application)}.local" }
-    set :nginx_flags, -> { 'fail_timeout=0' }
-    set :nginx_http_flags, -> { fetch(:nginx_flags) }
-    set :nginx_socket_flags, -> { fetch(:nginx_flags) }
-    set :nginx_use_ssl, false
+    append :bundle_bins, 'puma', 'pumactl'
   end
 end
 
@@ -168,6 +158,12 @@ namespace :puma do
   def puma_bind
     Array(fetch(:puma_bind)).collect do |bind|
       "bind '#{bind}'"
+    end.join("\n")
+  end
+
+  def puma_plugins
+    Array(fetch(:puma_plugins)).collect do |bind|
+      "plugin '#{bind}'"
     end.join("\n")
   end
 
