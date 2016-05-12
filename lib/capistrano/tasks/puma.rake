@@ -183,7 +183,7 @@ namespace :puma do
     ].each do |path|
       if File.file?(path)
         erb = File.read(path)
-        upload! StringIO.new(ERB.new(erb).result(binding)), to
+        upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to
         break
       end
     end

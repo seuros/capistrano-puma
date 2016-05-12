@@ -26,30 +26,73 @@ And then execute:
     require 'capistrano/puma/nginx'   # if you want to upload a nginx site template
 ```
 
-then you can use ```cap -T``` to list tasks
+### Config
+
+To list available tasks use `cap -T`
+
+To upload puma config use:
+```ruby
+cap puma:config 
 ```
-cap puma:nginx_config # upload a nginx site config(eg. /etc/nginx/sites-enabled/)
-cap puma:config  # upload puma config(eg. shared/puma.config)
+By default the file located in  `shared/puma.config`
+
+
+Ensure that `tmp/pids` and ` tmp/sockets log` are shared (via `linked_dirs`):
+
+`This step is mandatory before deploying, otherwise puma server won't start`
+
+### Nginx
+
+To upload a nginx site config (eg. /etc/nginx/sites-enabled/) use:
+```ruby
+cap puma:nginx_config
 ```
-you may want to customize these two templates locally before uploading
+
+To customize these two templates locally before uploading use:
 ```
 rails g capistrano:nginx_puma:config
 ```
 
-if your nginx server configuration is not located in /etc/nginx, you may need to customize nginx_sites_available_path and nginx_sites_enabled_path
-```
+if your nginx server configuration is not located in `/etc/nginx`, you may need to customize:
+```ruby
 set :nginx_sites_available_path, "/etc/nginx/sites-available"
 set :nginx_sites_enabled_path, "/etc/nginx/sites-enabled"
 ```
 
-By default, ```nginx_config``` will be executed with ```:web``` role. But you can assign it to a different role:
-```
+By default, `nginx_config` will be executed with `:web` role. But you can assign it to a different role:
+```ruby
 set :puma_nginx, :foo
 ```
 or define a standalone one:
-```
+```ruby
 role :puma_nginx, %w{root@example.com}
 ```
+
+### Jungle
+
+For Jungle tasks (beta), these options exist:
+```ruby
+    set :puma_jungle_conf, '/etc/puma.conf'
+    set :puma_run_path, '/usr/local/bin/run-puma'
+```
+
+### Multi bind
+
+Multi-bind can be set with an array in the puma_bind variable
+```ruby
+  set :puma_bind, %w(tcp://0.0.0.0:9292 unix:///tmp/puma.sock)
+```
+    * Listening on tcp://0.0.0.0:9220
+    * Listening on unix:///tmp/puma.sock
+
+### Active Record
+
+For ActiveRecord the following line to your deploy.rb
+```ruby
+    set :puma_init_active_record, true
+```
+
+### Othe configs
 
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
 
@@ -73,30 +116,6 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_plugins, []  #accept array of plugins
     set :nginx_use_ssl, false
 ```
-For Jungle tasks (beta), these options exist:
-```ruby
-    set :puma_jungle_conf, '/etc/puma.conf'
-    set :puma_run_path, '/usr/local/bin/run-puma'
-```
-
-Multi-bind can be set with an array in the puma_bind variable
-```ruby
-  set :puma_bind, %w(tcp://0.0.0.0:9292 unix:///tmp/puma.sock)
-```
-    * Listening on tcp://0.0.0.0:9220
-    * Listening on unix:///tmp/puma.sock
-
-
-For ActiveRecord the following line to your deploy.rb
-```ruby
-    set :puma_init_active_record, true
-```
-
-Ensure that the following directories are shared (via ``linked_dirs``):
-
-    tmp/pids tmp/sockets log
-
-
 
 ## Contributing
 
