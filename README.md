@@ -77,6 +77,7 @@ For Jungle tasks (beta), these options exist:
 ```ruby
     set :puma_jungle_conf, '/etc/puma.conf'
     set :puma_run_path, '/usr/local/bin/run-puma'
+    set :puma_service, "puma" # override defaults of "puma_#{fetch(:application)}_#{fetch(:stage)}"
 ```
 
 Multi-bind can be set with an array in the puma_bind variable
