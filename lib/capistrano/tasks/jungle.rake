@@ -2,6 +2,7 @@ namespace :load do
   task :defaults do
     set :puma_jungle_conf, '/etc/puma.conf'
     set :puma_run_path, '/usr/local/bin/run-puma'
+    set :puma_service, -> { "puma_#{fetch(:application)}_#{fetch(:stage)}" }
   end
 end
 
@@ -34,16 +35,16 @@ namespace :puma do
     def debian_install
       template_puma 'puma-deb', "#{fetch(:tmp_dir)}/puma", @role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
-      sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
-      sudo 'update-rc.d -f puma defaults'
+      sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/#{fetch(:puma_service)}"
+      sudo 'update-rc.d -f #{fetch(:puma_service)} defaults'
 
     end
 
     def rhel_install
       template_puma 'puma-rpm', "#{fetch(:tmp_dir)}/puma" , @role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
-      sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
-      sudo 'chkconfig --add puma'
+      sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/#{fetch(:puma_service)}"
+      sudo 'chkconfig --add #{fetch(:puma_service)}'
     end
 
 
@@ -57,14 +58,14 @@ namespace :puma do
     desc 'Add current project to the jungle'
     task :add do
       on roles(fetch(:puma_role)) do|role|
-        sudo "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user, role.user)}"
+        sudo "/etc/init.d/#{fetch(:puma_service)} add '#{current_path}' #{fetch(:puma_user, role.user)}"
       end
     end
 
     desc 'Remove current project from the jungle'
     task :remove do
       on roles(fetch(:puma_role)) do
-        sudo "/etc/init.d/puma remove '#{current_path}'"
+        sudo "/etc/init.d/#{fetch(:puma_service)} remove '#{current_path}'"
       end
     end
 
@@ -72,7 +73,7 @@ namespace :puma do
       desc "#{command} puma"
       task command do
         on roles(fetch(:puma_role)) do
-          sudo "service puma #{command} #{current_path}"
+          sudo "service #{fetch(:puma_service)} #{command} #{current_path}"
         end
       end
     end
