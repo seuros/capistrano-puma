@@ -36,7 +36,7 @@ namespace :puma do
       template_puma 'puma-deb', "#{fetch(:tmp_dir)}/puma", @role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
       sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/#{fetch(:puma_service)}"
-      sudo 'update-rc.d -f #{fetch(:puma_service)} defaults'
+      sudo "update-rc.d -f #{fetch(:puma_service)} defaults"
 
     end
 
@@ -44,7 +44,7 @@ namespace :puma do
       template_puma 'puma-rpm', "#{fetch(:tmp_dir)}/puma" , @role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
       sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/#{fetch(:puma_service)}"
-      sudo 'chkconfig --add #{fetch(:puma_service)}'
+      sudo "chkconfig --add #{fetch(:puma_service)}"
     end
 
 
