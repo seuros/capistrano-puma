@@ -92,7 +92,7 @@ For ActiveRecord the following line to your deploy.rb
     set :puma_init_active_record, true
 ```
 
-### Othe configs
+### Other configs
 
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
 
