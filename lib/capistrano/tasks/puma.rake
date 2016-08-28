@@ -17,6 +17,9 @@ namespace :load do
     set :puma_error_log, -> { File.join(shared_path, 'log', 'puma_error.log') }
     set :puma_init_active_record, false
     set :puma_preload_app, false
+    set :puma_template_dirs, -> { ['lib/capistrano/templates/',
+                                   'config/deploy/templates/',
+                                   File.expand_path("../../templates/", __FILE__)] }
 
     # Chruby, Rbenv and RVM integration
     append :chruby_map_bins, 'puma', 'pumactl'
@@ -168,23 +171,22 @@ namespace :puma do
   end
 
   def template_puma(from, to, role)
-    [
-        "lib/capistrano/templates/#{from}-#{role.hostname}-#{fetch(:stage)}.rb",
-        "lib/capistrano/templates/#{from}-#{role.hostname}.rb",
-        "lib/capistrano/templates/#{from}-#{fetch(:stage)}.rb",
-        "lib/capistrano/templates/#{from}.rb.erb",
-        "lib/capistrano/templates/#{from}.rb",
-        "lib/capistrano/templates/#{from}.erb",
-        "config/deploy/templates/#{from}.rb.erb",
-        "config/deploy/templates/#{from}.rb",
-        "config/deploy/templates/#{from}.erb",
-        File.expand_path("../../templates/#{from}.rb.erb", __FILE__),
-        File.expand_path("../../templates/#{from}.erb", __FILE__)
-    ].each do |path|
-      if File.file?(path)
-        erb = File.read(path)
-        upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to
-        break
+    file_names = [
+        "#{from}-#{role.hostname}-#{fetch(:stage)}.rb",
+        "#{from}-#{role.hostname}.rb",
+        "#{from}-#{fetch(:stage)}.rb",
+        "#{from}.rb.erb",
+        "#{from}.rb",
+        "#{from}.erb"
+    ]
+    fetch(:puma_template_dirs).each do |dir|
+      file_names.each do |file_name|
+        path = File.join(dir, file_name)
+        if File.file?(path)
+          erb = File.read(path)
+          upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to
+          break
+        end
       end
     end
   end
