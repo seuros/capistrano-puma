@@ -7,7 +7,7 @@ namespace :puma do
         #TODO
         # cleanup
         # add host name/ip
-        workers_count = capture("ps ax | grep -c 'puma: cluster worker: `cat  #{fetch(:puma_pid)}`'").to_i - 1
+        workers_count = capture("ps ax | grep -c 'puma: cluster worker [0-9]: `cat  #{fetch(:puma_pid)}`'").to_i - 1
         log  "Workers count : #{workers_count}"
         end
       end
