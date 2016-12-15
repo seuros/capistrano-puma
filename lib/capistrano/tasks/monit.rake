@@ -21,14 +21,23 @@ namespace :puma do
     desc 'Monitor Puma monit-service'
     task :monitor do
       on roles(fetch(:puma_role)) do
-        sudo_if_needed "#{fetch(:puma_monit_bin)} monitor #{puma_monit_service_name}"
+        begin
+          sudo_if_needed "#{fetch(:puma_monit_bin)} monitor #{puma_monit_service_name}"
+        rescue
+          invoke 'puma:monit:config'
+          sudo_if_needed "#{fetch(:puma_monit_bin)} monitor #{puma_monit_service_name}"
+        end
       end
     end
 
     desc 'Unmonitor Puma monit-service'
     task :unmonitor do
       on roles(fetch(:puma_role)) do
-        sudo_if_needed "#{fetch(:puma_monit_bin)} unmonitor #{puma_monit_service_name}"
+        begin
+          sudo_if_needed "#{fetch(:puma_monit_bin)} unmonitor #{puma_monit_service_name}"
+        rescue
+          # no worries here (still no monitoring)
+        end
       end
     end
 
