@@ -11,7 +11,6 @@ namespace :load do
     set :puma_state, -> { File.join(shared_path, 'tmp', 'pids', 'puma.state') }
     set :puma_pid, -> { File.join(shared_path, 'tmp', 'pids', 'puma.pid') }
     set :puma_bind, -> { File.join("unix://#{shared_path}", 'tmp', 'sockets', 'puma.sock') }
-    set :puma_default_control_app, -> { File.join("unix://#{shared_path}", 'tmp', 'sockets', 'pumactl.sock') }
     set :puma_conf, -> { File.join(shared_path, 'puma.rb') }
     set :puma_access_log, -> { File.join(shared_path, 'log', 'puma_access.log') }
     set :puma_error_log, -> { File.join(shared_path, 'log', 'puma_error.log') }
@@ -78,6 +77,32 @@ namespace :puma do
               else
                 #pid file not found, so puma is probably not running or it using another pidfile
                 warn 'Puma not running'
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
+  %w[stats reload-worker-directory].map do |command|
+    desc "#{command} puma"
+    task command do
+      on roles (fetch(:puma_role)) do |role|
+        within current_path do
+          puma_switch_user(role) do
+            with rack_env: fetch(:puma_env) do
+              info "Using control app: #{fetch(:puma_control_app)}"
+              if fetch(:puma_control_app)
+                if fetch(:puma_control_app_token).nil?
+                  execute :pumactl, "-C #{fetch(:puma_control_app)} #{command}"
+                else
+                  puts capture :pumactl, "-C #{fetch(:puma_control_app)} --control-token #{fetch(:puma_control_app_token)} #{command}"
+
+                end
+              else
+                #pumactl server not found, so puma control app is probably not running
+                warn 'Puma control app not running'
               end
             end
           end
