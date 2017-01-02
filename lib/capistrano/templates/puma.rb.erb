@@ -40,7 +40,9 @@ before_fork do
   ActiveRecord::Base.connection_pool.disconnect!
 end
 
-on_worker_boot do
+on_worker_boot do |worker_index|
+  File.open("<%= fetch(:puma_pid).gsub(/\.pid$/, "-worker-") %>#{worker_index}.pid", "w") { |f| f.puts Process.pid }
+
   ActiveSupport.on_load(:active_record) do
     ActiveRecord::Base.establish_connection
   end

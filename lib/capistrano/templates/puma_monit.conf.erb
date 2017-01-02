@@ -5,3 +5,11 @@ check process <%= puma_monit_service_name %>
   with pidfile "<%= fetch(:puma_pid) %>"
   start program = "/usr/bin/sudo -iu <%= puma_user(@role) %> /bin/bash -c 'cd <%= current_path %> && <%= SSHKit.config.command_map[:puma] %> -C <%= fetch(:puma_conf) %> --daemon'"
   stop program = "/usr/bin/sudo -iu <%= puma_user(@role) %> /bin/bash -c 'cd <%= current_path %> && <%= SSHKit.config.command_map[:pumactl] %> -S <%= fetch(:puma_state) %> stop'"
+
+<% fetch(:puma_workers).times do |idx| %>
+check process <%= puma_monit_worker_name(idx) %>
+  with pidfile "<%= worker_pidfile(idx) %>"
+  if totalmem is greater than 230 MB for 2 cycles then exec "kill -s QUIT $(cat <%= worker_pidfile(idx) %>)"
+<% end %>
+
+
