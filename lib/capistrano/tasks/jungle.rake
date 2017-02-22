@@ -72,7 +72,7 @@ namespace :puma do
       desc "#{command} puma"
       task command do
         on roles(fetch(:puma_role)) do
-          sudo "service puma #{command} #{current_path}"
+          sudo "service puma #{command} app=#{current_path}"
         end
       end
     end
