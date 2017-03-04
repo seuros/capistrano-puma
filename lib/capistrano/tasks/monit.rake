@@ -1,7 +1,21 @@
 git_plugin = self
 
+namespace :deploy do
+  before :starting, :check_puma_monit_hooks do
+    if fetch(:puma_default_hooks) && fetch(:puma_monit_default_hooks)
+      invoke 'puma:monit:add_default_hooks'
+    end
+  end
+end
+
 namespace :puma do
   namespace :monit do
+
+    task :add_default_hooks do
+      before 'deploy:updating', 'puma:monit:unmonitor'
+      after 'deploy:published', 'puma:monit:monitor'
+    end
+
     desc 'Config Puma monit-service'
     task :config do
       on roles(fetch(:puma_role)) do |role|
