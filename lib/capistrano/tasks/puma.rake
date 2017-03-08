@@ -17,6 +17,7 @@ namespace :load do
     set :puma_error_log, -> { File.join(shared_path, 'log', 'puma_error.log') }
     set :puma_init_active_record, false
     set :puma_preload_app, false
+    set :puma_use_sudo, true
 
     # Chruby, Rbenv and RVM integration
     append :chruby_map_bins, 'puma', 'pumactl'
@@ -191,6 +192,14 @@ namespace :puma do
         upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to
         break
       end
+    end
+  end
+
+  def sudo_if_needed(command)
+    if fetch(:puma_use_sudo)
+      sudo command
+    else
+      execute command
     end
   end
 

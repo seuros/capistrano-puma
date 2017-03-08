@@ -1,7 +1,6 @@
 namespace :load do
   task :defaults do
     set :puma_monit_conf_dir, -> { "/etc/monit/conf.d/#{puma_monit_service_name}.conf" }
-    set :puma_monit_use_sudo, true
     set :puma_monit_bin, '/usr/bin/monit'
   end
 end
@@ -67,14 +66,6 @@ namespace :puma do
 
     def puma_monit_service_name
       fetch(:puma_monit_service_name, "puma_#{fetch(:application)}_#{fetch(:stage)}")
-    end
-
-    def sudo_if_needed(command)
-      if fetch(:puma_monit_use_sudo)
-        sudo command
-      else
-        execute command
-      end
     end
 
   end
