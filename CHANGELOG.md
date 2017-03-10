@@ -1,6 +1,6 @@
 ## Changelog
 - 3.0.0:
- - Require puma 3.7+
+ - Require capistrano 3.7+
  - Implement the plugin system
  - don't fail if puma was already running
  - Added :puma_daemonize option (default is false)

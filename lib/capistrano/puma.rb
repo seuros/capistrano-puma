@@ -8,7 +8,6 @@ module Capistrano
     end
 
     def set_defaults
-      set_if_empty :my_plugin_option, true
       set_if_empty :puma_role, :app
       set_if_empty :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
       # Configure "min" to be the minimum number of threads to use to answer
@@ -69,6 +68,10 @@ module Capistrano
       fetch(:puma_preload_app)
     end
 
+    def puma_daemonize?
+      fetch(:puma_daemonize)
+    end
+
     def puma_bind
       Array(fetch(:puma_bind)).collect do |bind|
         "bind '#{bind}'"
@@ -82,7 +85,7 @@ module Capistrano
     end
 
     def template_puma(from, to, role)
-      [
+      file = [
           "lib/capistrano/templates/#{from}-#{role.hostname}-#{fetch(:stage)}.rb",
           "lib/capistrano/templates/#{from}-#{role.hostname}.rb",
           "lib/capistrano/templates/#{from}-#{fetch(:stage)}.rb",
@@ -92,15 +95,11 @@ module Capistrano
           "config/deploy/templates/#{from}.rb.erb",
           "config/deploy/templates/#{from}.rb",
           "config/deploy/templates/#{from}.erb",
-          File.expand_path("../../templates/#{from}.rb.erb", __FILE__),
-          File.expand_path("../../templates/#{from}.erb", __FILE__)
-      ].each do |path|
-        if File.file?(path)
-          erb = File.read(path)
-          upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to
-          break
-        end
-      end
+          File.expand_path("../templates/#{from}.rb.erb", __FILE__),
+      ].detect { |path| File.file?(path) }
+
+      erb = File.read(file)
+      backend.upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to
     end
   end
 end
