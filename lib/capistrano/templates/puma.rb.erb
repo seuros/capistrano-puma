@@ -24,6 +24,10 @@ workers <%= puma_workers %>
 worker_timeout <%= fetch(:puma_worker_timeout).to_i %>
 <% end %>
 
+<% if puma_daemonize? %>
+daemonize
+<% end %>
+
 <% if puma_preload_app? %>
 preload_app!
 <% else %>

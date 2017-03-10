@@ -25,6 +25,7 @@ module Capistrano
       set_if_empty :puma_error_log, -> { File.join(shared_path, 'log', 'puma_error.log') }
       set_if_empty :puma_init_active_record, false
       set_if_empty :puma_preload_app, false
+      set_if_empty :puma_daemonize, false
 
       # Chruby, Rbenv and RVM integration
       append :chruby_map_bins, 'puma', 'pumactl'

@@ -3,6 +3,7 @@
  - Require puma 3.7+
  - Implement the plugin system
  - don't fail if puma was already running
+ - Added :puma_daemonize option (default is false)
 
 - 2.0.0: 
  - Require puma 3.4+
