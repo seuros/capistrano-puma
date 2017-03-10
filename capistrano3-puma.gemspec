@@ -5,7 +5,7 @@ require 'capistrano/puma/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'capistrano3-puma'
-  spec.version = Capistrano::Puma::VERSION
+  spec.version = Capistrano::PumaVERSION
   spec.authors = ['Abdelkader Boudih']
   spec.email = ['Terminale@gmail.com']
   spec.description = %q{Puma integration for Capistrano 3}
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.files = `git ls-files`.split($/)
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'capistrano', '~> 3.5'
+  spec.add_dependency 'capistrano', '~> 3.7'
   spec.add_dependency 'capistrano-bundler'
   spec.add_dependency 'puma' , '~> 3.4'
 end

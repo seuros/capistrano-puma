@@ -1,4 +1,9 @@
 ## Changelog
+- 3.0.0:
+ - Require puma 3.7+
+ - Implement the plugin system
+ - don't fail if puma was already running
+
 - 2.0.0: 
  - Require puma 3.4+
  - Require Capistrano 3.5+
