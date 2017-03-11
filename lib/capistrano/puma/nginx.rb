@@ -1,5 +1,6 @@
 module Capistrano
   class Puma::Nginx < Capistrano::Plugin
+    include PumaCommon
     def set_defaults
       # Nginx and puma configuration
       set_if_empty :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"

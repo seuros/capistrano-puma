@@ -1,5 +1,7 @@
 module Capistrano
   class Puma::Jungle < Capistrano::Plugin
+    include PumaCommon
+    
     def set_defaults
       set_if_empty :puma_jungle_conf, '/etc/puma.conf'
       set_if_empty :puma_run_path, '/usr/local/bin/run-puma'

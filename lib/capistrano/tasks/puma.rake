@@ -4,7 +4,7 @@ namespace :puma do
   desc 'Setup Puma config file'
   task :config do
     on roles(fetch(:puma_role)) do |role|
-      git_plugin.template_puma 'puma', fetch(:puma_conf), role
+      git_plugin.template_puma 'puma.rb', fetch(:puma_conf), role
     end
   end
 
@@ -83,7 +83,7 @@ namespace :puma do
       unless  test "[ -f #{fetch(:puma_conf)} ]"
         warn 'puma.rb NOT FOUND!'
         #TODO DRY
-        git_plugin.template_puma 'puma', fetch(:puma_conf), role
+        git_plugin.template_puma 'puma.rb', fetch(:puma_conf), role
         info 'puma.rb generated'
       end
     end

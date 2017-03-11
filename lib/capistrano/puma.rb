@@ -2,7 +2,54 @@ require 'capistrano/bundler'
 require "capistrano/plugin"
 
 module Capistrano
+  module PumaCommon
+    def puma_switch_user(role, &block)
+      user = puma_user(role)
+      if user == role.user
+        block.call
+      else
+        as user do
+          block.call
+        end
+      end
+    end
+
+    def puma_user(role)
+      properties = role.properties
+      properties.fetch(:puma_user) || # local property for puma only
+          fetch(:puma_user) ||
+          properties.fetch(:run_as) || # global property across multiple capistrano gems
+          role.user
+    end
+
+    def puma_bind
+      Array(fetch(:puma_bind)).collect do |bind|
+        "bind '#{bind}'"
+      end.join("\n")
+    end
+
+
+    def template_puma(from, to, role)
+      file = [
+          "lib/capistrano/templates/#{from}-#{role.hostname}-#{fetch(:stage)}.rb",
+          "lib/capistrano/templates/#{from}-#{role.hostname}.rb",
+          "lib/capistrano/templates/#{from}-#{fetch(:stage)}.rb",
+          "lib/capistrano/templates/#{from}.rb.erb",
+          "lib/capistrano/templates/#{from}.rb",
+          "lib/capistrano/templates/#{from}.erb",
+          "config/deploy/templates/#{from}.rb.erb",
+          "config/deploy/templates/#{from}.rb",
+          "config/deploy/templates/#{from}.erb",
+          File.expand_path("../templates/#{from}.erb", __FILE__),
+      ].detect { |path| File.file?(path) }
+      erb = File.read(file)
+      backend.upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to
+    end
+  end
+
   class Puma < Capistrano::Plugin
+    include PumaCommon
+
     def define_tasks
       eval_rakefile File.expand_path('../tasks/puma.rake', __FILE__)
     end
@@ -40,26 +87,6 @@ module Capistrano
       after 'deploy:finished', 'puma:smart_restart'
     end
 
-
-    def puma_switch_user(role, &block)
-      user = puma_user(role)
-      if user == role.user
-        block.call
-      else
-        as user do
-          block.call
-        end
-      end
-    end
-
-    def puma_user(role)
-      properties = role.properties
-      properties.fetch(:puma_user) || # local property for puma only
-          fetch(:puma_user) ||
-          properties.fetch(:run_as) || # global property across multiple capistrano gems
-          role.user
-    end
-
     def puma_workers
       fetch(:puma_workers, 0)
     end
@@ -72,34 +99,10 @@ module Capistrano
       fetch(:puma_daemonize)
     end
 
-    def puma_bind
-      Array(fetch(:puma_bind)).collect do |bind|
-        "bind '#{bind}'"
-      end.join("\n")
-    end
-
     def puma_plugins
       Array(fetch(:puma_plugins)).collect do |bind|
         "plugin '#{bind}'"
       end.join("\n")
-    end
-
-    def template_puma(from, to, role)
-      file = [
-          "lib/capistrano/templates/#{from}-#{role.hostname}-#{fetch(:stage)}.rb",
-          "lib/capistrano/templates/#{from}-#{role.hostname}.rb",
-          "lib/capistrano/templates/#{from}-#{fetch(:stage)}.rb",
-          "lib/capistrano/templates/#{from}.rb.erb",
-          "lib/capistrano/templates/#{from}.rb",
-          "lib/capistrano/templates/#{from}.erb",
-          "config/deploy/templates/#{from}.rb.erb",
-          "config/deploy/templates/#{from}.rb",
-          "config/deploy/templates/#{from}.erb",
-          File.expand_path("../templates/#{from}.rb.erb", __FILE__),
-      ].detect { |path| File.file?(path) }
-
-      erb = File.read(file)
-      backend.upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to
     end
   end
 end
