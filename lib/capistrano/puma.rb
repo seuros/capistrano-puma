@@ -104,8 +104,13 @@ module Capistrano
         "plugin '#{bind}'"
       end.join("\n")
     end
+
+    def upload_puma_rb(role)
+      template_puma 'puma.rb', fetch(:puma_conf), role
+    end
   end
 end
+install_plugin Capistrano::Puma
 
 require 'capistrano/puma/workers'
 require 'capistrano/puma/monit'
