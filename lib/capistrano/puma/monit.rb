@@ -1,5 +1,6 @@
 module Capistrano
   class Puma::Monit < Capistrano::Plugin
+    include PumaCommon
     def register_hooks
       before 'deploy:updating', 'puma:monit:unmonitor'
       after 'deploy:published', 'puma:monit:monitor'
