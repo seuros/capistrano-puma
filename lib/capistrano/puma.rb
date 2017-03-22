@@ -73,6 +73,7 @@ module Capistrano
       set_if_empty :puma_init_active_record, false
       set_if_empty :puma_preload_app, false
       set_if_empty :puma_daemonize, false
+      set_if_empty :puma_default_hooks, true
 
       # Chruby, Rbenv and RVM integration
       append :chruby_map_bins, 'puma', 'pumactl'
@@ -84,8 +85,10 @@ module Capistrano
     end
 
     def register_hooks
-      after 'deploy:check', 'puma:check'
-      after 'deploy:finished', 'puma:smart_restart'
+      if fetch(:puma_default_hooks)
+        after 'deploy:check', 'puma:check'
+        after 'deploy:finished', 'puma:smart_restart'
+      end
     end
 
     def puma_workers
