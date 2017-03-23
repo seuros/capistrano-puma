@@ -32,7 +32,7 @@ To list available tasks use `cap -T`
 
 To upload puma config use:
 ```ruby
-cap puma:config 
+cap puma:config
 ```
 By default the file located in  `shared/puma.config`
 
@@ -116,6 +116,11 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_daemonize, true
     set :puma_plugins, []  #accept array of plugins
     set :nginx_use_ssl, false
+```
+
+__Notes:__ If you are setting values for variables that might be used by other plugins, use `append` instead of `set`. For example:
+```ruby
+append :rbenv_map_bins, 'puma', 'pumactl'
 ```
 
 ## Contributing
