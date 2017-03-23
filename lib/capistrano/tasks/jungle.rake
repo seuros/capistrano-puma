@@ -5,16 +5,15 @@ namespace :puma do
     desc 'Install Puma jungle'
     task :install do
       on roles(fetch(:puma_role)) do |role|
-        @role = role
         git_plugin.template_puma 'run-puma', "#{fetch(:tmp_dir)}/run-puma", role
         execute "chmod +x #{fetch(:tmp_dir)}/run-puma"
         sudo "mv #{fetch(:tmp_dir)}/run-puma #{fetch(:puma_run_path)}"
         if test '[ -f /etc/redhat-release ]'
           #RHEL flavor OS
-          git_plugin.rhel_install
+          git_plugin.rhel_install(role)
         elsif test '[ -f /etc/lsb-release ]'
           #Debian flavor OS
-          git_plugin.debian_install
+          git_plugin.debian_install(role)
         else
           #Some other OS
           error 'This task is not supported for your OS'

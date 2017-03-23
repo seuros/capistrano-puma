@@ -11,17 +11,15 @@ module Capistrano
       eval_rakefile File.expand_path('../../tasks/jungle.rake', __FILE__)
     end
 
-    private
-
-    def debian_install
-      template_puma 'puma-deb', "#{fetch(:tmp_dir)}/puma", @role
+    def debian_install(role)
+      template_puma 'puma-deb', "#{fetch(:tmp_dir)}/puma", role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
       sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
       sudo 'update-rc.d -f puma defaults'
     end
 
-    def rhel_install
-      template_puma 'puma-rpm', "#{fetch(:tmp_dir)}/puma", @role
+    def rhel_install(role)
+      template_puma 'puma-rpm', "#{fetch(:tmp_dir)}/puma", role
       execute "chmod +x #{fetch(:tmp_dir)}/puma"
       sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
       sudo 'chkconfig --add puma'
