@@ -1,3 +1,3 @@
 module Capistrano
-  PumaVERSION = '3.0.3'
+  PumaVERSION = '3.1.0'
 end
