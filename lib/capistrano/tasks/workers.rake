@@ -9,7 +9,8 @@ namespace :puma do
           #TODO
           # cleanup
           # add host name/ip
-          workers_count = capture("ps ax | grep -c 'puma: cluster worker [0-9]: `cat  #{fetch(:puma_pid)}`'").to_i - 1
+          puma_pid = capture("cat #{fetch(:puma_pid)}")
+          workers_count = capture("ps ax | grep -c 'puma: cluster worker [0-9]: #{puma_pid}'").to_i
           log "Workers count : #{workers_count}"
         end
       end
@@ -23,7 +24,8 @@ namespace :puma do
     task :more do
       on roles(fetch(:puma_role)) do |role|
         git_plugin.puma_switch_user(role) do
-          execute(:kill, "-TTIN `cat  #{fetch(:puma_pid)}`")
+          puma_pid = capture("cat  #{fetch(:puma_pid)}")
+          execute(:kill, "-TTIN #{puma_pid}")
         end
       end
     end
@@ -32,7 +34,8 @@ namespace :puma do
     task :less do
       on roles(fetch(:puma_role)) do |role|
         git_plugin.puma_switch_user(role) do
-          execute(:kill, "-TTOU `cat  #{fetch(:puma_pid)}`")
+          puma_pid = capture("cat  #{fetch(:puma_pid)}")
+          execute(:kill, "-TTOU #{puma_pid}")
         end
       end
     end
