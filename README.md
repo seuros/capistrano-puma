@@ -27,13 +27,13 @@ And then execute:
     install_plugin Capistrano::Puma::Nginx  # if you want to upload a nginx site template
 ```
 
-To prevent loading the hooks of the plugin, add false to the second param.
+To prevent loading the hooks of the plugin, add false to the load_hooks param.
 ```ruby
     # Capfile
 
     require 'capistrano/puma'
-    install_plugin Capistrano::Puma, false  # Default puma tasks without hooks
-    install_plugin Capistrano::Puma::Monit, false  # Monit tasks without hooks
+    install_plugin Capistrano::Puma, load_hooks: false  # Default puma tasks without hooks
+    install_plugin Capistrano::Puma::Monit, load_hooks: false  # Monit tasks without hooks
 ```
 
 ### Config
