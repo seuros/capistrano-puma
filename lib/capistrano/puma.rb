@@ -111,7 +111,6 @@ module Capistrano
     end
   end
 end
-install_plugin Capistrano::Puma
 
 require 'capistrano/puma/workers'
 require 'capistrano/puma/monit'

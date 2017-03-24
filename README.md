@@ -20,10 +20,20 @@ And then execute:
     # Capfile
 
     require 'capistrano/puma'
+    install_plugin Capistrano::Puma  # Default puma tasks
     install_plugin Capistrano::Puma::Workers  # if you want to control the workers (in cluster mode)
     install_plugin Capistrano::Puma::Jungle # if you need the jungle tasks
     install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
     install_plugin Capistrano::Puma::Nginx  # if you want to upload a nginx site template
+```
+
+To prevent loading the hooks of the plugin, add false to the second param.
+```ruby
+    # Capfile
+
+    require 'capistrano/puma'
+    install_plugin Capistrano::Puma, false  # Default puma tasks without hooks
+    install_plugin Capistrano::Puma::Monit, false  # Monit tasks without hooks
 ```
 
 ### Config

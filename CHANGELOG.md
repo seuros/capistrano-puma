@@ -1,4 +1,6 @@
 ## Changelog
+- 3.1.0: 
+  - Don't load puma hooks by default.
 - 3.0.0:
  - Require capistrano 3.7+
  - Implement the plugin system
