@@ -66,6 +66,7 @@ module Capistrano
       set_if_empty :puma_state, -> { File.join(shared_path, 'tmp', 'pids', 'puma.state') }
       set_if_empty :puma_pid, -> { File.join(shared_path, 'tmp', 'pids', 'puma.pid') }
       set_if_empty :puma_bind, -> { File.join("unix://#{shared_path}", 'tmp', 'sockets', 'puma.sock') }
+      set_if_empty :puma_control_app, false
       set_if_empty :puma_default_control_app, -> { File.join("unix://#{shared_path}", 'tmp', 'sockets', 'pumactl.sock') }
       set_if_empty :puma_conf, -> { File.join(shared_path, 'puma.rb') }
       set_if_empty :puma_access_log, -> { File.join(shared_path, 'log', 'puma_access.log') }
@@ -73,6 +74,7 @@ module Capistrano
       set_if_empty :puma_init_active_record, false
       set_if_empty :puma_preload_app, false
       set_if_empty :puma_daemonize, false
+      set_if_empty :puma_tag, ''
 
       # Chruby, Rbenv and RVM integration
       append :chruby_map_bins, 'puma', 'pumactl'
