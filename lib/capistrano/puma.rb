@@ -41,7 +41,8 @@ module Capistrano
           "config/deploy/templates/#{from}.rb.erb",
           "config/deploy/templates/#{from}.rb",
           "config/deploy/templates/#{from}.erb",
-          File.expand_path("../templates/#{from}.rb.erb", __FILE__),
+          File.expand_path("../templates/#{from}.erb", __FILE__),
+          File.expand_path("../templates/#{from}.rb.erb", __FILE__)
       ].detect { |path| File.file?(path) }
       erb = File.read(file)
       backend.upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to

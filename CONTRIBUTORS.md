@@ -11,6 +11,7 @@
 - Claudio Poli
 - Cyril Rohr
 - Fritz Lee
+- Feña Agar
 - Hnat Kubov
 - Ivan Schneider
 - James-Hendrickson
