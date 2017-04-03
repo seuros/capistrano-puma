@@ -10,25 +10,34 @@ end
 %><% @backends.each do |server| %>
   <%= server %><% end %>
 }
-<% if fetch(:nginx_use_ssl) -%>
+<% if fetch(:nginx_redirected_domains) %>
 server {
   listen 80;
-  server_name <%= fetch(:nginx_server_name) %>;
+  server_name <%= fetch(:nginx_redirected_domains) %>;
+  rewrite ^(.*) http://<%= fetch(:nginx_domains).gsub(/\s.*/,'') %> permanent;
+}
+<% end %>
+
+<% if fetch(:nginx_use_ssl) %>
+server {
+  listen 80;
+  server_name <%= fetch(:nginx_domains) %>;
   rewrite ^(.*) https://$host$1 permanent;
 }
-<% end -%>
+<% end %>
 
 server {
 <% if fetch(:nginx_use_ssl) -%>
   listen 443;
   ssl on;
-  ssl_certificate /etc/ssl/certs/<%= fetch(:nginx_config_name) %>.crt;
-  ssl_certificate_key /etc/ssl/private/<%= fetch(:nginx_config_name) %>.key;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_certificate <%= fetch(:nginx_ssl_certificate_path) %>/<%= fetch(:nginx_ssl_certificate) %>;
+  ssl_certificate_key <%= fetch(:nginx_ssl_certificate_key_path) %>/<%= fetch(:nginx_ssl_certificate_key) %>;
 <% else -%>
   listen 80;
 <% end -%>
-  server_name <%= fetch(:nginx_server_name) %>;
-  root <%= current_path %>/public;
+  server_name <%= fetch(:nginx_domains) %>;
+  root        <%= fetch(:deploy_to) %>/current/<%= fetch(:nginx_static_dir) %>;
   try_files $uri/index.html $uri @puma_<%= fetch(:nginx_config_name) %>;
 
   client_max_body_size 4G;
