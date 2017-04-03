@@ -42,7 +42,7 @@ To list available tasks use `cap -T`
 
 To upload puma config use:
 ```ruby
-cap puma:config
+cap production puma:config
 ```
 By default the file located in  `shared/puma.config`
 
@@ -55,7 +55,7 @@ Ensure that `tmp/pids` and ` tmp/sockets log` are shared (via `linked_dirs`):
 
 To upload a nginx site config (eg. /etc/nginx/sites-enabled/) use:
 ```ruby
-cap puma:nginx_config
+cap production puma:nginx_config
 ```
 
 To customize these two templates locally before uploading use:
