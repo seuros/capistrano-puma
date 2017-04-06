@@ -127,6 +127,16 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_daemonize, true
     set :puma_plugins, []  #accept array of plugins
     set :puma_tag, fetch(:application)
+
+    set :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"
+    set :nginx_flags, 'fail_timeout=0'
+    set :nginx_http_flags, fetch(:nginx_flags)
+    set :nginx_server_name, "localhost #{fetch(:application)}.local"
+    set :nginx_sites_available_path, '/etc/nginx/sites-available'
+    set :nginx_sites_enabled_path, '/etc/nginx/sites-enabled'
+    set :nginx_socket_flags, fetch(:nginx_flags)
+    set :nginx_ssl_certificate, "/etc/ssl/certs/{fetch(:nginx_config_name)}.crt"
+    set :nginx_ssl_certificate_key, "/etc/ssl/private/{fetch(:nginx_config_name)}.key"
     set :nginx_use_ssl, false
 ```
 
