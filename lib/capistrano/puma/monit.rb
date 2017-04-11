@@ -22,9 +22,9 @@ module Capistrano
 
     def sudo_if_needed(command)
       if fetch(:puma_monit_use_sudo)
-        sudo command
+        backend.sudo command
       else
-        execute command
+        backend.execute command
       end
     end
   end
