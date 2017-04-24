@@ -14,6 +14,7 @@ module Capistrano
       set_if_empty :puma_monit_conf_dir, -> { "/etc/monit/conf.d/#{puma_monit_service_name}.conf" }
       set_if_empty :puma_monit_use_sudo, true
       set_if_empty :puma_monit_bin, '/usr/bin/monit'
+      set_if_empty :puma_monit, ->{ fetch(:puma_nginx) || fetch(:puma_role) }
     end
 
     def puma_monit_service_name

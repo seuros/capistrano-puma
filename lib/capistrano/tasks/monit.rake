@@ -4,7 +4,7 @@ namespace :puma do
   namespace :monit do
     desc 'Config Puma monit-service'
     task :config do
-      on roles(fetch(:puma_role)) do |role|
+      on roles(fetch(:puma_monit)) do |role|
         git_plugin.template_puma 'puma_monit.conf', "#{fetch(:tmp_dir)}/monit.conf", role
         git_plugin.sudo_if_needed "mv #{fetch(:tmp_dir)}/monit.conf #{fetch(:puma_monit_conf_dir)}"
         git_plugin.sudo_if_needed "#{fetch(:puma_monit_bin)} reload"
@@ -15,7 +15,7 @@ namespace :puma do
 
     desc 'Monitor Puma monit-service'
     task :monitor do
-      on roles(fetch(:puma_role)) do
+      on roles(fetch(:puma_monit)) do
         begin
           git_plugin.sudo_if_needed "#{fetch(:puma_monit_bin)} monitor #{git_plugin.puma_monit_service_name}"
         rescue
@@ -27,7 +27,7 @@ namespace :puma do
 
     desc 'Unmonitor Puma monit-service'
     task :unmonitor do
-      on roles(fetch(:puma_role)) do
+      on roles(fetch(:puma_monit)) do
         begin
           git_plugin.sudo_if_needed "#{fetch(:puma_monit_bin)} unmonitor #{git_plugin.puma_monit_service_name}"
         rescue
@@ -38,21 +38,21 @@ namespace :puma do
 
     desc 'Start Puma monit-service'
     task :start do
-      on roles(fetch(:puma_role)) do
+      on roles(fetch(:puma_monit)) do
         git_plugin.sudo_if_needed "#{fetch(:puma_monit_bin)} start #{git_plugin.puma_monit_service_name}"
       end
     end
 
     desc 'Stop Puma monit-service'
     task :stop do
-      on roles(fetch(:puma_role)) do
+      on roles(fetch(:puma_monit)) do
         git_plugin.sudo_if_needed "#{fetch(:puma_monit_bin)}  stop #{git_plugin.puma_monit_service_name}"
       end
     end
 
     desc 'Restart Puma monit-service'
     task :restart do
-      on roles(fetch(:puma_role)) do
+      on roles(fetch(:puma_monit)) do
         git_plugin.sudo_if_needed "#{fetch(:puma_monit_bin)} restart #{git_plugin.puma_monit_service_name}"
       end
     end
