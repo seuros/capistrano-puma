@@ -32,7 +32,7 @@ namespace :puma do
           git_plugin.sudo_if_needed "#{fetch(:puma_monit_bin)} unmonitor #{git_plugin.puma_monit_service_name}"
           git_plugin.wait_until_not_monitored
         rescue
-          warn "ERROR: #{$!.message}"
+          # no worries here (still no monitoring)
         end
       end
     end
