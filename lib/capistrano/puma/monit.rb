@@ -14,6 +14,7 @@ module Capistrano
       set_if_empty :puma_monit_conf_dir, -> { "/etc/monit/conf.d/#{puma_monit_service_name}.conf" }
       set_if_empty :puma_monit_use_sudo, true
       set_if_empty :puma_monit_bin, '/usr/bin/monit'
+      set_if_empty :puma_monit_wait_timeout, 120
     end
 
     def puma_monit_service_name
@@ -25,6 +26,24 @@ module Capistrano
         backend.sudo command
       else
         backend.execute command
+      end
+    end
+
+    def wait_until_not_monitored
+      backend.info "Wait until monit process is not monitored"
+      cmd = "#{'sudo ' if fetch(:puma_monit_use_sudo)} #{fetch(:puma_monit_bin)} summary"
+
+      start_time = Time.now
+      loop do
+        output = backend.capture(cmd)
+        break if output !~ Regexp.new("^(.*#{puma_monit_service_name}.*)$")
+        line = $1
+        break if line =~ /Not monitored$/
+        if start_time + fetch(:puma_monit_wait_timeout) < Time.now
+          backend.warn 'Timeout... skip.'
+          break
+        end
+        sleep 3
       end
     end
   end

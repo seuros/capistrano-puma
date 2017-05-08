@@ -30,8 +30,9 @@ namespace :puma do
       on roles(fetch(:puma_role)) do
         begin
           git_plugin.sudo_if_needed "#{fetch(:puma_monit_bin)} unmonitor #{git_plugin.puma_monit_service_name}"
+          git_plugin.wait_until_not_monitored
         rescue
-          # no worries here (still no monitoring)
+          warn "ERROR: #{$!.message}"
         end
       end
     end
