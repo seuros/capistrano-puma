@@ -8,7 +8,7 @@ module Capistrano
       if user == role.user
         block.call
       else
-        as user do
+        backend.as user do
           block.call
         end
       end
