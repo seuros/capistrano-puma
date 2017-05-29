@@ -10,13 +10,13 @@ namespace :puma do
         sudo "mv #{fetch(:tmp_dir)}/run-puma #{fetch(:puma_run_path)}"
         if test '[ -f /etc/redhat-release ]'
           #RHEL flavor OS
-          Capistrano::PumaCommon.template_puma 'puma-rpm', "#{fetch(:tmp_dir)}/puma", role
+          git_plugin.rhel_install(role)
           execute "chmod +x #{fetch(:tmp_dir)}/puma"
           sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
           sudo 'chkconfig --add puma'
         elsif test '[ -f /etc/lsb-release ]'
           #Debian flavor OS
-          Capistrano::PumaCommon.template_puma 'puma-deb', "#{fetch(:tmp_dir)}/puma", role
+          git_plugin.debian_install(role)
           execute "chmod +x #{fetch(:tmp_dir)}/puma"
           sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
           sudo 'update-rc.d -f puma defaults'
