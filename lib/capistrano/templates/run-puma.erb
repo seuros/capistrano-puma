@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# source ENV variables manually
+. /etc/environment
 # on system boot, and root have no rbenv installed,
 #   after start-stop-daemon switched to current user, we have to init rbenv
 if [ -d "$HOME/.rbenv/bin" ]; then
