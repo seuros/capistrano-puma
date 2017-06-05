@@ -39,7 +39,7 @@ namespace :puma do
           git_plugin.puma_switch_user(role) do
             with rack_env: fetch(:puma_env) do
               if test "[ -f #{fetch(:puma_pid)} ]"
-                if test :kill, "-0 $( cat #{fetch(:puma_pid)} )"
+                if test :kill, "-s SIGUSR1 $( cat #{fetch(:puma_pid)} )"
                   execute :pumactl, "-S #{fetch(:puma_state)} -F #{fetch(:puma_conf)} #{command}"
                 else
                   # delete invalid pid file , process is not running.
