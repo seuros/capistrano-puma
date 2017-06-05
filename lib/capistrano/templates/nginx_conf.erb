@@ -14,7 +14,7 @@ end
 server {
   listen 80;
   server_name <%= fetch(:nginx_server_name) %>;
-  rewrite ^(.*) https://$host$1 permanent;
+  return 301 https://$host$1$request_uri;
 }
 <% end -%>
 
