@@ -11,9 +11,15 @@ namespace :puma do
         if test '[ -f /etc/redhat-release ]'
           #RHEL flavor OS
           git_plugin.rhel_install(role)
+          execute "chmod +x #{fetch(:tmp_dir)}/puma"
+          sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
+          sudo 'chkconfig --add puma'
         elsif test '[ -f /etc/lsb-release ]'
           #Debian flavor OS
           git_plugin.debian_install(role)
+          execute "chmod +x #{fetch(:tmp_dir)}/puma"
+          sudo "mv #{fetch(:tmp_dir)}/puma /etc/init.d/puma"
+          sudo 'update-rc.d -f puma defaults'
         else
           #Some other OS
           error 'This task is not supported for your OS'
@@ -32,7 +38,11 @@ namespace :puma do
     desc 'Add current project to the jungle'
     task :add do
       on roles(fetch(:puma_role)) do|role|
-        sudo "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user, role.user)}"
+        begin
+          sudo "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user, role.user)}"
+        rescue => error
+          warn error
+        end
       end
     end
 
