@@ -5,7 +5,7 @@ require 'capistrano/puma/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'capistrano3-puma'
-  spec.version = Capistrano::PumaVERSION
+  spec.version = Capistrano::PUMAVERSION
   spec.authors = ['Abdelkader Boudih']
   spec.email = ['Terminale@gmail.com']
   spec.description = %q{Puma integration for Capistrano 3}
