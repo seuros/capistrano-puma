@@ -39,7 +39,7 @@ namespace :puma do
     task :add do
       on roles(fetch(:puma_role)) do|role|
         begin
-          sudo "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user, role.user)}"
+          sudo "/etc/init.d/puma add '#{current_path}' #{fetch(:puma_user, role.user)} '#{fetch(:puma_conf)}'"
         rescue => error
           warn error
         end
