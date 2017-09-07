@@ -76,6 +76,7 @@ module Capistrano
       set_if_empty :puma_preload_app, false
       set_if_empty :puma_daemonize, false
       set_if_empty :puma_tag, ''
+      set_if_empty :puma_restart_command, 'bundle exec puma'
 
       # Chruby, Rbenv and RVM integration
       append :chruby_map_bins, 'puma', 'pumactl'
