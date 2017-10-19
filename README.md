@@ -44,7 +44,7 @@ To upload puma config use:
 ```ruby
 cap production puma:config
 ```
-By default the file located in  `shared/puma.config`
+By default the file located in  `shared/puma.rb`
 
 
 Ensure that `tmp/pids` and ` tmp/sockets log` are shared (via `linked_dirs`):
