@@ -38,7 +38,7 @@ prune_bundler
 
 on_restart do
   puts 'Refreshing Gemfile'
-  ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile, "#{current_path}/Gemfile") %>"
+  ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile) || "#{current_path}/Gemfile" %>"
 end
 
 <% if puma_preload_app? and fetch(:puma_init_active_record) %>
