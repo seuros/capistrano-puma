@@ -129,6 +129,11 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_tag, fetch(:application)
     set :puma_restart_command, 'bundle exec puma'
 
+    # Rolling restart
+    set :puma_rolling_restart, false
+    set :puma_rolling_wait, 10
+    set :puma_rolling_groups, 1
+
     set :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"
     set :nginx_flags, 'fail_timeout=0'
     set :nginx_http_flags, fetch(:nginx_flags)

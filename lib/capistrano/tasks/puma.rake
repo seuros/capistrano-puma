@@ -59,7 +59,8 @@ namespace :puma do
   %w[phased-restart restart].map do |command|
     desc "#{command} puma"
     task command do
-      on roles (fetch(:puma_role)) do |role|
+      options = restart_options(command)
+      on roles(fetch(:puma_role)), options do |role|
         within current_path do
           git_plugin.puma_switch_user(role) do
             with rack_env: fetch(:puma_env) do

@@ -78,6 +78,11 @@ module Capistrano
       set_if_empty :puma_tag, ''
       set_if_empty :puma_restart_command, 'bundle exec puma'
 
+      # Rolling restart
+      set :puma_rolling_restart, false
+      set :puma_rolling_wait, 10
+      set :puma_rolling_groups, 1
+
       # Chruby, Rbenv and RVM integration
       append :chruby_map_bins, 'puma', 'pumactl'
       append :rbenv_map_bins, 'puma', 'pumactl'
@@ -102,6 +107,20 @@ module Capistrano
 
     def puma_daemonize?
       fetch(:puma_daemonize)
+    end
+
+    def restart_options(command)
+      opts = {}
+      if command == 'restart' && fetch(:puma_rolling_restart)
+        if (groups = fetch(:puma_rolling_groups).to_i) > 1
+          opts[:in] = :groups
+          opts[:limit] = groups
+        else
+          opts[:in] = :sequence
+        end
+        opts[:wait] = fetch(:puma_rolling_wait, 10).to_i
+      end
+      opts
     end
 
     def puma_plugins
