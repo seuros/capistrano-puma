@@ -62,6 +62,15 @@ server {
     error_log <%= shared_path %>/log/nginx.error.log;
   }
 
+  location /cable {
+    proxy_pass http://puma_<%= fetch(:nginx_config_name) %>;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
+    access_log <%= shared_path %>/log/cable.access.log;
+    error_log <%= shared_path %>/log/cable.error.log;
+  }
+
   location ^~ /assets/ {
     gzip_static on;
     expires max;
