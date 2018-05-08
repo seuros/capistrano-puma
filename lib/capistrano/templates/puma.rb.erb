@@ -38,7 +38,7 @@ prune_bundler
 
 on_restart do
   puts 'Refreshing Gemfile'
-  ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile, "#{current_path}/Gemfile") %>"
+  ENV["BUNDLE_GEMFILE"] = "<%= fetch(:bundle_gemfile) || "#{current_path}/Gemfile" %>"
 end
 
 <% if puma_preload_app? and fetch(:puma_init_active_record) %>
@@ -52,3 +52,16 @@ on_worker_boot do
   end
 end
 <% end %>
+
+lowlevel_error_handler do |ex, env|
+  if ex.message.included?("Unable to add work while shutting down")
+    [503, {}, ["Service Unavailable"]]
+  else
+    puts ex
+    puts env
+    if(defined? Raven)
+      Raven.capture_exception(ex, message: ex.message, extra: {puma: env})
+    end
+    [500, {}, ["An error has occurred, and engineers have been informed. Please reload the page. If you continue to have problems, contact support@example.com\n"]]
+  end
+end
