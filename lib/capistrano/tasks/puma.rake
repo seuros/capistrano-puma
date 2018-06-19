@@ -56,7 +56,7 @@ namespace :puma do
     end
   end
 
-  %w[stats reload-worker-directory].map do |command|
+  %w[stats reload-worker-directory gc-stats].map do |command|
     desc "#{command} puma"
     task command do
       on roles (fetch(:puma_role)) do |role|
