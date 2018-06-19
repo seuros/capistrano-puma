@@ -1,5 +1,3 @@
 module Capistrano
-  module Puma
-    VERSION = '2.0.1'
-  end
+  PUMAVERSION = '3.1.1.2'
 end

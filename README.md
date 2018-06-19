@@ -20,10 +20,20 @@ And then execute:
     # Capfile
 
     require 'capistrano/puma'
-    require 'capistrano/puma/workers' # if you want to control the workers (in cluster mode)
-    require 'capistrano/puma/jungle'  # if you need the jungle tasks
-    require 'capistrano/puma/monit'   # if you need the monit tasks
-    require 'capistrano/puma/nginx'   # if you want to upload a nginx site template
+    install_plugin Capistrano::Puma  # Default puma tasks
+    install_plugin Capistrano::Puma::Workers  # if you want to control the workers (in cluster mode)
+    install_plugin Capistrano::Puma::Jungle # if you need the jungle tasks
+    install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
+    install_plugin Capistrano::Puma::Nginx  # if you want to upload a nginx site template
+```
+
+To prevent loading the hooks of the plugin, add false to the load_hooks param.
+```ruby
+    # Capfile
+
+    require 'capistrano/puma'
+    install_plugin Capistrano::Puma, load_hooks: false  # Default puma tasks without hooks
+    install_plugin Capistrano::Puma::Monit, load_hooks: false  # Monit tasks without hooks
 ```
 
 ### Config
@@ -32,9 +42,9 @@ To list available tasks use `cap -T`
 
 To upload puma config use:
 ```ruby
-cap puma:config 
+cap production puma:config
 ```
-By default the file located in  `shared/puma.config`
+By default the file located in  `shared/puma.rb`
 
 
 Ensure that `tmp/pids` and ` tmp/sockets log` are shared (via `linked_dirs`):
@@ -45,7 +55,7 @@ Ensure that `tmp/pids` and ` tmp/sockets log` are shared (via `linked_dirs`):
 
 To upload a nginx site config (eg. /etc/nginx/sites-enabled/) use:
 ```ruby
-cap puma:nginx_config
+cap production puma:nginx_config
 ```
 
 To customize these two templates locally before uploading use:
@@ -102,6 +112,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_state, "#{shared_path}/tmp/pids/puma.state"
     set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
     set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"    #accept array for multi-bind
+    set :puma_control_app, false
     set :puma_default_control_app, "unix://#{shared_path}/tmp/sockets/pumactl.sock"
     set :puma_conf, "#{shared_path}/puma.rb"
     set :puma_access_log, "#{shared_path}/log/puma_access.log"
@@ -113,8 +124,26 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_worker_timeout, nil
     set :puma_init_active_record, false
     set :puma_preload_app, false
+    set :puma_daemonize, false
     set :puma_plugins, []  #accept array of plugins
+    set :puma_tag, fetch(:application)
+    set :puma_restart_command, 'bundle exec puma'
+
+    set :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"
+    set :nginx_flags, 'fail_timeout=0'
+    set :nginx_http_flags, fetch(:nginx_flags)
+    set :nginx_server_name, "localhost #{fetch(:application)}.local"
+    set :nginx_sites_available_path, '/etc/nginx/sites-available'
+    set :nginx_sites_enabled_path, '/etc/nginx/sites-enabled'
+    set :nginx_socket_flags, fetch(:nginx_flags)
+    set :nginx_ssl_certificate, "/etc/ssl/certs/#{fetch(:nginx_config_name)}.crt"
+    set :nginx_ssl_certificate_key, "/etc/ssl/private/#{fetch(:nginx_config_name)}.key"
     set :nginx_use_ssl, false
+```
+
+__Notes:__ If you are setting values for variables that might be used by other plugins, use `append` instead of `set`. For example:
+```ruby
+append :rbenv_map_bins, 'puma', 'pumactl'
 ```
 
 ## Contributing

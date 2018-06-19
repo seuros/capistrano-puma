@@ -5,7 +5,7 @@ require 'capistrano/puma/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'capistrano3-puma'
-  spec.version = Capistrano::Puma::VERSION
+  spec.version = Capistrano::PUMAVERSION
   spec.authors = ['Abdelkader Boudih']
   spec.email = ['Terminale@gmail.com']
   spec.description = %q{Puma integration for Capistrano 3}
@@ -18,7 +18,11 @@ Gem::Specification.new do |spec|
   spec.files = `git ls-files`.split($/)
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'capistrano', '~> 3.5'
+  spec.add_dependency 'capistrano', '~> 3.7'
   spec.add_dependency 'capistrano-bundler'
   spec.add_dependency 'puma' , '~> 3.4'
+  spec.post_install_message = %q{
+    All plugins need to be explicitly installed with install_plugin.
+    Please see README.md
+  }
 end

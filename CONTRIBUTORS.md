@@ -1,45 +1,47 @@
 ## Contributors
 
-Abdelkader Boudih
-André Arko
-Ariel Zerahia
-ayaya
-Bin Huang
-Bryan Liles
-Claudio Poli
-Cyril Rohr
-dfang
-Fritz Lee
-Hnat Kubov
-Ivan Schneider
-James-Hendrickson
-Jens Hausherr
-Jeremy Rottman
-Jesse Cooke
-Johan Lind
-Jordan Hollinger
-Jun Lin
-Kamil Giszczak
-Kevin Collignon
-Konstantin Papkovskiy
-Kyle Decot
-Lisa Hagemann
-Lonre Wang
-marshall-lee
-Matias De Santi
-Michael C. Beck
-Molfar
-msbrigna
-Neil Bartley
-Peter
-Ponomarev Nikolay
-Rafael Goulart
-RavWar
-ruohan.chen
-Ruslan
-Sergey Ponomarev
-Shane O'Grady
-Simon Males
-Steve Madere
-Suhail Patel
-Suraj Shirvankar
+- Abdelkader Boudih
+- André Arko
+- Ariel Zerahia
+- Barack Obama
+- Bart de Water
+- Benjamin Kim
+- Bin Huang
+- Bryan Liles
+- Claudio Poli
+- Cyril Rohr
+- Fritz Lee
+- Feña Agar
+- Hnat Kubov
+- Ivan Schneider
+- James-Hendrickson
+- Jens Hausherr
+- Jeremy Rottman
+- Jesse Cooke
+- Johan Lind
+- Jordan Hollinger
+- Jun Lin
+- Kamil Giszczak
+- Kevin Collignon
+- Konstantin Papkovskiy
+- Kyle Decot
+- Lisa Hagemann
+- Lonre Wang
+- Lucas Alves
+- Marcos Chicote
+- Mario Celit log
+- Matias De Santi
+- Michael C. Beck
+- Neil Bartley
+- Philippe Nénert
+- Ponomarev Nikolay
+- Rafael Goulart
+- SHIMADA Koji
+- Sergey Ponomarev
+- Shane O'Grady
+- Simon Males
+- Steve Madere
+- Suhail Patel
+- Suraj Shirvankar
+- marshall-lee
+- ruohan chen

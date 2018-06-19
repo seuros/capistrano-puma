@@ -14,7 +14,7 @@ end
 server {
   listen 80;
   server_name <%= fetch(:nginx_server_name) %>;
-  rewrite ^(.*) https://$host$1 permanent;
+  return 301 https://$host$1$request_uri;
 }
 <% end -%>
 
@@ -22,8 +22,16 @@ server {
 <% if fetch(:nginx_use_ssl) -%>
   listen 443;
   ssl on;
+<% if fetch(:nginx_ssl_certificate) -%>
+  ssl_certificate <%= fetch(:nginx_ssl_certificate) %>;
+<% else -%>
   ssl_certificate /etc/ssl/certs/<%= fetch(:nginx_config_name) %>.crt;
+<% end -%>
+<% if fetch(:nginx_ssl_certificate_key) -%>
+  ssl_certificate_key <%= fetch(:nginx_ssl_certificate_key) %>;
+<% else -%>
   ssl_certificate_key /etc/ssl/private/<%= fetch(:nginx_config_name) %>.key;
+<% end -%>
 <% else -%>
   listen 80;
 <% end -%>
@@ -39,10 +47,14 @@ server {
 
   location @puma_<%= fetch(:nginx_config_name) %> {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header Host $http_host;
+    proxy_set_header Host $host;
     proxy_redirect off;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
 <% if fetch(:nginx_use_ssl) -%>
     proxy_set_header X-Forwarded-Proto https;
+<% else -%>
+    proxy_set_header X-Forwarded-Proto http;
 <% end -%>
     proxy_pass http://puma_<%= fetch(:nginx_config_name) %>;
     # limit_req zone=one;

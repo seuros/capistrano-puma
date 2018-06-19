@@ -1,4 +1,12 @@
 ## Changelog
+- 3.1.0: 
+  - Don't load puma hooks by default.
+- 3.0.0:
+ - Require capistrano 3.7+
+ - Implement the plugin system
+ - don't fail if puma was already running
+ - Added :puma_daemonize option (default is false)
+
 - 2.0.0: 
  - Require puma 3.4+
  - Require Capistrano 3.5+
