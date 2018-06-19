@@ -61,7 +61,7 @@ namespace :puma do
     task command do
       on roles (fetch(:puma_role)) do |role|
         within current_path do
-          puma_switch_user(role) do
+          git_plugin.puma_switch_user(role) do
             with rack_env: fetch(:puma_env) do
               info "Using control app: #{fetch(:puma_control_app)}"
               if fetch(:puma_control_app)
