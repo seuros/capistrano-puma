@@ -66,10 +66,9 @@ namespace :puma do
               info "Using control app: #{fetch(:puma_control_app)}"
               if fetch(:puma_control_app)
                 if fetch(:puma_control_app_token).nil?
-                  execute :pumactl, "-C #{fetch(:puma_control_app)} #{command}"
+                  execute :pumactl, "-C #{fetch(:puma_default_control_app)} #{command}"
                 else
-                  puts capture :pumactl, "-C #{fetch(:puma_control_app)} --control-token #{fetch(:puma_control_app_token)} #{command}"
-
+                  puts capture :pumactl, "-C #{fetch(:puma_default_control_app)} --control-token #{fetch(:puma_control_app_token)} #{command}"
                 end
               else
                 #pumactl server not found, so puma control app is probably not running
