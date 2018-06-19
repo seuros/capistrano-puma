@@ -17,7 +17,7 @@ threads <%=fetch(:puma_threads).join(',')%>
 
 <%= puma_bind %>
 <% if fetch(:puma_control_app) %>
-activate_control_app "<%= fetch(:puma_control_app) %>", <%= fetch(:puma_control_app_token).nil? ? {no_token: true} : {auth_token: fetch(:puma_control_app_token)} %>
+activate_control_app "<%= fetch(:puma_default_control_app) %>", <%= fetch(:puma_control_app_token).nil? ? {no_token: true} : {auth_token: fetch(:puma_control_app_token)} %>
 <% end %>
 workers <%= puma_workers %>
 <% if fetch(:puma_worker_timeout) %>
