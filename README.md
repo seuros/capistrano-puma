@@ -114,6 +114,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"    #accept array for multi-bind
     set :puma_control_app, false
     set :puma_default_control_app, "unix://#{shared_path}/tmp/sockets/pumactl.sock"
+    set :puma_control_app_token, <%= ENV["IM_NOT_IN_SOURCE"] %>, #allow to use control app auth token
     set :puma_conf, "#{shared_path}/puma.rb"
     set :puma_access_log, "#{shared_path}/log/puma_access.log"
     set :puma_error_log, "#{shared_path}/log/puma_error.log"
