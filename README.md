@@ -92,7 +92,7 @@ Multi-bind can be set with an array in the puma_bind variable
 ```ruby
   set :puma_bind, %w(tcp://0.0.0.0:9292 unix:///tmp/puma.sock)
 ```
-    * Listening on tcp://0.0.0.0:9220
+    * Listening on tcp://0.0.0.0:9292
     * Listening on unix:///tmp/puma.sock
 
 ### Active Record
