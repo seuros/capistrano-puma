@@ -36,6 +36,15 @@ To prevent loading the hooks of the plugin, add false to the load_hooks param.
     install_plugin Capistrano::Puma::Monit, load_hooks: false  # Monit tasks without hooks
 ```
 
+To make it work with rvm, rbenv and chruby, install the plugin after corresponding library inclusion.
+```ruby
+    # Capfile
+    
+    require 'capistrano/rvm    
+    require 'capistrano/puma'
+    install_plugin Capistrano::Puma
+```
+
 ### Config
 
 To list available tasks use `cap -T`
