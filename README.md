@@ -40,7 +40,7 @@ To make it work with rvm, rbenv and chruby, install the plugin after correspondi
 ```ruby
     # Capfile
     
-    require 'capistrano/rvm    
+    require 'capistrano/rbenv'   
     require 'capistrano/puma'
     install_plugin Capistrano::Puma
 ```
