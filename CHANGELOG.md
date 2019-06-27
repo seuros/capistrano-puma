@@ -1,16 +1,18 @@
 ## Changelog
-- 3.1.0: 
+- 4.0.0:
+  - Support puma 4.x
+- 3.1.0:
   - Don't load puma hooks by default.
 - 3.0.0:
- - Require capistrano 3.7+
- - Implement the plugin system
- - don't fail if puma was already running
- - Added :puma_daemonize option (default is false)
+   - Require capistrano 3.7+
+   - Implement the plugin system
+   - don't fail if puma was already running
+   - Added :puma_daemonize option (default is false)
 
 - 2.0.0: 
- - Require puma 3.4+
- - Require Capistrano 3.5+
- - Require capistrano-bundler
+   - Require puma 3.4+
+   - Require Capistrano 3.5+
+   - Require capistrano-bundler
  
 - 1.2.0: add support for puma user for puma user @mcb & @seuros
 - 1.1.0: Set :puma_preload_app to false; Reload Monit after uploading any monit configuration; Always refresh Gemfile @rafaelgoulart @suhailpatel @sime
