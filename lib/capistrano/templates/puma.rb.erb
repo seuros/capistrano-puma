@@ -52,3 +52,9 @@ on_worker_boot do
   end
 end
 <% end %>
+
+<% if fetch(:puma_on_worker_shutdown) %>
+on_worker_shutdown do
+  <%= fetch(:puma_on_worker_shutdown) %>
+end
+<% end %>

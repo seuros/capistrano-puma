@@ -137,6 +137,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_plugins, []  #accept array of plugins
     set :puma_tag, fetch(:application)
     set :puma_restart_command, 'bundle exec puma'
+    set :puma_on_worker_shutdown, false
 
     set :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"
     set :nginx_flags, 'fail_timeout=0'
