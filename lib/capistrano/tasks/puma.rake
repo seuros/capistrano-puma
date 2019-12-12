@@ -19,7 +19,7 @@ namespace :puma do
         end
 
         if test "[ -f #{fetch(:puma_pid)} ]" and test :kill, "-0 $( cat #{fetch(:puma_pid)} )"
-          info 'Already Puma is running'
+          info 'Puma is already running'
         else
           within current_path do
             with rack_env: fetch(:puma_env) do
