@@ -73,6 +73,12 @@ server {
     add_header Cache-Control public;
   }
 
+  location ^~ /packs/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+
   location = /50x.html {
     root html;
   }
