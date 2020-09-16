@@ -148,6 +148,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :nginx_ssl_certificate, "/etc/ssl/certs/#{fetch(:nginx_config_name)}.crt"
     set :nginx_ssl_certificate_key, "/etc/ssl/private/#{fetch(:nginx_config_name)}.key"
     set :nginx_use_ssl, false
+    set :nginx_use_http2, true
     set :nginx_downstream_uses_ssl, false
 ```
 
