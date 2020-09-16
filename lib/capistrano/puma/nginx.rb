@@ -11,6 +11,7 @@ module Capistrano
       set_if_empty :nginx_http_flags, fetch(:nginx_flags)
       set_if_empty :nginx_socket_flags, fetch(:nginx_flags)
       set_if_empty :nginx_use_ssl, false
+      set_if_empty :nginx_use_http2, true
       set_if_empty :nginx_downstream_uses_ssl, false
     end
 
