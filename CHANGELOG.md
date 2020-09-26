@@ -2,6 +2,7 @@
 - 5.0.0:
   - Support puma 5.x
   - Remove :puma_daemonize option (due to Puma 5.x)
+  - Remove ability to run puma as a daemon.
 - 4.0.0:
   - Support puma 4.x
 - 3.1.0:
