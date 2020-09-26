@@ -133,7 +133,6 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_worker_timeout, nil
     set :puma_init_active_record, false
     set :puma_preload_app, false
-    set :puma_daemonize, false
     set :puma_plugins, []  #accept array of plugins
     set :puma_tag, fetch(:application)
     set :puma_restart_command, 'bundle exec puma'

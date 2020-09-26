@@ -74,7 +74,6 @@ module Capistrano
       set_if_empty :puma_error_log, -> { File.join(shared_path, 'log', 'puma_error.log') }
       set_if_empty :puma_init_active_record, false
       set_if_empty :puma_preload_app, false
-      set_if_empty :puma_daemonize, false
       set_if_empty :puma_tag, ''
       set_if_empty :puma_restart_command, 'bundle exec puma'
 
@@ -98,10 +97,6 @@ module Capistrano
 
     def puma_preload_app?
       fetch(:puma_preload_app)
-    end
-
-    def puma_daemonize?
-      fetch(:puma_daemonize)
     end
 
     def puma_plugins
