@@ -24,6 +24,7 @@ And then execute:
     install_plugin Capistrano::Puma::Workers  # if you want to control the workers (in cluster mode)
     install_plugin Capistrano::Puma::Jungle # if you need the jungle tasks
     install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
+    install_plugin Capistrano::Puma::Systemd  # if you need the systemd tasks
     install_plugin Capistrano::Puma::Nginx  # if you want to upload a nginx site template
 ```
 
@@ -93,6 +94,26 @@ For Jungle tasks (beta), these options exist:
 ```ruby
     set :puma_jungle_conf, '/etc/puma.conf'
     set :puma_run_path, '/usr/local/bin/run-puma'
+```
+
+### Systemd
+
+Install Systemd plugin in `Capfile`:
+```ruby
+install_plugin Capistrano::Puma, load_hooks: false
+install_plugin Capistrano::Puma::Systemd
+```
+
+To generate unit file use:
+```
+cap production puma:systemd:config puma:systemd:enable
+```
+
+To start, stop, restart puma manually use:
+```
+cap production puma:systemd:start
+cap production puma:systemd:stop
+cap production puma:systemd:restart
 ```
 
 ### Multi bind
