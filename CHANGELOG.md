@@ -1,4 +1,7 @@
 ## Changelog
+- 5.0.0:
+  - Support puma 5.0
+  - Support SystemD service manager
 - 4.0.0:
   - Support puma 4.x
 - 3.1.0:

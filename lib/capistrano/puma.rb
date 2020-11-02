@@ -89,7 +89,6 @@ module Capistrano
 
     def register_hooks
       after 'deploy:check', 'puma:check'
-      after 'deploy:finished', 'puma:smart_restart'
     end
 
     def puma_workers
@@ -117,6 +116,7 @@ module Capistrano
 end
 
 require 'capistrano/puma/workers'
+require 'capistrano/puma/daemon'
 require 'capistrano/puma/systemd'
 require 'capistrano/puma/monit'
 require 'capistrano/puma/jungle'

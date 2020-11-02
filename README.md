@@ -24,8 +24,15 @@ And then execute:
     install_plugin Capistrano::Puma::Workers  # if you want to control the workers (in cluster mode)
     install_plugin Capistrano::Puma::Jungle # if you need the jungle tasks
     install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
-    install_plugin Capistrano::Puma::Systemd  # if you need the systemd tasks
     install_plugin Capistrano::Puma::Nginx  # if you want to upload a nginx site template
+```
+You need to select your service manager
+```ruby
+install_plugin Capistrano::Puma::Daemon  # If you using puma daemonized (not supported in Puma 5+)
+```
+or
+```ruby
+install_plugin Capistrano::Puma::Systemd  # if you use SystemD 
 ```
 
 To prevent loading the hooks of the plugin, add false to the load_hooks param.

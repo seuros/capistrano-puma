@@ -3,8 +3,7 @@ module Capistrano
     include PumaCommon
 
     def register_hooks
-      after 'deploy:check', 'puma:check'
-      after 'deploy:finished', 'puma:systemd:restart'
+      after 'deploy:finished', 'puma:restart'
     end
 
     def define_tasks
@@ -13,7 +12,7 @@ module Capistrano
 
     def set_defaults
       set_if_empty :puma_systemd_conf_dir, '/etc/systemd/system'
-      set_if_empty :puma_systemctl_bin, '/usr/bin/systemctl'
+      set_if_empty :puma_systemctl_bin, '/bin/systemctl'
       set_if_empty :puma_service_unit_name, 'puma'
     end
   end

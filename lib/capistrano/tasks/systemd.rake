@@ -25,26 +25,33 @@ namespace :puma do
         sudo "#{fetch(:puma_systemctl_bin)} disable puma"
       end
     end
+  end
 
-    desc 'Start Puma systemd service'
-    task :start do
-      on roles(fetch(:puma_role)) do |role|
-        sudo "#{fetch(:puma_systemctl_bin)} start puma"
-      end
+  desc 'Start Puma service via systemd'
+  task :start do
+    on roles(fetch(:puma_role)) do |role|
+      sudo "#{fetch(:puma_systemctl_bin)} start puma"
     end
+  end
 
-    desc 'Stop Puma systemd service'
-    task :stop do
-      on roles(fetch(:puma_role)) do |role|
-        sudo "#{fetch(:puma_systemctl_bin)} stop puma"
-      end
+  desc 'Stop Puma service via systemd'
+  task :stop do
+    on roles(fetch(:puma_role)) do |role|
+      sudo "#{fetch(:puma_systemctl_bin)} stop puma"
     end
+  end
 
-    desc 'Restart Puma systemd service'
-    task :restart do
-      on roles(fetch(:puma_role)) do |role|
-        sudo "#{fetch(:puma_systemctl_bin)} restart puma"
-      end
+  desc 'Restart Puma service via systemd'
+  task :restart do
+    on roles(fetch(:puma_role)) do |role|
+      sudo "#{fetch(:puma_systemctl_bin)} restart puma"
+    end
+  end
+
+  desc 'Get Puma service status via systemd'
+  task :status do
+    on roles(fetch(:puma_role)) do |role|
+      sudo "#{fetch(:puma_systemctl_bin)} status puma"
     end
   end
 end
