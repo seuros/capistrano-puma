@@ -7,7 +7,7 @@ module Capistrano
     end
 
     def define_tasks
-      eval_rakefile File.expand_path('../../tasks/puma4.rake', __FILE__)
+      eval_rakefile File.expand_path('../../tasks/daemon.rake', __FILE__)
     end
   end
 end
