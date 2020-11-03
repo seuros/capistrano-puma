@@ -26,7 +26,7 @@ And then execute:
     install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
     install_plugin Capistrano::Puma::Nginx  # if you want to upload a nginx site template
 ```
-You need to select your service manager
+You will need to select your service manager
 ```ruby
 install_plugin Capistrano::Puma::Daemon  # If you using puma daemonized (not supported in Puma 5+)
 ```
@@ -107,20 +107,13 @@ For Jungle tasks (beta), these options exist:
 
 Install Systemd plugin in `Capfile`:
 ```ruby
-install_plugin Capistrano::Puma, load_hooks: false
+install_plugin Capistrano::Puma
 install_plugin Capistrano::Puma::Systemd
 ```
 
 To generate unit file use:
 ```
 cap production puma:systemd:config puma:systemd:enable
-```
-
-To start, stop, restart puma manually use:
-```
-cap production puma:systemd:start
-cap production puma:systemd:stop
-cap production puma:systemd:restart
 ```
 
 ### Multi bind
