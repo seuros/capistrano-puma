@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 git_plugin = self
 
 namespace :puma do
@@ -14,44 +16,44 @@ namespace :puma do
 
     desc 'Enable Puma systemd service'
     task :enable do
-      on roles(fetch(:puma_role)) do |role|
-        sudo "#{fetch(:puma_systemctl_bin)} enable puma"
+      on roles(fetch(:puma_role)) do
+        sudo "#{fetch(:puma_systemctl_bin)} enable #{fetch(:puma_service_unit_name)}"
       end
     end
 
     desc 'Disable Puma systemd service'
     task :disable do
-      on roles(fetch(:puma_role)) do |role|
-        sudo "#{fetch(:puma_systemctl_bin)} disable puma"
+      on roles(fetch(:puma_role)) do
+        sudo "#{fetch(:puma_systemctl_bin)} disable #{fetch(:puma_service_unit_name)}"
       end
     end
   end
 
   desc 'Start Puma service via systemd'
   task :start do
-    on roles(fetch(:puma_role)) do |role|
-      sudo "#{fetch(:puma_systemctl_bin)} start puma"
+    on roles(fetch(:puma_role)) do
+      sudo "#{fetch(:puma_systemctl_bin)} start #{fetch(:puma_service_unit_name)}"
     end
   end
 
   desc 'Stop Puma service via systemd'
   task :stop do
-    on roles(fetch(:puma_role)) do |role|
-      sudo "#{fetch(:puma_systemctl_bin)} stop puma"
+    on roles(fetch(:puma_role)) do
+      sudo "#{fetch(:puma_systemctl_bin)} stop #{fetch(:puma_service_unit_name)}"
     end
   end
 
   desc 'Restart Puma service via systemd'
   task :restart do
-    on roles(fetch(:puma_role)) do |role|
-      sudo "#{fetch(:puma_systemctl_bin)} restart puma"
+    on roles(fetch(:puma_role)) do
+      sudo "#{fetch(:puma_systemctl_bin)} restart #{fetch(:puma_service_unit_name)}"
     end
   end
 
   desc 'Get Puma service status via systemd'
   task :status do
-    on roles(fetch(:puma_role)) do |role|
-      sudo "#{fetch(:puma_systemctl_bin)} status puma"
+    on roles(fetch(:puma_role)) do
+      sudo "#{fetch(:puma_systemctl_bin)} status #{fetch(:puma_service_unit_name)}"
     end
   end
 end
