@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=<%= fetch(:puma_user) %>
-WorkingDirectory=<%= File.join(fetch(:deploy_to), 'current') %>
+User=<%= puma_user(@role) %>
+WorkingDirectory=<%= current_path %>
 ExecStart=<%= SSHKit.config.command_map[:bundle] %> exec puma -C <%= fetch(:puma_conf) %>
 ExecReload=/bin/kill -TSTP $MAINPID
 ExecStop=/bin/kill -TERM $MAINPID
