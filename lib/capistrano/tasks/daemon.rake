@@ -63,4 +63,12 @@ namespace :puma do
       end
     end
   end
+
+  task :smart_restart do
+    if !fetch(:puma_preload_app) && fetch(:puma_workers, 0).to_i > 1
+      invoke 'puma:phased-restart'
+    else
+      invoke 'puma:restart'
+    end
+  end
 end
