@@ -13,7 +13,7 @@ module Capistrano
     def set_defaults
       set_if_empty :puma_systemd_conf_dir, '/etc/systemd/system'
       set_if_empty :puma_systemctl_bin, '/bin/systemctl'
-      set_if_empty :puma_service_unit_name, 'puma'
+      set_if_empty :puma_service_unit_name, -> { "puma_#{fetch(:application)}_#{fetch(:stage)}" }
     end
   end
 end
