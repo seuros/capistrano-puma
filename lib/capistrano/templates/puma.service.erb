@@ -8,7 +8,6 @@ User=<%= puma_user(@role) %>
 WorkingDirectory=<%= current_path %>
 ExecStart=<%= SSHKit.config.command_map[:bundle] %> exec puma -C <%= fetch(:puma_conf) %>
 ExecReload=/bin/kill -TSTP $MAINPID
-ExecStop=/bin/kill -TERM $MAINPID
 StandardOutput=append:<%= fetch(:puma_access_log) %>
 StandardError=append:<%= fetch(:puma_error_log) %>
 
