@@ -11,8 +11,16 @@ ExecReload=/bin/kill -TSTP $MAINPID
 ExecStop=/bin/kill -TERM $MAINPID
 StandardOutput=append:<%= fetch(:puma_access_log) %>
 StandardError=append:<%= fetch(:puma_error_log) %>
+<%="EnvironmentFile=#{fetch(:puma_service_unit_env_file)}" if fetch(:puma_service_unit_env_file) %>
+
+<% fetch(:puma_service_unit_env_vars, []).each do |environment_variable| %>
+<%="Environment=#{environment_variable}" %>
+<% end %>
 
 Restart=always
+RestartSec=1
+
+SyslogIdentifier=puma
 
 [Install]
 WantedBy=multi-user.target

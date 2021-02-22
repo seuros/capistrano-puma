@@ -159,6 +159,8 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_tag, fetch(:application)
     set :puma_restart_command, 'bundle exec puma'
     set :puma_service_unit_name, "puma_#{fetch(:application)}_#{fetch(:stage)}"
+    set :puma_service_unit_env_file, nil
+    set :puma_service_unit_env_vars, []
 
     set :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"
     set :nginx_flags, 'fail_timeout=0'
