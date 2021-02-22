@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-User=<%= puma_user(@role) %>
+<%="User=#{puma_user(@role)}" if fetch(:puma_systemctl_user) == :system %>
 WorkingDirectory=<%= current_path %>
 ExecStart=<%= SSHKit.config.command_map[:bundle] %> exec puma -C <%= fetch(:puma_conf) %>
 ExecReload=/bin/kill -TSTP $MAINPID
@@ -15,4 +15,4 @@ StandardError=append:<%= fetch(:puma_error_log) %>
 Restart=always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=<%=(fetch(:puma_systemctl_user) == :system) ? "multi-user.target" : "default.target"%>
