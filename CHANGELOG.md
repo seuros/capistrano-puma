@@ -1,4 +1,11 @@
 ## Changelog
+- 5.0.3:
+  - Remove ExecStop from systemd unit file (#314)
+  - Systemd user service manager and lingering (#307)
+- 5.0.2:  
+  - Single name for systemd config template
+- 5.0.1:
+  - Fix #301, Task "puma:smart_restart" not found
 - 5.0.0:
   - Support puma 5.0
   - Support SystemD service manager
