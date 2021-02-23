@@ -116,6 +116,18 @@ To generate unit file use:
 cap production puma:systemd:config puma:systemd:enable
 ```
 
+To use customize environment variables
+
+```ruby
+  set :puma_service_unit_env_file, '/etc/environment'
+```
+```ruby
+  set :puma_service_unit_env_vars, %w[
+      RAILSE_NV=development
+      PUMA_METRICS_HTTP=tcp://0.0.0.0:9393
+  ]
+```
+
 ### Multi bind
 
 Multi-bind can be set with an array in the puma_bind variable
