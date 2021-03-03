@@ -171,7 +171,9 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_tag, fetch(:application)
     set :puma_restart_command, 'bundle exec puma'
     set :puma_service_unit_name, "puma_#{fetch(:application)}_#{fetch(:stage)}"
-    set :puma_systemctl_user, :system # defaults to system. If set to any other value, the --user arg is included #307
+    set :puma_systemctl_user, :system # accepts :user
+    set :puma_enable_lingering, fetch(:puma_systemctl_user) != :system # https://wiki.archlinux.org/index.php/systemd/User#Automatic_start-up_of_systemd_user_instances
+    set :puma_lingering_user, fetch(:user)
     set :puma_service_unit_env_file, nil
     set :puma_service_unit_env_vars, []
 
