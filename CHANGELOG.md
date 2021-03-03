@@ -1,4 +1,6 @@
 ## Changelog
+- 5.0.4:
+  - fix: puma_systemctl_user default value (#319)
 - 5.0.3:
   - Remove ExecStop from systemd unit file (#314)
   - Systemd user service manager and lingering (#307)
