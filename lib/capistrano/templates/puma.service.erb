@@ -7,7 +7,7 @@ After=network.target
 Type=simple
 <%="User=#{puma_user(@role)}" if fetch(:puma_systemctl_user) == :system %>
 WorkingDirectory=<%= current_path %>
-ExecStart=<%= SSHKit.config.command_map[:bundle %> exec --keep-file-descriptors puma -C <%= fetch(:puma_conf) %>
+ExecStart=<%= expanded_bundle_command %> exec --keep-file-descriptors puma -C <%= fetch(:puma_conf) %>
 ExecReload=/bin/kill -TSTP $MAINPID
 StandardOutput=append:<%= fetch(:puma_access_log) %>
 StandardError=append:<%= fetch(:puma_error_log) %>
