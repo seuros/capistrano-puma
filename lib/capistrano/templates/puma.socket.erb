@@ -1,0 +1,16 @@
+[Unit]
+Description=Puma HTTP Server Accept Sockets for <%= "#{fetch(:application)} (#{fetch(:stage)})" %>
+
+[Socket]
+<% puma_binds.each do |bind| -%>
+<%= "ListenStream=#{bind.local.address}" %>
+<% end -%>
+
+NoDelay=true
+ReusePort=true
+Backlog=1024
+
+SyslogIdentifier=puma_socket
+
+[Install]
+WantedBy=sockets.target
