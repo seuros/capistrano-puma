@@ -7,15 +7,33 @@ namespace :puma do
     desc 'Config Puma systemd service'
     task :config do
       on roles(fetch(:puma_role)) do |role|
-        unit_filename = "#{fetch(:puma_service_unit_name)}.service"
-        git_plugin.template_puma "puma.service", "#{fetch(:tmp_dir)}/#{unit_filename}", role
-        systemd_path = fetch(:puma_systemd_conf_dir, git_plugin.fetch_systemd_unit_path)
+        upload_compiled_template = lambda do |template_name, unit_filename|
+          git_plugin.template_puma template_name, "#{fetch(:tmp_dir)}/#{unit_filename}", role
+          systemd_path = fetch(:puma_systemd_conf_dir, git_plugin.fetch_systemd_unit_path)
+          if fetch(:puma_systemctl_user) == :system
+            sudo "mv #{fetch(:tmp_dir)}/#{unit_filename} #{systemd_path}"
+          else
+            execute :mkdir, "-p", systemd_path
+            execute :mv, "#{fetch(:tmp_dir)}/#{unit_filename}", "#{systemd_path}"
+          end
+        end
+
+        upload_compiled_template.call(
+          "puma.service",
+          "#{fetch(:puma_service_unit_name)}.service"
+        )
+
+        if fetch(:puma_enable_socket_service) do
+          upload_compiled_template.call(
+            "puma.socket",
+            "#{fetch(:puma_service_unit_name)}.socket"
+          )
+        end
+
+        # Restart systemd
         if fetch(:puma_systemctl_user) == :system
-          sudo "mv #{fetch(:tmp_dir)}/#{unit_filename} #{systemd_path}"
           sudo "#{fetch(:puma_systemctl_bin)} daemon-reload"
         else
-          execute :mkdir, "-p", systemd_path
-          execute :mv, "#{fetch(:tmp_dir)}/#{unit_filename}", "#{systemd_path}"
           execute fetch(:puma_systemctl_bin), "--user", "daemon-reload"
         end
       end
