@@ -6,7 +6,7 @@ Description=Puma HTTP Server Accept Sockets for <%= "#{fetch(:application)} (#{f
 <%= "ListenStream=#{bind.local.address}" %>
 <% end -%>
 
-NoDelay=true
+<%= "NoDelay=true" if fetch(:puma_systemctl_user) == :system %>
 ReusePort=true
 Backlog=1024
 
