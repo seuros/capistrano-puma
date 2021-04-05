@@ -123,7 +123,7 @@ To use customize environment variables
 ```
 ```ruby
   set :puma_service_unit_env_vars, %w[
-      RAILSE_NV=development
+      RAILS_ENV=development
       PUMA_METRICS_HTTP=tcp://0.0.0.0:9393
   ]
 ```
