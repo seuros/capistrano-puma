@@ -11,4 +11,12 @@ namespace :puma do
       end
     end
   end
+
+  desc 'Generate nginx configuration locally'
+  task :generate_nginx_config_locally do
+    fake_role = Struct.new(:hostname)
+    run_locally do
+      File.write('nginx.conf', git_plugin.compiled_template_puma("nginx_conf", fake_role.new("example.com")).string)
+    end
+  end
 end
