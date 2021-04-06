@@ -6,6 +6,12 @@ Description=Puma HTTP Server Accept Sockets for <%= "#{fetch(:application)} (#{f
 <%= "ListenStream=#{bind.local.address}" %>
 <% end -%>
 
+# Don't let systemd accept the request, wait for Puma to do that.
+# Systemd will start the puma service upon first request if it wasn't started.
+#
+# You might also want to set your Nginx upstream to have a fail_timeout large enough to accomodate your app's
+# startup time.
+Accept=no
 <%= "NoDelay=true" if fetch(:puma_systemctl_user) == :system %>
 ReusePort=true
 Backlog=1024
