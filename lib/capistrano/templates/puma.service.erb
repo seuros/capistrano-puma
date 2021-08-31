@@ -7,6 +7,8 @@ After=network.target
 Type=simple
 <%="User=#{puma_user(@role)}" if fetch(:puma_systemctl_user) == :system %>
 WorkingDirectory=<%= current_path %>
+# Support older bundler versions where file descriptors weren't kept
+# See https://github.com/rubygems/rubygems/issues/3254
 ExecStart=<%= expanded_bundle_command %> exec --keep-file-descriptors puma -C <%= fetch(:puma_conf) %>
 ExecReload=/bin/kill -TSTP $MAINPID
 StandardOutput=append:<%= fetch(:puma_access_log) %>

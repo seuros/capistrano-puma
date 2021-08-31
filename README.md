@@ -32,7 +32,7 @@ install_plugin Capistrano::Puma::Daemon  # If you using puma daemonized (not sup
 ```
 or
 ```ruby
-install_plugin Capistrano::Puma::Systemd  # if you use SystemD 
+install_plugin Capistrano::Puma::Systemd  # if you use SystemD
 ```
 
 To prevent loading the hooks of the plugin, add false to the load_hooks param.
@@ -47,8 +47,8 @@ To prevent loading the hooks of the plugin, add false to the load_hooks param.
 To make it work with rvm, rbenv and chruby, install the plugin after corresponding library inclusion.
 ```ruby
     # Capfile
-    
-    require 'capistrano/rbenv'   
+
+    require 'capistrano/rbenv'
     require 'capistrano/puma'
     install_plugin Capistrano::Puma
 ```
@@ -127,6 +127,22 @@ To use customize environment variables
       PUMA_METRICS_HTTP=tcp://0.0.0.0:9393
   ]
 ```
+
+### Systemd Socket Activation
+
+Systemd socket activation starts your app upon first request if it is not already running
+
+```ruby
+    set :puma_enable_socket_service, true
+```
+
+For more information on socket activation have a look at the `systemd.socket` [man page](https://man7.org/linux/man-pages/man5/systemd.socket.5.html).
+
+To restart the listening socket using Systemd run
+```
+cap puma:systemd:restart_socket
+```
+This would also restart the puma instance as the puma service depends on the socket service being active
 
 ### Multi bind
 
