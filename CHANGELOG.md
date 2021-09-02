@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/seuros/capistrano-puma/tree/HEAD)
+## [v5.1.0](https://github.com/seuros/capistrano-puma/tree/v5.1.0) (2021-09-02)
 
-[Full Changelog](https://github.com/seuros/capistrano-puma/compare/v5.0.4...HEAD)
+[Full Changelog](https://github.com/seuros/capistrano-puma/compare/v5.0.4...v5.1.0)
 
 **Merged pull requests:**
 
