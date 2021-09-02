@@ -1,5 +1,5 @@
 require 'capistrano/bundler'
-require "capistrano/plugin"
+require 'capistrano/plugin'
 
 module Capistrano
   module PumaCommon
@@ -28,8 +28,7 @@ module Capistrano
       end.join("\n")
     end
 
-
-    def template_puma(from, to, role)
+    def compiled_template_puma(from, role)
       @role = role
       file = [
           "lib/capistrano/templates/#{from}-#{role.hostname}-#{fetch(:stage)}.rb",
@@ -45,7 +44,50 @@ module Capistrano
           File.expand_path("../templates/#{from}.rb.erb", __FILE__)
       ].detect { |path| File.file?(path) }
       erb = File.read(file)
-      backend.upload! StringIO.new(ERB.new(erb, nil, '-').result(binding)), to
+      StringIO.new(ERB.new(erb, nil, '-').result(binding))
+    end
+
+    def template_puma(from, to, role)
+      backend.upload! compiled_template_puma(from, role), to
+    end
+
+    PumaBind = Struct.new(:full_address, :kind, :address) do
+      def unix?
+        kind == :unix
+      end
+
+      def ssl?
+        kind == :ssl
+      end
+
+      def tcp
+        kind == :tcp || ssl?
+      end
+
+      def local
+        if unix?
+          self
+        else
+          PumaBind.new(
+            localize_address(full_address),
+            kind,
+            localize_address(address)
+          )
+        end
+      end
+
+      private
+
+      def localize_address(address)
+        address.gsub(/0\.0\.0\.0(.+)/, "127.0.0.1\\1")
+      end
+    end
+
+    def puma_binds
+      Array(fetch(:puma_bind)).map do |m|
+        etype, address  = /(tcp|unix|ssl):\/{1,2}(.+)/.match(m).captures
+        PumaBind.new(m, etype.to_sym, address)
+      end
     end
   end
 

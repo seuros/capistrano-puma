@@ -1,12 +1,11 @@
 upstream puma_<%= fetch(:nginx_config_name) %> { <%
-  @backends = [fetch(:puma_bind)].flatten.map do |m|
-  etype, address  = /(tcp|unix|ssl):\/{1,2}(.+)/.match(m).captures
-  if etype == 'unix'
-    "server #{etype}:#{address} #{fetch(:nginx_socket_flags)};"
-  else
-    "server #{address.gsub(/0\.0\.0\.0(.+)/, "127.0.0.1\\1")} #{fetch(:nginx_http_flags)};"
+  @backends = puma_binds.map do |bind|
+     if bind.unix?
+       "server unix:#{bind.address} #{fetch(:nginx_socket_flags)};"
+     else
+       "server #{bind.local.address} #{fetch(:nginx_http_flags)};"
+     end
   end
-end
 %><% @backends.each do |server| %>
   <%= server %><% end %>
 }
