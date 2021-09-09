@@ -3,7 +3,7 @@ module Capistrano
     include PumaCommon
 
     def register_hooks
-      after 'deploy:finished', 'puma:reload'
+      after 'deploy:finished', 'puma:smart_restart'
     end
 
     def define_tasks
@@ -17,6 +17,7 @@ module Capistrano
       set_if_empty :puma_systemctl_user, :system
       set_if_empty :puma_enable_lingering, -> { fetch(:puma_systemctl_user) != :system }
       set_if_empty :puma_lingering_user, -> { fetch(:user) }
+      set_if_empty :puma_phased_restart, -> { false }
     end
 
     def expanded_bundle_command

@@ -128,6 +128,12 @@ To use customize environment variables
   ]
 ```
 
+To use [phased restart](https://github.com/puma/puma/blob/master/docs/restart.md) for zero downtime deployments:
+
+```ruby
+  set :puma_phased_restart, true
+```
+
 ### Systemd Socket Activation
 
 Systemd socket activation starts your app upon first request if it is not already running
@@ -192,6 +198,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_lingering_user, fetch(:user)
     set :puma_service_unit_env_file, nil
     set :puma_service_unit_env_vars, []
+    set :puma_phased_restart, false
 
     set :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"
     set :nginx_flags, 'fail_timeout=0'
