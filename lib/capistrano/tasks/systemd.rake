@@ -90,6 +90,15 @@ namespace :puma do
     end
   end
 
+  desc 'Restarts or reloads Puma service via systemd'
+  task :smart_restart do
+    if fetch(:puma_phased_restart)
+      invoke 'puma:reload'
+    else
+      invoke 'puma:restart'
+    end
+  end
+
   desc 'Restart Puma service via systemd'
   task :restart do
     on roles(fetch(:puma_role)) do
