@@ -1,8 +1,16 @@
 # Changelog
 
-## [5.1.1](https://github.com/seuros/capistrano-puma/tree/5.1.1) (2021-09-03)
+## [5.2.0](https://github.com/seuros/capistrano-puma/tree/5.2.0) (2021-09-11)
 
-[Full Changelog](https://github.com/seuros/capistrano-puma/compare/v5.1.0...5.1.1)
+[Full Changelog](https://github.com/seuros/capistrano-puma/compare/v5.1.1...5.2.0)
+
+**Merged pull requests:**
+
+- Add option for phased restart of puma [\#333](https://github.com/seuros/capistrano-puma/pull/333) ([phylor](https://github.com/phylor))
+
+## [v5.1.1](https://github.com/seuros/capistrano-puma/tree/v5.1.1) (2021-09-03)
+
+[Full Changelog](https://github.com/seuros/capistrano-puma/compare/v5.1.0...v5.1.1)
 
 **Merged pull requests:**
 
