@@ -32,11 +32,11 @@ namespace :puma do
 
     desc 'Generate service configuration locally'
     task :generate_config_locally do
-      fake_role = Struct.new(:hostname)
+      fake_role = Struct.new(:hostname, :user, :properties)
       run_locally do
-        File.write('puma.service', git_plugin.compiled_template_puma("puma.service", fake_role.new("example.com")).string)
+        File.write('puma.service', git_plugin.compiled_template_puma("puma.service", fake_role.new("example.com", "puma_user")).string)
         if fetch(:puma_enable_socket_service)
-          File.write('puma.socket', git_plugin.compiled_template_puma("puma.socket", fake_role.new("example.com")).string)
+          File.write('puma.socket', git_plugin.compiled_template_puma("puma.socket", fake_role.new("example.com", "puma_user")).string)
         end
       end
     end
