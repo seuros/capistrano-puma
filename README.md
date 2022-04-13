@@ -64,7 +64,7 @@ cap production puma:config
 By default the file located in  `shared/puma.rb`
 
 
-Ensure that `tmp/pids` and ` tmp/sockets log` are shared (via `linked_dirs`):
+Ensure that `tmp/pids`, `tmp/sockets` and `log` are shared (via `linked_dirs`):
 
 `This step is mandatory before deploying, otherwise puma server won't start`
 
