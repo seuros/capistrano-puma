@@ -110,7 +110,7 @@ namespace :puma do
   task :reload do
     on roles(fetch(:puma_role)) do
       service_ok = if fetch(:puma_systemctl_user) == :system
-        execute("#{fetch(:puma_systemctl_bin)} status #{fetch(:puma_service_unit_name)} > /dev/null", raise_on_non_zero_exit: false)
+        sudo("#{fetch(:puma_systemctl_bin)} status #{fetch(:puma_service_unit_name)} > /dev/null", raise_on_non_zero_exit: false)
       else
         execute("#{fetch(:puma_systemctl_bin)} --user status #{fetch(:puma_service_unit_name)} > /dev/null", raise_on_non_zero_exit: false)
       end
