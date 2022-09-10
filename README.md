@@ -22,15 +22,10 @@ And then execute:
     require 'capistrano/puma'
     install_plugin Capistrano::Puma  # Default puma tasks
     install_plugin Capistrano::Puma::Workers  # if you want to control the workers (in cluster mode)
-    install_plugin Capistrano::Puma::Jungle # if you need the jungle tasks
     install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
     install_plugin Capistrano::Puma::Nginx  # if you want to upload a nginx site template
 ```
 You will need to select your service manager
-```ruby
-install_plugin Capistrano::Puma::Daemon  # If you using puma daemonized (not supported in Puma 5+)
-```
-or
 ```ruby
 install_plugin Capistrano::Puma::Systemd  # if you use SystemD
 ```
@@ -95,27 +90,6 @@ or define a standalone one:
 role :puma_nginx, %w{root@example.com}
 ```
 
-### Jungle
-
-For Jungle tasks (beta), these options exist:
-```ruby
-    set :puma_jungle_conf, '/etc/puma.conf'
-    set :puma_run_path, '/usr/local/bin/run-puma'
-```
-
-### Systemd
-
-Install Systemd plugin in `Capfile`:
-```ruby
-install_plugin Capistrano::Puma
-install_plugin Capistrano::Puma::Systemd
-```
-
-To generate unit file use:
-```
-cap production puma:systemd:config puma:systemd:enable
-```
-
 To use customize environment variables
 
 ```ruby
@@ -172,33 +146,13 @@ Configurable options, shown here with defaults: Please note the configuration op
 
 ```ruby
     set :puma_user, fetch(:user)
-    set :puma_rackup, -> { File.join(current_path, 'config.ru') }
-    set :puma_state, "#{shared_path}/tmp/pids/puma.state"
-    set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
-    set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"    #accept array for multi-bind
-    set :puma_control_app, false
-    set :puma_default_control_app, "unix://#{shared_path}/tmp/sockets/pumactl.sock"
-    set :puma_conf, "#{shared_path}/puma.rb"
-    set :puma_access_log, "#{shared_path}/log/puma_access.log"
-    set :puma_error_log, "#{shared_path}/log/puma_error.log"
     set :puma_role, :app
-    set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
-    set :puma_threads, [0, 16]
-    set :puma_workers, 0
-    set :puma_worker_timeout, nil
-    set :puma_init_active_record, false
-    set :puma_preload_app, false
-    set :puma_daemonize, false
-    set :puma_plugins, []  #accept array of plugins
-    set :puma_tag, fetch(:application)
-    set :puma_restart_command, 'bundle exec puma'
     set :puma_service_unit_name, "puma_#{fetch(:application)}_#{fetch(:stage)}"
     set :puma_systemctl_user, :system # accepts :user
     set :puma_enable_lingering, fetch(:puma_systemctl_user) != :system # https://wiki.archlinux.org/index.php/systemd/User#Automatic_start-up_of_systemd_user_instances
     set :puma_lingering_user, fetch(:user)
     set :puma_service_unit_env_file, nil
     set :puma_service_unit_env_vars, []
-    set :puma_phased_restart, false
 
     set :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"
     set :nginx_flags, 'fail_timeout=0'
