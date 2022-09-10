@@ -94,10 +94,6 @@ module Capistrano
   class Puma < Capistrano::Plugin
     include PumaCommon
 
-    def define_tasks
-      eval_rakefile File.expand_path('../tasks/puma.rake', __FILE__)
-    end
-
     def set_defaults
       set_if_empty :puma_role, :app
       set_if_empty :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
@@ -109,32 +105,6 @@ module Capistrano
 
       # Bundler integration
       append :bundle_bins, 'puma', 'pumactl'
-    end
-
-    def register_hooks
-      after 'deploy:check', 'puma:check'
-    end
-
-    def puma_workers
-      fetch(:puma_workers, 0)
-    end
-
-    def puma_preload_app?
-      fetch(:puma_preload_app)
-    end
-
-    def puma_daemonize?
-      fetch(:puma_daemonize)
-    end
-
-    def puma_plugins
-      Array(fetch(:puma_plugins)).collect do |bind|
-        "plugin '#{bind}'"
-      end.join("\n")
-    end
-
-    def upload_puma_rb(role)
-      template_puma 'puma', fetch(:puma_conf), role
     end
   end
 end
