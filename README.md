@@ -21,12 +21,9 @@ And then execute:
 
     require 'capistrano/puma'
     install_plugin Capistrano::Puma  # Default puma tasks
+    install_plugin Capistrano::Puma::Systemd
     install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
     install_plugin Capistrano::Puma::Nginx  # if you want to upload a nginx site template
-```
-You will need to select your service manager
-```ruby
-install_plugin Capistrano::Puma::Systemd  # if you use SystemD
 ```
 
 To prevent loading the hooks of the plugin, add false to the load_hooks param.
