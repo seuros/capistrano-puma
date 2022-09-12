@@ -44,7 +44,7 @@ module Capistrano
           File.expand_path("../templates/#{from}.rb.erb", __FILE__)
       ].detect { |path| File.file?(path) }
       erb = File.read(file)
-      StringIO.new(ERB.new(erb, nil, '-').result(binding))
+      StringIO.new(ERB.new(erb, trim_mode: '-').result(binding))
     end
 
     def template_puma(from, to, role)
