@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Capistrano
-  PUMAVERSION = '5.2.0'
+  PUMAVERSION = '6.0.0.alpha.1'
 end
