@@ -16,7 +16,8 @@ After=network.target
 After=syslog.target network.target
 
 [Service]
-Type=simple
+Type=notify
+WatchdogSec=10
 <%="User=#{puma_user(@role)}" if fetch(:puma_systemctl_user) == :system -%>
 WorkingDirectory=<%= current_path %>
 # Support older bundler versions where file descriptors weren't kept
