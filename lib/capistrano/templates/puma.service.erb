@@ -11,7 +11,6 @@
 #
 [Unit]
 Description=Puma HTTP Server for <%= "#{fetch(:application)} (#{fetch(:stage)})" %>
-After=network.target
 <%= "Requires=#{fetch(:puma_service_unit_name)}.socket" if fetch(:puma_enable_socket_service) %>
 After=syslog.target network.target
 
