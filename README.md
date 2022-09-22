@@ -136,6 +136,15 @@ For ActiveRecord the following line to your deploy.rb
     set :puma_init_active_record, true
 ```
 
+### Rackup file path
+
+In the case you're using a Rackup file to be used to start Puma, you can pass
+its path to the `:puma_rackup_file_path` parameter :
+
+```ruby
+set :puma_rackup_file_path, 'path/to/my/config.ru'
+```
+
 ### Other configs
 
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
