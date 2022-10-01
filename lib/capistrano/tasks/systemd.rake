@@ -26,6 +26,7 @@ namespace :puma do
 
       # Reload systemd
       git_plugin.execute_systemd("daemon-reload")
+      invoke "puma:enable"
     end
   end
 
