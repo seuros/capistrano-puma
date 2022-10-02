@@ -15,17 +15,17 @@ Description=Puma HTTP Server for <%= "#{fetch(:application)} (#{fetch(:stage)})"
 After=syslog.target network.target
 
 [Service]
-Type=notify
+Type=<%= service_unit_type %>
 WatchdogSec=10
 <%="User=#{puma_user(@role)}" if fetch(:puma_systemctl_user) == :system -%>
 WorkingDirectory=<%= current_path %>
-ExecStart=<%= expanded_bundle_command %> exec puma
+ExecStart=<%= expanded_bundle_command %> exec puma -e <%= fetch(:puma_env) %>
 ExecReload=/bin/kill -USR1 $MAINPID
 <%- Array(fetch(:puma_service_unit_env_files)).each do |file| %>
 <%="EnvironmentFile=#{file}" -%>
 <% end -%>
 <% Array(fetch(:puma_service_unit_env_vars)).each do |environment_variable| %>
-<%="Environment=#{environment_variable}" -%>
+<%="Environment=\"#{environment_variable}\"" -%>
 <% end -%>
 
 # if we crash, restart

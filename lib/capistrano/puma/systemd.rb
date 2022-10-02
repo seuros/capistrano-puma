@@ -18,7 +18,7 @@ module Capistrano
       set_if_empty :puma_service_unit_env_files, -> { fetch(:service_unit_env_files, []) }
       set_if_empty :puma_service_unit_env_vars, -> { fetch(:service_unit_env_vars, []) }
 
-      set_if_empty :puma_systemctl_user, fetch(:systemctl_user, :user)
+      set_if_empty :puma_systemctl_user, -> { fetch(:systemctl_user, :user) }
       set_if_empty :puma_enable_lingering, -> { fetch(:puma_systemctl_user) != :system }
       set_if_empty :puma_lingering_user, -> { fetch(:lingering_user, fetch(:user)) }
 
