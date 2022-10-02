@@ -89,7 +89,7 @@ role :puma_nginx, %w{root@example.com}
 To use customize environment variables
 
 ```ruby
-  set :puma_service_unit_env_file, '/etc/environment'
+  set :puma_service_unit_env_files, '/etc/environment'
 ```
 ```ruby
   set :puma_service_unit_env_vars, %w[
@@ -147,7 +147,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_systemctl_user, :system # accepts :user
     set :puma_enable_lingering, fetch(:puma_systemctl_user) != :system # https://wiki.archlinux.org/index.php/systemd/User#Automatic_start-up_of_systemd_user_instances
     set :puma_lingering_user, fetch(:user)
-    set :puma_service_unit_env_file, nil
+    set :puma_service_unit_env_files, []
     set :puma_service_unit_env_vars, []
 
     set :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"

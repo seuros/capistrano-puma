@@ -12,15 +12,15 @@ module Capistrano
 
     def set_defaults
       set_if_empty :puma_systemctl_bin, -> { fetch(:systemctl_bin, '/bin/systemctl') }
-      set_if_empty :puma_service_unit_name, "puma_#{fetch(:application)}_#{fetch(:stage)}"
+      set_if_empty :puma_service_unit_name, -> { "#{fetch(:application)}_puma_#{fetch(:stage)}" }
       set_if_empty :puma_enable_socket_service, false
-      set_if_empty :puma_service_unit_env_file, fetch(:service_unit_env_file)
+
+      set_if_empty :puma_service_unit_env_files, -> { fetch(:service_unit_env_files, []) }
+      set_if_empty :puma_service_unit_env_vars, -> { fetch(:service_unit_env_vars, []) }
 
       set_if_empty :puma_systemctl_user, fetch(:systemctl_user, :user)
       set_if_empty :puma_enable_lingering, -> { fetch(:puma_systemctl_user) != :system }
       set_if_empty :puma_lingering_user, -> { fetch(:lingering_user, fetch(:user)) }
-      set_if_empty :puma_access_log, -> { File.join(shared_path, 'log', "#{fetch(:puma_env)}.log") }
-      set_if_empty :puma_error_log, -> { File.join(shared_path, 'log', "#{fetch(:puma_env)}.log") }
 
       set_if_empty :puma_service_templates_path, fetch(:service_templates_path, 'config/deploy/templates')
     end

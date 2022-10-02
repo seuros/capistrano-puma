@@ -97,11 +97,13 @@ module Capistrano
     def set_defaults
       set_if_empty :puma_role, :app
       set_if_empty :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
+      set_if_empty :puma_access_log, -> { File.join(shared_path, 'log', "puma.log") }
+      set_if_empty :puma_error_log, -> { File.join(shared_path, 'log', "puma.log") }
 
       # Chruby, Rbenv and RVM integration
-      append :chruby_map_bins, 'puma', 'pumactl'
-      append :rbenv_map_bins, 'puma', 'pumactl'
-      append :rvm_map_bins, 'puma', 'pumactl'
+      append :chruby_map_bins, 'puma', 'pumactl' if fetch(:chruby_map_bins)
+      append :rbenv_map_bins, 'puma', 'pumactl' if fetch(:rbenv_map_bins)
+      append :rvm_map_bins, 'puma', 'pumactl' if fetch(:rvm_map_bins)
 
       # Bundler integration
       append :bundle_bins, 'puma', 'pumactl'
@@ -110,5 +112,3 @@ module Capistrano
 end
 
 require 'capistrano/puma/systemd'
-require 'capistrano/puma/monit'
-require 'capistrano/puma/nginx'

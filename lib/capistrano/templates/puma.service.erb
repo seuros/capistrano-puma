@@ -19,15 +19,15 @@ Type=notify
 WatchdogSec=10
 <%="User=#{puma_user(@role)}" if fetch(:puma_systemctl_user) == :system -%>
 WorkingDirectory=<%= current_path %>
-# Support older bundler versions where file descriptors weren't kept
-# See https://github.com/rubygems/rubygems/issues/3254
-ExecStart=<%= expanded_bundle_command %> exec --keep-file-descriptors puma
+ExecStart=<%= expanded_bundle_command %> exec puma
 ExecReload=/bin/kill -USR1 $MAINPID
+<%- Array(fetch(:puma_service_unit_env_files)).each do |file| %>
+<%="EnvironmentFile=#{file}" -%>
+<% end -%>
+<% Array(fetch(:puma_service_unit_env_vars)).each do |environment_variable| %>
+<%="Environment=#{environment_variable}" -%>
+<% end -%>
 
-<%="EnvironmentFile=#{fetch(:puma_service_unit_env_file)}" if fetch(:puma_service_unit_env_file) %>
-<% fetch(:puma_service_unit_env_vars, []).each do |environment_variable| %>
-<%="Environment=#{environment_variable}" %>
-<% end %>
 # if we crash, restart
 RestartSec=1
 Restart=on-failure
