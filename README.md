@@ -129,13 +129,6 @@ Multi-bind can be set with an array in the puma_bind variable
     * Listening on tcp://0.0.0.0:9292
     * Listening on unix:///tmp/puma.sock
 
-### Active Record
-
-For ActiveRecord the following line to your deploy.rb
-```ruby
-    set :puma_init_active_record, true
-```
-
 ### Other configs
 
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
