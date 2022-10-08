@@ -1,5 +1,12 @@
 # Changelog
 
+[Unreleased](https://github.com/seuros/capistrano-puma/compare/v5.2.0...master)
+- Removed support for support for monit and upstart. (will add them back if someone is willing to maintain them)
+- Sync configuration with capistrano-sidekiq
+- Support for notify systemd service. Add sd_notify gem to your Gemfile.
+- Add example application for easier testing.
+- Deprecate Nginx support. (configuration tools should be preferred over capistrano tasks)
+
 ## [5.2.0](https://github.com/seuros/capistrano-puma/tree/5.2.0) (2021-09-11)
 
 [Full Changelog](https://github.com/seuros/capistrano-puma/compare/v5.1.1...5.2.0)

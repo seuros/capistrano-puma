@@ -22,17 +22,13 @@ And then execute:
     require 'capistrano/puma'
     install_plugin Capistrano::Puma  # Default puma tasks
     install_plugin Capistrano::Puma::Systemd
-    install_plugin Capistrano::Puma::Monit  # if you need the monit tasks
-    install_plugin Capistrano::Puma::Nginx  # if you want to upload a nginx site template
 ```
 
 To prevent loading the hooks of the plugin, add false to the load_hooks param.
 ```ruby
     # Capfile
 
-    require 'capistrano/puma'
     install_plugin Capistrano::Puma, load_hooks: false  # Default puma tasks without hooks
-    install_plugin Capistrano::Puma::Monit, load_hooks: false  # Monit tasks without hooks
 ```
 
 To make it work with rvm, rbenv and chruby, install the plugin after corresponding library inclusion.
@@ -48,61 +44,14 @@ To make it work with rvm, rbenv and chruby, install the plugin after correspondi
 
 To list available tasks use `cap -T`
 
-To upload puma config use:
-```ruby
-cap production puma:config
-```
-By default the file located in  `shared/puma.rb`
-
 
 Ensure that `tmp/pids` and ` tmp/sockets log` are shared (via `linked_dirs`):
 
 `This step is mandatory before deploying, otherwise puma server won't start`
 
-### Nginx
+## Example
 
-To upload a nginx site config (eg. /etc/nginx/sites-enabled/) use:
-```ruby
-cap production puma:nginx_config
-```
-
-To customize these two templates locally before uploading use:
-```
-rails g capistrano:nginx_puma:config
-```
-
-if your nginx server configuration is not located in `/etc/nginx`, you may need to customize:
-```ruby
-set :nginx_sites_available_path, "/etc/nginx/sites-available"
-set :nginx_sites_enabled_path, "/etc/nginx/sites-enabled"
-```
-
-By default, `nginx_config` will be executed with `:web` role. But you can assign it to a different role:
-```ruby
-set :puma_nginx, :foo
-```
-or define a standalone one:
-```ruby
-role :puma_nginx, %w{root@example.com}
-```
-
-To use customize environment variables
-
-```ruby
-  set :puma_service_unit_env_files, '/etc/environment'
-```
-```ruby
-  set :puma_service_unit_env_vars, %w[
-      RAILS_ENV=development
-      PUMA_METRICS_HTTP=tcp://0.0.0.0:9393
-  ]
-```
-
-To use [phased restart](https://github.com/puma/puma/blob/master/docs/restart.md) for zero downtime deployments:
-
-```ruby
-  set :puma_phased_restart, true
-```
+A sample application is provided to show how to use this gem at https://github.com/seuros/capistrano-example-app
 
 ### Systemd Socket Activation
 
@@ -120,47 +69,24 @@ cap puma:systemd:restart_socket
 ```
 This would also restart the puma instance as the puma service depends on the socket service being active
 
-### Multi bind
-
-Multi-bind can be set with an array in the puma_bind variable
-```ruby
-  set :puma_bind, %w(tcp://0.0.0.0:9292 unix:///tmp/puma.sock)
-```
-    * Listening on tcp://0.0.0.0:9292
-    * Listening on unix:///tmp/puma.sock
-
 ### Other configs
 
 Configurable options, shown here with defaults: Please note the configuration options below are not required unless you are trying to override a default setting, for instance if you are deploying on a host on which you do not have sudo or root privileges and you need to restrict the path. These settings go in the deploy.rb file.
 
 ```ruby
     set :puma_user, fetch(:user)
-    set :puma_role, :app
-    set :puma_service_unit_name, "puma_#{fetch(:application)}_#{fetch(:stage)}"
-    set :puma_systemctl_user, :system # accepts :user
-    set :puma_enable_lingering, fetch(:puma_systemctl_user) != :system # https://wiki.archlinux.org/index.php/systemd/User#Automatic_start-up_of_systemd_user_instances
-    set :puma_lingering_user, fetch(:user)
+    set :puma_role, :web
     set :puma_service_unit_env_files, []
     set :puma_service_unit_env_vars, []
-
-    set :nginx_config_name, "#{fetch(:application)}_#{fetch(:stage)}"
-    set :nginx_flags, 'fail_timeout=0'
-    set :nginx_http_flags, fetch(:nginx_flags)
-    set :nginx_server_name, "localhost #{fetch(:application)}.local"
-    set :nginx_sites_available_path, '/etc/nginx/sites-available'
-    set :nginx_sites_enabled_path, '/etc/nginx/sites-enabled'
-    set :nginx_socket_flags, fetch(:nginx_flags)
-    set :nginx_ssl_certificate, "/etc/ssl/certs/#{fetch(:nginx_config_name)}.crt"
-    set :nginx_ssl_certificate_key, "/etc/ssl/private/#{fetch(:nginx_config_name)}.key"
-    set :nginx_use_ssl, false
-    set :nginx_use_http2, true
-    set :nginx_downstream_uses_ssl, false
 ```
 
 __Notes:__ If you are setting values for variables that might be used by other plugins, use `append` instead of `set`. For example:
 ```ruby
 append :rbenv_map_bins, 'puma', 'pumactl'
 ```
+
+# Nginx documentation
+Nginx documentation was moved to [nginx.md](docs/nginx.md)
 
 ## Contributing
 
