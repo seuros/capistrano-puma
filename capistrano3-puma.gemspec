@@ -1,10 +1,8 @@
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'capistrano/puma/version'
+# frozen_string_literal: true
 
 Gem::Specification.new do |spec|
   spec.name = 'capistrano3-puma'
-  spec.version = Capistrano::PUMAVERSION
+  spec.version = '6.0.0.alpha.4'
   spec.authors = ['Abdelkader Boudih']
   spec.email = ['Terminale@gmail.com']
   spec.description = %q{Puma integration for Capistrano 3}
