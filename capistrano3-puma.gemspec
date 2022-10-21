@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name = 'capistrano3-puma'
-  spec.version = '6.0.0.alpha.4'
+  spec.version = '6.0.0.beta.1'
   spec.authors = ['Abdelkader Boudih']
   spec.email = ['Terminale@gmail.com']
   spec.description = %q{Puma integration for Capistrano 3}
@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'capistrano', '~> 3.7'
   spec.add_dependency 'capistrano-bundler'
-  spec.add_dependency 'puma', '>= 5.1', '< 6.0'
+  spec.add_dependency 'puma', '>= 5.1', '< 7.0'
   spec.post_install_message = %q{
     Version 6.0.0 is a major release. Please see README.md, breaking changes are listed in CHANGELOG.md
   }

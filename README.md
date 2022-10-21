@@ -42,12 +42,8 @@ To make it work with rvm, rbenv and chruby, install the plugin after correspondi
 
 ### Config
 
-To list available tasks use `cap -T`
-
-
-Ensure that `tmp/pids` and ` tmp/sockets log` are shared (via `linked_dirs`):
-
-`This step is mandatory before deploying, otherwise puma server won't start`
+Puma configuration is expected to be in `config/puma.rb` or `config/puma/#{fetch(:puma_env)}.rb` and checked in your repository.
+Uploading the configuration via capistrano was removed as it was causing problems with custom configurations.
 
 ## Example
 
