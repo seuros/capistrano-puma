@@ -80,6 +80,10 @@ __Notes:__ If you are setting values for variables that might be used by other p
 ```ruby
 append :rbenv_map_bins, 'puma', 'pumactl'
 ```
+__Notes:__ Please run capistrano task that updates the config at the server to reflect the changes made in the deploy.rb (or deploy/production.rb etc.). For example, if you add some environment variables using the above config, the following task will update the SystemD config at the server and those environment variables will be available to the app.
+```
+cap puma:systemd:config
+```
 
 # Nginx documentation
 Nginx documentation was moved to [nginx.md](docs/nginx.md)
