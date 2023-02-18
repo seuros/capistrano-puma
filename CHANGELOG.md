@@ -1,4 +1,7 @@
 # Changelog
+## Unreleased
+
+- Bump puma support to v6.x
 
 ## [5.2.0](https://github.com/seuros/capistrano-puma/tree/5.2.0) (2021-09-11)
 
