@@ -7,6 +7,7 @@ Tools like ansible, puppet, chef, etc. are better suited for configuring your se
 To upload a nginx site config (eg. /etc/nginx/sites-enabled/) use:
 ```ruby
     # Capfile
+    require 'capistrano/puma/nginx'
     install_plugin Capistrano::Puma::Nginx
 ```
 ```shell
