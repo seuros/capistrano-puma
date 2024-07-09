@@ -53,7 +53,11 @@ module Capistrano
           File.expand_path("../templates/#{from}.rb.erb", __FILE__)
       ].detect { |path| File.file?(path) }
       erb = File.read(file)
-      StringIO.new(ERB.new(erb, trim_mode: '-').result(binding))
+      if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.6')
+        StringIO.new(ERB.new(erb, nil, '-').result(binding))
+      else
+        StringIO.new(ERB.new(erb, trim_mode: '-').result(binding))
+      end
     end
 
     def template_puma(from, to, role)
