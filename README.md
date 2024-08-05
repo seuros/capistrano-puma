@@ -45,6 +45,34 @@ To make it work with rvm, rbenv and chruby, install the plugin after correspondi
 Puma configuration is expected to be in `config/puma.rb` or `config/puma/#{fetch(:puma_env)}.rb` and checked in your repository.
 Uploading the configuration via capistrano was removed as it was causing problems with custom configurations.
 
+### Deployment
+
+Before running `$ bundle exec cap {stage} deploy` for the first time, install Puma on the deployment server. For example, if stage=production:
+```
+$ bundle exec cap production puma:install
+```
+
+To uninstall,
+```
+$ bundle exec cap production puma:uninstall
+```
+
+### Full Task List
+```
+$ cap -T puma
+cap puma:disable         # Disable Puma systemd service
+cap puma:enable          # Enable Puma systemd service
+cap puma:install         # Install Puma systemd service
+cap puma:reload          # Reload Puma service via systemd
+cap puma:restart         # Restart Puma service via systemd
+cap puma:restart_socket  # Restart Puma socket via systemd
+cap puma:smart_restart   # Restarts or reloads Puma service via systemd
+cap puma:start           # Start Puma service via systemd
+cap puma:status          # Get Puma service status via systemd
+cap puma:stop            # Stop Puma service via systemd
+cap puma:stop_socket     # Stop Puma socket via systemd
+cap puma:uninstall       # Uninstall Puma systemd service
+```
 ## Example
 
 A sample application is provided to show how to use this gem at https://github.com/seuros/capistrano-example-app
