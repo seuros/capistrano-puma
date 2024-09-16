@@ -51,8 +51,8 @@ namespace :puma do
       git_plugin.execute_systemd("enable", fetch(:puma_service_unit_name))
       git_plugin.execute_systemd("enable", fetch(:puma_service_unit_name) + ".socket") if fetch(:puma_enable_socket_service)
 
-      if fetch(:puma_systemctl_user) != :system && fetch(:puma_enable_lingering)
-        sudo "loginctl enable-linger #{fetch(:puma_lingering_user)}"
+      if fetch(:puma_enable_lingering) && fetch(:puma_systemctl_user) != :system
+        execute :loginctl, "enable-linger", fetch(:puma_lingering_user)
       end
     end
   end
