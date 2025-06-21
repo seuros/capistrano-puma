@@ -15,6 +15,34 @@ And then execute:
 
     $ bundle
 
+## Upgrading from Version 5.x to 6.x
+
+Version 6.0 includes several breaking changes:
+
+### Breaking Changes:
+1. **Manual Puma Configuration**: The gem no longer generates `puma.rb` automatically
+   - You must create your own `config/puma.rb` in your repository
+   - Add it to `linked_files` in your `deploy.rb`
+
+2. **Default puma_bind Removed**: You must explicitly set the bind address
+   ```ruby
+   set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
+   ```
+
+3. **Systemd Service Changes**: Services are now user-specific by default
+   - Services are created in `~/.config/systemd/user/`
+   - Run `cap production puma:install` again after upgrading
+
+### Migration Steps:
+1. Create your `config/puma.rb` if you don't have one
+2. Add to your `deploy.rb`:
+   ```ruby
+   append :linked_files, 'config/puma.rb'
+   set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
+   ```
+3. Run `cap production puma:install` to update the systemd service
+4. Deploy as normal
+
 ## Usage
 ```ruby
     # Capfile
@@ -54,15 +82,42 @@ Starting with version 6.0.0, you need to manage the puma configuration file your
 
 This ensures the puma configuration persists across deployments. The systemd service will start puma with `puma -e <environment>` from your app's current directory.
 
-### Deployment
+### First-Time Setup (IMPORTANT! 🎉)
 
-Before running `$ bundle exec cap {stage} deploy` for the first time, install Puma on the deployment server. For example, if stage=production:
-```
+**🙋 Hey there, human! Read this magical section and save yourself from confusion! 😊**
+
+Before your first deployment, you MUST install the Puma systemd service on your server:
+
+```bash
+# ✨ This only needs to be done once per server/stage - it's like a first date! 💝
 $ bundle exec cap production puma:install
 ```
 
-To uninstall,
+This command will:
+- 🏗️ Create the systemd service files for Puma
+- 🚀 Enable the service to start on boot
+- 🔐 Set up the proper user permissions
+
+**🎭 Plot twist:** Without running this command first, your deployment will succeed but Puma won't start! (We know, it's sneaky like that 😅)
+
+### Deployment
+
+After the initial setup, normal deployments will work as expected:
+```bash
+$ bundle exec cap production deploy
 ```
+
+The deployment process will automatically restart Puma using the installed systemd service.
+
+To manually control the Puma service:
+```bash
+$ bundle exec cap production puma:start
+$ bundle exec cap production puma:stop
+$ bundle exec cap production puma:restart
+```
+
+To uninstall the systemd service:
+```bash
 $ bundle exec cap production puma:uninstall
 ```
 
@@ -119,6 +174,35 @@ __Notes:__ If you are setting values for variables that might be used by other p
 ```ruby
 append :rbenv_map_bins, 'puma', 'pumactl'
 ```
+
+## Troubleshooting
+
+### Puma is not starting after deployment
+- Ensure you ran `cap production puma:install` before your first deployment
+- Check the service status: `cap production puma:status`
+- Check logs: `sudo journalctl -u your_app_puma_production -n 100`
+
+### Nginx 502 Bad Gateway errors
+This usually means nginx and puma have mismatched configurations:
+- If nginx expects a unix socket but puma binds to a port (or vice versa)
+- Ensure your `puma_bind` in deploy.rb matches your nginx upstream configuration
+- Common configurations:
+  ```ruby
+  # Unix socket (default)
+  set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
+  
+  # TCP port
+  set :puma_bind, "tcp://0.0.0.0:3000"
+  ```
+
+### Puma keeps restarting (systemd watchdog kills it)
+- Your app may take longer than 10 seconds to boot
+- Disable or increase WatchdogSec (requires version 6.0.0+):
+  ```ruby
+  set :puma_systemd_watchdog_sec, 30  # 30 seconds
+  # or
+  set :puma_systemd_watchdog_sec, 0   # Disable watchdog
+  ```
 
 # Nginx documentation
 Nginx documentation was moved to [nginx.md](docs/nginx.md)
