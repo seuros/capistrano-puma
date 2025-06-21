@@ -43,7 +43,16 @@ To make it work with rvm, rbenv and chruby, install the plugin after correspondi
 ### Config
 
 Puma configuration is expected to be in `config/puma.rb` or `config/puma/#{fetch(:puma_env)}.rb` and checked in your repository.
-Uploading the configuration via capistrano was removed as it was causing problems with custom configurations.
+
+Starting with version 6.0.0, you need to manage the puma configuration file yourself. Here are the steps:
+
+1. Create your puma configuration in `shared/config/puma.rb` on the server
+2. Add it to linked_files in your `deploy.rb`:
+   ```ruby
+   append :linked_files, 'config/puma.rb'
+   ```
+
+This ensures the puma configuration persists across deployments. The systemd service will start puma with `puma -e <environment>` from your app's current directory.
 
 ### Deployment
 
