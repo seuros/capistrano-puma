@@ -3,6 +3,7 @@
 [Unreleased](https://github.com/seuros/capistrano-puma/compare/v5.2.0...master)
 - Restored default value for `puma_bind` to fix socket activation (Issue #387)
 - Added documentation for puma.rb symlink requirement in v6.0.0 (Issue #384)
+- Made WatchdogSec configurable via `puma_systemd_watchdog_sec` (Issue #373)
 - Removed support for support for monit and upstart. (will add them back if someone is willing to maintain them)
 - Sync configuration with capistrano-sidekiq
 - Support for notify systemd service. Add sd_notify gem to your Gemfile.
