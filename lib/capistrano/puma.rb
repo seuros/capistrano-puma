@@ -110,6 +110,7 @@ module Capistrano
     def set_defaults
       set_if_empty :puma_role, :web
       set_if_empty :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
+      set_if_empty :puma_bind, -> { "unix://#{File.join(shared_path, 'tmp', 'sockets', 'puma.sock')}" }
       set_if_empty :puma_access_log, -> { File.join(shared_path, 'log', "puma.log") }
       set_if_empty :puma_error_log, -> { File.join(shared_path, 'log', "puma.log") }
 

@@ -100,6 +100,7 @@ Configurable options, shown here with defaults: Please note the configuration op
 ```ruby
     set :puma_user, fetch(:user)
     set :puma_role, :web
+    set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
     set :puma_service_unit_env_files, []
     set :puma_service_unit_env_vars, []
 ```
