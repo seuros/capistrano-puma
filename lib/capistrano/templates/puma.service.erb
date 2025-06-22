@@ -21,7 +21,11 @@ WatchdogSec=<%= fetch(:puma_systemd_watchdog_sec) %>
 <% end %>
 <%="User=#{puma_user(@role)}" if fetch(:puma_systemctl_user) == :system %>
 WorkingDirectory=<%= current_path %>
+<% if fetch(:puma_use_login_shell) %>
+ExecStart=/bin/bash -lc '<%= expanded_bundle_command %> exec puma -e <%= fetch(:puma_env) %>'
+<% else %>
 ExecStart=<%= expanded_bundle_command %> exec puma -e <%= fetch(:puma_env) %>
+<% end %>
 ExecReload=/bin/kill -USR1 $MAINPID
 <%- Array(fetch(:puma_service_unit_env_files)).each do |file| %>
 <%="EnvironmentFile=#{file}" -%>

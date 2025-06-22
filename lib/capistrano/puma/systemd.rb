@@ -26,10 +26,6 @@ module Capistrano
       set_if_empty :puma_service_templates_path, fetch(:service_templates_path, 'config/deploy/templates')
     end
 
-    def expanded_bundle_command
-      backend.capture(:echo, SSHKit.config.command_map[:bundle]).strip
-    end
-
     def fetch_systemd_unit_path
       if fetch(:puma_systemctl_user) == :system
         "/etc/systemd/system/"

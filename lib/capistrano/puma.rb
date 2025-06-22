@@ -6,18 +6,18 @@ module Capistrano
     def puma_switch_user(role, &block)
       user = puma_user(role)
       if user == role.user
-        block.call
+        yield
       else
-        backend.as user do
-          block.call
-        end
+        backend.as(user, &block)
       end
     end
 
     def puma_user(role)
       properties = role.properties
+      return role.user unless properties
+      
       properties.fetch(:puma_user) || # local property for puma only
-          fetch(:puma_user) ||
+          fetch(:puma_user, nil) ||
           properties.fetch(:run_as) || # global property across multiple capistrano gems
           role.user
     end
@@ -53,11 +53,7 @@ module Capistrano
           File.expand_path("../templates/#{from}.rb.erb", __FILE__)
       ].detect { |path| File.file?(path) }
       erb = File.read(file)
-      if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.6')
-        StringIO.new(ERB.new(erb, nil, '-').result(binding))
-      else
-        StringIO.new(ERB.new(erb, trim_mode: '-').result(binding))
-      end
+      StringIO.new(ERB.new(erb, trim_mode: '-').result(binding))
     end
 
     def template_puma(from, to, role)
@@ -102,6 +98,10 @@ module Capistrano
         PumaBind.new(m, etype.to_sym, address)
       end
     end
+
+    def expanded_bundle_command
+      backend.capture(:echo, SSHKit.config.command_map[:bundle]).strip
+    end
   end
 
   class Puma < Capistrano::Plugin
@@ -109,10 +109,10 @@ module Capistrano
 
     def set_defaults
       set_if_empty :puma_role, :web
-      set_if_empty :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:stage))) }
+      set_if_empty :puma_env, -> { fetch(:rack_env, fetch(:rails_env, fetch(:rake_env, fetch(:stage)))) }
       set_if_empty :puma_bind, -> { "unix://#{File.join(shared_path, 'tmp', 'sockets', 'puma.sock')}" }
       set_if_empty :puma_access_log, -> { File.join(shared_path, 'log', "puma.log") }
-      set_if_empty :puma_error_log, -> { File.join(shared_path, 'log', "puma.log") }
+      set_if_empty :puma_error_log, -> { File.join(shared_path, 'log', "puma_error.log") }
 
       # Chruby, Rbenv and RVM integration
       append :chruby_map_bins, 'puma', 'pumactl' if fetch(:chruby_map_bins)
