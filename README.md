@@ -1,6 +1,17 @@
 [![Gem Version](https://badge.fury.io/rb/capistrano3-puma.svg)](http://badge.fury.io/rb/capistrano3-puma)
 # Capistrano::Puma
 
+Puma integration for Capistrano - providing systemd service management and zero-downtime deployments for Puma 5.1+.
+
+## Example Application
+
+For a complete working example of this gem in action, see the [capistrano-example-app](https://github.com/seuros/capistrano-example-app) which demonstrates:
+- Rails 8.0 deployment with Capistrano
+- Puma 6.0 with systemd socket activation
+- Zero-downtime deployments
+- rbenv integration
+- Nginx configuration examples
+
 ## Installation
 
 Add this line to your application's Gemfile:
