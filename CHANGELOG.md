@@ -1,5 +1,14 @@
 # Changelog
 
+## [6.2.0](https://github.com/seuros/capistrano-puma/tree/6.2.0) (2025-06-22)
+
+[Full Changelog](https://github.com/seuros/capistrano-puma/compare/v6.1.0...6.2.0)
+- Harmonized interface with capistrano-sidekiq for better ecosystem consistency
+- Aligned configuration variable naming patterns
+- Unified systemd command execution methods
+- Standardized template search order across both gems
+- Added documentation reference to example application
+
 ## [6.1.0](https://github.com/seuros/capistrano-puma/tree/6.1.0) (2025-01-21)
 
 [Full Changelog](https://github.com/seuros/capistrano-puma/compare/v6.0.0...6.1.0)
