@@ -3,7 +3,7 @@ module Capistrano
     include PumaCommon
 
     def register_hooks
-      after 'deploy:finished', 'puma:smart_restart'
+      after 'deploy:published', 'puma:smart_restart'
     end
 
     def define_tasks
