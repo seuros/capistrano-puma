@@ -40,7 +40,7 @@ class DeployTest < Minitest::Test
       assert_equal '200', response.code
       system 'cap production puma:stop'
       sleep 1
-      assert_raises(Errno::ECONNRESET) do
+      assert_raises(Errno::ECONNRESET, EOFError) do
         Net::HTTP.get_response(URI.parse('http://localhost:3000'))
       end
       system 'cap production puma:start'
