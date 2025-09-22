@@ -15,7 +15,7 @@ module Capistrano
     def puma_user(role)
       properties = role.properties
       return role.user unless properties
-      
+
       properties.fetch(:puma_user) || # local property for puma only
           fetch(:puma_user, nil) ||
           properties.fetch(:run_as) || # global property across multiple capistrano gems
@@ -31,10 +31,8 @@ module Capistrano
     def service_unit_type
       ## Jruby don't support notify
       return "simple" if RUBY_ENGINE == "jruby"
-      fetch(:puma_service_unit_type,
-      ## Check if sd_notify is available in the bundle
-        Gem::Specification.find_all_by_name("sd_notify").any? ? "notify" : "simple")
-
+      ## Puma 6.1+ has built-in sd_notify support
+      fetch(:puma_service_unit_type, "notify")
     end
 
     def compiled_template_puma(from, role)
