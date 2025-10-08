@@ -1,0 +1,204 @@
+name: Hive Guard Protection
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  protect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Hive Guard Check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const yaml = require('js-yaml');
+
+            // Get PR author association
+            const authorAssociation = context.payload.pull_request.author_association;
+            const author = context.payload.pull_request.user.login;
+
+            console.log(`PR Author: ${author}`);
+            console.log(`Author Association: ${authorAssociation}`);
+
+            // Only apply to first-time contributors
+            const isFirstTimer = ['FIRST_TIME_CONTRIBUTOR', 'FIRST_TIMER'].includes(authorAssociation);
+
+            if (!isFirstTimer) {
+              console.log('✅ Not a first-time contributor, skipping Hive Guard');
+              return;
+            }
+
+            console.log('⚠️  First-time contributor detected, activating Hive Guard...');
+
+            // Load Hive Guard configuration
+            let config = {
+              protected_files: [],
+              spam_patterns: [],
+              message: ''
+            };
+
+            try {
+              const configContent = fs.readFileSync('.github/hive-guard.yml', 'utf8');
+              config = yaml.load(configContent);
+            } catch (error) {
+              console.log('❌ No hive-guard.yml found, skipping protection');
+              return;
+            }
+
+            // Get changed files in this PR
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            const changedFiles = files.map(f => ({
+              filename: f.filename,
+              patch: f.patch || ''
+            }));
+
+            console.log('Changed files:', changedFiles.map(f => f.filename));
+
+            // Collect all violations
+            const violations = [];
+
+            // Check 1: Protected files
+            console.log('🔍 Checking protected files...');
+            for (const file of changedFiles) {
+              for (const rule of config.protected_files || []) {
+                const pattern = rule.pattern;
+                let matches = false;
+
+                if (pattern === file.filename) {
+                  matches = true;
+                } else if (pattern.includes('*')) {
+                  const regexPattern = pattern
+                    .replace(/\./g, '\\.')
+                    .replace(/\*\*/g, '___DOUBLESTAR___')
+                    .replace(/\*/g, '[^/]*')
+                    .replace(/___DOUBLESTAR___/g, '.*');
+                  const regex = new RegExp(`^${regexPattern}$`);
+                  matches = regex.test(file.filename);
+                }
+
+                if (matches) {
+                  violations.push({
+                    type: 'protected_file',
+                    file: file.filename,
+                    pattern: pattern,
+                    reason: rule.reason || 'Protected file'
+                  });
+                  console.log(`  ❌ ${file.filename} matches protected pattern: ${pattern}`);
+                }
+              }
+            }
+
+            // Check 2: Spam patterns in diff content
+            console.log('🔍 Checking spam patterns in diffs...');
+            for (const file of changedFiles) {
+              if (!file.patch) continue;
+
+              // Extract only added lines (starting with +)
+              const addedLines = file.patch
+                .split('\n')
+                .filter(line => line.startsWith('+') && !line.startsWith('+++'))
+                .map(line => line.substring(1))
+                .join('\n');
+
+              if (!addedLines) continue;
+
+              for (const rule of config.spam_patterns || []) {
+                try {
+                  const regex = new RegExp(rule.pattern, 'i');
+                  if (regex.test(addedLines)) {
+                    const match = addedLines.match(regex);
+                    violations.push({
+                      type: 'spam_pattern',
+                      file: file.filename,
+                      pattern: rule.pattern,
+                      reason: rule.reason || 'Spam pattern detected',
+                      matched_text: match ? match[0].substring(0, 100) : ''
+                    });
+                    console.log(`  ❌ Spam pattern "${rule.reason}" detected in ${file.filename}`);
+                    console.log(`     Matched: "${match[0].substring(0, 100)}..."`);
+                  }
+                } catch (error) {
+                  console.log(`  ⚠️  Invalid regex pattern: ${rule.pattern}`);
+                }
+              }
+            }
+
+            // Report results
+            if (violations.length === 0) {
+              console.log('✅ No Hive Guard violations detected');
+              return;
+            }
+
+            console.log('❌ ' + violations.length + ' violation(s) detected');
+
+            // Use custom message or default
+            const defaultMessage = '## 🚫 Pull Request Automatically Closed by Hive Guard\n\n' +
+              'This pull request has been **automatically closed** by Hive Guard protection.\n\n' +
+              '**If you were sent here by a YouTuber or influencer** to make changes as a "Git tutorial":\n\n' +
+              '- Go back to their channel and **unsubscribe**\n' +
+              '- **Unlike their videos** that promote this spam behavior\n' +
+              '- These spam PRs **permanently harm your GitHub reputation** more than they help you learn Git\n' +
+              '- Real contributions matter; tutorial spam does not\n\n' +
+              '**If this is a legitimate contribution:**\n' +
+              '- Review the violation reason below\n' +
+              '- If this is a false positive, comment explaining your use case\n' +
+              '- A maintainer will review and can reopen this PR if appropriate\n' +
+              '- Consider contributing to other parts of the project\n\n' +
+              'Thank you for understanding!';
+
+            const message = config.message || defaultMessage;
+
+            // Format violations list (no @ tags to avoid spam bombing maintainers)
+            let violationsList = '\n\n### 🛡️ Violations Detected:\n\n';
+
+            for (const v of violations) {
+              if (v.type === 'protected_file') {
+                violationsList += `- **Protected File**: \`${v.file}\`\n`;
+                violationsList += `  - Pattern: \`${v.pattern}\`\n`;
+                violationsList += `  - Reason: ${v.reason}\n\n`;
+              } else if (v.type === 'spam_pattern') {
+                violationsList += `- **Spam Pattern**: ${v.reason}\n`;
+                violationsList += `  - File: \`${v.file}\`\n`;
+                if (v.matched_text) {
+                  violationsList += `  - Matched: "${v.matched_text}${v.matched_text.length >= 100 ? '...' : ''}"\n`;
+                }
+                violationsList += `\n`;
+              }
+            }
+
+            // Post comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: message + violationsList
+            });
+
+            // Close the PR automatically
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              state: 'closed'
+            });
+
+            console.log('❌ PR automatically closed by Hive Guard');
+
+            // Fail the check
+            core.setFailed(`Hive Guard: ${violations.length} violation(s) detected`);

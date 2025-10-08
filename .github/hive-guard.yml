@@ -1,0 +1,68 @@
+# Hive Guard - First-time contributor protection
+# Automatically closes PRs from first-time contributors that modify protected files or contain spam patterns
+# Only applies to FIRST_TIME_CONTRIBUTOR and FIRST_TIMER (not regular contributors)
+
+# Files that first-time contributors cannot modify
+protected_files:
+  - pattern: "README.md"
+    reason: "Project documentation maintained by core team"
+
+  - pattern: "*.gemspec"
+    reason: "Gem specifications require maintainer approval"
+
+  - pattern: ".github/workflows/*"
+    reason: "CI/CD workflows require maintainer approval"
+
+# Content patterns to detect in PR diffs (case-insensitive regex)
+# Scans added lines (+) in diffs for spam/propaganda/promotional content
+spam_patterns:
+  - pattern: "subscribe.*(to|my|our).*(channel|youtube)"
+    reason: "YouTube channel promotion"
+
+  - pattern: "follow.*(me|us|my|our).*(on|at).*(twitter|instagram|tiktok|facebook|linkedin)"
+    reason: "Social media promotion"
+
+  - pattern: "(check out|visit|see).*(my|our).*(course|tutorial|blog|website|channel)"
+    reason: "Self-promotion content"
+
+  - pattern: "(click|check).*(link|here|below).*(in|for).*(bio|description)"
+    reason: "Promotional link spam"
+
+  - pattern: "(trump|biden|democrat|republican|liberal|conservative).*(vote|elect|support|oppose)"
+    reason: "Political propaganda"
+
+  - pattern: "(bitcoin|crypto|nft|forex|trading).*(join|invest|buy|earn|profit)"
+    reason: "Cryptocurrency spam"
+
+  - pattern: "buy.*(followers|likes|views|subscribers|engagement)"
+    reason: "Social media service spam"
+
+  - pattern: "(make|earn).*\\$[0-9]+(k|,000).*(per|a|every).*(day|week|month)"
+    reason: "Get-rich-quick spam"
+
+  - pattern: "\\[sponsored\\]|\\[ad\\]|\\[affiliate"
+    reason: "Advertisement content"
+
+  - pattern: "(free|discount|promo).*(code|coupon).*:"
+    reason: "Promotional code spam"
+
+# Message shown when PR is auto-closed
+message: |
+  ## 🚫 Pull Request Automatically Closed
+
+  This pull request has been **automatically closed** by Hive Guard protection.
+
+  **If you were sent here by a YouTuber or influencer** to make changes as a "Git tutorial":
+
+  - Go back to their channel and **unsubscribe**
+  - **Unlike their videos** that promote this spam behavior
+  - These spam PRs **permanently harm your GitHub reputation** more than they help you learn Git
+  - Real contributions matter; tutorial spam does not
+
+  **If this is a legitimate contribution:**
+  - Review the violation reason below
+  - If this is a false positive, comment explaining your use case
+  - A maintainer will review and can reopen this PR if appropriate
+  - Consider contributing to other parts of the project
+
+  Thank you for understanding!
