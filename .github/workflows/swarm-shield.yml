@@ -1,7 +1,7 @@
-name: Hive Guard Protection
+name: Swarm Shield Protection
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened]
 
 permissions:
@@ -14,6 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: contriboss/hive-guard-action@v0.2.0
+      - uses: contriboss/swarm-shield-action@v0.3.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
