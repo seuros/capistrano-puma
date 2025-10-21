@@ -38,8 +38,18 @@ ExecReload=/bin/kill -USR1 $MAINPID
 RestartSec=1
 Restart=on-failure
 
-<%="StandardOutput=append:#{fetch(:puma_access_log)}" if fetch(:puma_access_log) %>
-<%="StandardError=append:#{fetch(:puma_error_log)}" if fetch(:puma_error_log) %>
+<%- puma_access_log = fetch(:puma_access_log) -%>
+<%- if puma_access_log == "journal" %>
+StandardOutput=journal
+<%- else -%>
+<%="StandardOutput=append:#{puma_access_log}" if puma_access_log %>
+<%- end -%>
+<%- puma_error_log = fetch(:puma_error_log) -%>
+<%- if puma_error_log == "journal" %>
+StandardError=journal
+<%- else -%>
+<%="StandardError=append:#{puma_error_log}" if puma_error_log %>
+<%- end -%>
 
 SyslogIdentifier=<%= fetch(:puma_service_unit_name) %>
 [Install]
