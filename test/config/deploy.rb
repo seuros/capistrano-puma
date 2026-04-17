@@ -1,4 +1,4 @@
-lock "~> 3.19.1"
+lock "~> 3.19"
 
 set :application, "capistrano-puma"
 set :repo_url, "https://github.com/seuros/capistrano-puma.git"
