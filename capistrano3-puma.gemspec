@@ -17,5 +17,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'capistrano', '~> 3.7'
   spec.add_dependency 'capistrano-bundler'
-  spec.add_dependency 'puma', '>= 6.1', '< 8.0'
+  spec.add_dependency 'puma', '>= 6.1', '< 9.0'
 end
