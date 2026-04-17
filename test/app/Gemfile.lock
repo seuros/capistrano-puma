@@ -8,7 +8,7 @@ GEM
     nio4r (2.7.5)
     puma (8.0.0)
       nio4r (~> 2.0)
-    rack (3.2.3)
+    rack (3.2.6)
     rack-protection (4.2.0)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
