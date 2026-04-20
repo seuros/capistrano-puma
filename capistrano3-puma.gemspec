@@ -2,9 +2,9 @@
 
 Gem::Specification.new do |spec|
   spec.name = 'capistrano3-puma'
-  spec.version = '7.1.0'
+  spec.version = '8.0.0'
   spec.authors = ['Abdelkader Boudih']
-  spec.email = ['Terminale@gmail.com']
+  spec.email = ['terminale@gmail.com']
   spec.description = %q{Puma integration for Capistrano 3}
   spec.summary = %q{Puma integration for Capistrano}
   spec.homepage = 'https://github.com/seuros/capistrano-puma'
