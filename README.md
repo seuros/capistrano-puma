@@ -180,7 +180,18 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_service_unit_env_files, []
     set :puma_service_unit_env_vars, []
     set :puma_service_unit_props, [] # Set extral puma service properties, such as ["MemoryMax=2G","TimeoutAbortSec=30"]
+    set :puma_systemctl_reload_options, [] # Extra flags passed to `systemctl reload`, e.g. ["--no-block"]
 ```
+
+`puma_systemctl_reload_options` is an array of extra flags appended to the `systemctl reload`
+command (empty by default). The flags are applied to `reload` only; the `restart` fallback,
+used when the service is not running, is left untouched.
+
+For example, with the default `Type=notify` service, `systemctl reload` waits for the phased
+restart to finish and every worker to re-signal readiness before it returns. Passing
+`%w[--no-block]` makes systemd enqueue the reload and return immediately instead. This is a
+trade-off — the deploy no longer waits on the reload, so it will not surface a failed restart;
+use it only when your rollout is verified by other means.
 
 __Notes:__ If you are setting values for variables that might be used by other plugins, use `append` instead of `set`. For example:
 ```ruby

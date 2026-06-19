@@ -15,6 +15,7 @@ module Capistrano
       set_if_empty :puma_service_unit_name, -> { "#{fetch(:application)}_puma_#{fetch(:stage)}" }
       set_if_empty :puma_enable_socket_service, false
       set_if_empty :puma_systemd_watchdog_sec, 10
+      set_if_empty :puma_systemctl_reload_options, -> { fetch(:systemctl_reload_options, []) }
 
       set_if_empty :puma_service_unit_env_files, -> { fetch(:service_unit_env_files, []) }
       set_if_empty :puma_service_unit_env_vars, -> { fetch(:service_unit_env_vars, []) }

@@ -118,14 +118,12 @@ namespace :puma do
                      execute("#{fetch(:puma_systemctl_bin)} --user status #{fetch(:puma_service_unit_name)} > /dev/null", raise_on_non_zero_exit: false)
                    end
       cmd = 'reload'
+      opts = Array(fetch(:puma_systemctl_reload_options))
       unless service_ok
         cmd = 'restart'
+        opts = []
       end
-      if fetch(:puma_systemctl_user) == :system
-        sudo "#{fetch(:puma_systemctl_bin)} #{cmd} #{fetch(:puma_service_unit_name)}"
-      else
-        execute "#{fetch(:puma_systemctl_bin)}", "--user", cmd, fetch(:puma_service_unit_name)
-      end
+      git_plugin.execute_systemd(*opts, cmd, fetch(:puma_service_unit_name))
     end
   end
 
