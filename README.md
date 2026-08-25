@@ -180,6 +180,8 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_service_unit_env_files, []
     set :puma_service_unit_env_vars, []
     set :puma_service_unit_props, [] # Set extral puma service properties, such as ["MemoryMax=2G","TimeoutAbortSec=30"]
+    set :puma_service_aliases, [] # If you want to create a `puma.service` alias, set this to: ["puma"]
+    set :puma_socket_aliases, []
     set :puma_systemctl_reload_options, [] # Extra flags passed to `systemctl reload`, e.g. ["--no-block"]
 ```
 
