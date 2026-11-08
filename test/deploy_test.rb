@@ -12,7 +12,7 @@ class DeployTest < Minitest::Test
 
   def self.before_suite
     system 'docker build -t capistrano-puma-test-server test'
-    self.container_id = `docker run -d --privileged -p 8022:22 -p 3000:3000 capistrano-puma-test-server`
+    self.container_id = `docker run -d --rm --privileged -p 8022:22 -p 3000:3000 capistrano-puma-test-server`
     sleep 1
   end
 
