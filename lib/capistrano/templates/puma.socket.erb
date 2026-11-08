@@ -20,3 +20,6 @@ SyslogIdentifier=puma_socket
 
 [Install]
 WantedBy=sockets.target
+<% unless Array(fetch(:puma_socket_aliases)).empty? %>
+Alias=<% Array(fetch(:puma_socket_aliases)).map { |name| "#{name}.socket" }.join(" ") %>
+<% end %>
