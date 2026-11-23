@@ -98,7 +98,10 @@ module Capistrano
     end
 
     def expanded_bundle_command
-      backend.capture(:echo, SSHKit.config.command_map[:bundle]).strip
+      command = fetch(:puma_service_unit_bundle_command)
+      # nil, false or blank: use the deploy's own bundle command
+      command = SSHKit.config.command_map[:bundle] if !command || Array(command).join(' ').strip.empty?
+      backend.capture(:echo, command).strip
     end
   end
 

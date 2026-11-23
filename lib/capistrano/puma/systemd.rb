@@ -20,6 +20,8 @@ module Capistrano
       set_if_empty :puma_service_unit_env_files, -> { fetch(:service_unit_env_files, []) }
       set_if_empty :puma_service_unit_env_vars, -> { fetch(:service_unit_env_vars, []) }
       set_if_empty :puma_service_unit_props, -> { fetch(:service_unit_props, []) }
+      # Bundle command for ExecStart; when unset, the deploy's own bundle command (SSHKit command map) is used
+      set_if_empty :puma_service_unit_bundle_command, -> { fetch(:service_unit_bundle_command) }
 
       set_if_empty :puma_systemctl_user, -> { fetch(:systemctl_user, :user) }
       set_if_empty :puma_enable_lingering, -> { fetch(:puma_systemctl_user) != :system }
