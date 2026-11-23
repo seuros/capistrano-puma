@@ -181,6 +181,7 @@ Configurable options, shown here with defaults: Please note the configuration op
     set :puma_service_unit_env_vars, []
     set :puma_service_unit_props, [] # Set extral puma service properties, such as ["MemoryMax=2G","TimeoutAbortSec=30"]
     set :puma_systemctl_reload_options, [] # Extra flags passed to `systemctl reload`, e.g. ["--no-block"]
+    set :puma_service_unit_bundle_command, nil # Bundle command in ExecStart; nil uses the deploy's own bundle command
 ```
 
 `puma_systemctl_reload_options` is an array of extra flags appended to the `systemctl reload`
@@ -192,6 +193,21 @@ restart to finish and every worker to re-signal readiness before it returns. Pas
 `%w[--no-block]` makes systemd enqueue the reload and return immediately instead. This is a
 trade-off — the deploy no longer waits on the reload, so it will not surface a failed restart;
 use it only when your rollout is verified by other means.
+
+`puma_service_unit_bundle_command` sets the bundle command in the unit's `ExecStart` (it falls back to the shared
+`service_unit_bundle_command`). When neither is set, the unit uses the deploy's own bundle command
+(`SSHKit.config.command_map[:bundle]`). With capistrano-rvm or capistrano-rbenv that command names a Ruby version, for
+example `~/.rvm/bin/rvm 3.4.1 do bundle`, so the version is written into the unit and every Ruby upgrade needs another
+`puma:install`. To have the service run the Ruby version of the release it starts from, use a command that reads the
+release's `.ruby-version`. With rvm:
+
+```ruby
+set :puma_service_unit_bundle_command, -> { "#{fetch(:rvm_path)}/bin/rvm in #{current_path} do bundle" }
+```
+
+Like the default, the command is expanded on the server with `echo` when the unit is written: `~` and `$HOME` are
+resolved and shell quoting is removed, so avoid arguments that need quotes. A phased restart (`puma:reload`) keeps the
+running master and its Ruby, so use `puma:restart` after changing the Ruby version.
 
 __Notes:__ If you are setting values for variables that might be used by other plugins, use `append` instead of `set`. For example:
 ```ruby
